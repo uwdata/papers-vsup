@@ -73,13 +73,15 @@ function testPixels(){
 }
 
 function permute(anArray){
-  var j = 0;
+  var i = 0;
   var temp;
   var tempArray = anArray.slice(0);
-  for(var i = 0;i<anArray.length;i++){
-    j = floor(random(anArray.length));
-    temp = tempArray[j];
-    tempArray[j] = tempArray[i];
+  var m = anArray.length;
+
+  while(m){
+    i = floor(random(m--));
+    temp = tempArray[m];
+    tempArray[m] = tempArray[i];
     tempArray[i] = temp;
   }
   return tempArray;
