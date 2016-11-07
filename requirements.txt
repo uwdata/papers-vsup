@@ -1,2 +1,7 @@
 scipy
+seaborn
+matplotlib
 jupyter
+Pillow
+networkx
+pygraphviz
