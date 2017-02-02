@@ -6,7 +6,7 @@ function setup(){
   pixelDensity(displayDensity());
   createCanvas(500,500);
   background(255);
-  drawHeatmap([0,0.25,0.5,0.75]);
+  drawHeatmap([0,0.25,0.5,0.75,1.0,0.1,0.9,0.3]);
   noLoop();
 }
 
@@ -27,7 +27,7 @@ function drawHeatmap(samples){
 }
 
 function drawCell(value,uncertainty,x,y,w,mode){
-  var fillC = color(255*value);
+  var fillC = lerpColor(color(255),color(255,0,0),value);
   noStroke();
   fill(fillC);
   rect(x,y,w,w);
