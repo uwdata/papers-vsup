@@ -1,0 +1,3 @@
+body {margin:0; padding:0;} /* remove top and left whitespace */
+canvas {display:block;}    /* remove scrollbars */
+canvas:focus {outline:0;} /* remove blue outline around canvas */
