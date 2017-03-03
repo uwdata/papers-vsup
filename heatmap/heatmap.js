@@ -1,13 +1,17 @@
 
 var svg = d3.select("body").append("svg");
 
-function makeHeatmap(x,y,size,data,z){
+function makeHeatmap(x,y,size,data,z,name){
   //creates an svg heatmap with a 2d matrix of data, and a mapping function z
   var w = size/data[0].length;
   var h = size/data.length;
 
   var heatmap = svg.append("g")
              .attr("transform","translate("+x+","+y+")");
+
+  if(name){
+    heatmap.attr("id",name);
+  }
 
   heatmap.selectAll("g")
   .data(data)
@@ -74,8 +78,8 @@ function main(){
   z.domain([d3.min(d3.min(data)),d3.max(d3.max(data))]);
   u.domain([0,1]);
 
-  makeHeatmap(0,0,250,data,function(d){ return z(d.v);});
-  makeHeatmap(300,0,250,uncertainty,function(d){ return u(d.v);});
+  makeHeatmap(0,0,250,data,function(d){ return z(d.v);},"value");
+  makeHeatmap(300,0,250,uncertainty,function(d){ return u(d.v);},"uncertainty");
 }
 
 main();
