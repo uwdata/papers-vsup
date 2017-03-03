@@ -1,50 +1,35 @@
-var map = colorbrewer.YlGnBu[9];
 
-var width = 300;
-var height = 300;
+var svg = d3.select("body").append("svg");
 
-var x = d3.scale.linear().range([0,width]);
-var y = d3.scale.linear().range([0,height]);
-var z = d3.scale.quantize().range(map);
+function makeHeatmap(x,y,size,data,z){
+  //creates an svg heatmap with a 2d matrix of data, and a mapping function z
+  var w = size/data[0].length;
+  var h = size/data.length;
 
-var data = [
-  [1,2,3],
-  [4,5,6],
-  [7,8,9]
-];
+  var heatmap = svg.append("g")
+             .attr("transform","translate("+x+","+y+")");
 
-var uncertainty = [
-  [1,1,1],
-  [1,1,1],
-  [1,1,1]
-];
-
-x.domain([0,data[0].length]);
-y.domain([0,data.length]);
-z.domain([d3.min(d3.min(data)),d3.max(d3.max(data))]);
-
-var w = width/data[0].length;
-var h = height/data.length;
-
-var svg = d3.select("body").append("svg")
-  .attr("width",width)
-  .attr("height",height);
-
-var cells = svg.selectAll("g")
-    .data(data)
+  heatmap.selectAll("g")
+  .data(data)
+  .enter()
+  .append("g")
+  .selectAll("rect")
+    .data(function(d,i){ return d.map(function(val){ return {r:i, v:val};});})
     .enter()
-    .append("g")
-    .selectAll("rect")
-      .data(function(d,i){ return d.map(function(val){ return {r:i, v:val};});})
-      .enter()
-      .append("rect")
-      .datum(function(d,i){ d.c = i; d.u = uncertainty[d.r][d.c]; return d; })
-      .attr("x",function(d){ return x(d.c);})
-      .attr("y",function(d){ return y(d.r);})
-      .attr("width",w)
-      .attr("height",h)
-      .attr("fill",function(d){ return z(d.v);});
+    .append("rect")
+    .datum(function(d,i){ d.c = i; return d; })
+    .attr("x", function(d){ return d.c*w;})
+    .attr("y", function(d){ return d.r*h;})
+    .attr("width",w)
+    .attr("height",h)
+    .attr("fill", function(d){ return z(d);});
+}
 
+function makeArcmap(x,y,size,data,z){
+  //creates an svg "wedge" map
+  //TODO finish arcmap function
+
+}
 
 function lerp(v1,v2,amount){
        amount = Math.min(Math.max(amount,0),1);
@@ -58,3 +43,39 @@ function labLerp(c1,c2,amount){
   return d3.lab( lerp(lc1.l,lc2.l,amount), lerp(lc1.a,lc2.a,amount), lerp(lc1.b,lc2.b,amount));
 
 }
+
+function main(){
+  //Create all relevant maps
+
+  /*TODO
+  We'll need:
+  1) Juxtaposed Data/Uncertainty maps
+  2) Integrated map with regular "square" mapping
+  3) Integrated map with "arc" mapping
+  4) Legends for both square and arc maps.
+  */
+
+  var map = colorbrewer.YlGnBu[9];
+  var z = d3.scale.quantize().range(map);
+  var u = d3.scale.quantize().range(colorbrewer.Greys[9]);
+
+  var data = [
+    [1,2,3],
+    [4,5,6],
+    [7,8,9]
+  ];
+
+  var uncertainty = [
+    [0,0.1,0.2],
+    [0.3,0.4,0.5],
+    [0.6,0.7,0.8]
+  ];
+
+  z.domain([d3.min(d3.min(data)),d3.max(d3.max(data))]);
+  u.domain([0,1]);
+
+  makeHeatmap(0,0,250,data,function(d){ return z(d.v);});
+  makeHeatmap(300,0,250,uncertainty,function(d){ return u(d.v);});
+}
+
+main();
