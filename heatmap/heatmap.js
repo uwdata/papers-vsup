@@ -68,18 +68,7 @@ function makeArc(d,size,rows,cols){
   return arc;
 }
 
-function lerp(v1,v2,amount){
-       amount = Math.min(Math.max(amount,0),1);
-       return v1 + (v2 - v1) * amount;
-}
-
-function labLerp(c1,c2,amount){
-  //Linearly interpolates two colors in CIELAB space
-  var lc1 = d3.lab(c1);
-  var lc2 = d3.lab(c2);
-  return d3.lab( lerp(lc1.l,lc2.l,amount), lerp(lc1.a,lc2.a,amount), lerp(lc1.b,lc2.b,amount));
-
-}
+//should use d3.interpolateLab for colors.
 
 function main(){
   //Create all relevant maps
@@ -121,8 +110,8 @@ function main(){
   makeHeatmap(300,0,250,uncertainty,function(d){ return u(d.v);},"uncertainty");
 
   makeArcmap(0,300,250,arcData,function(d){ return z(d.v);},"arc");
-
   makeArcmap(300,300,250,arcData,function(d){ return u((d.v)/6.0);},"arcUncertainty");
+
 }
 
 main();
