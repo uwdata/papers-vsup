@@ -29,10 +29,43 @@ function makeHeatmap(x,y,size,data,z,name){
     .attr("fill", function(d){ return z(d);});
 }
 
-function makeArcmap(x,y,size,data,z){
+function makeArcmap(x,y,size,data,z,name){
   //creates an svg "wedge" map
-  //TODO finish arcmap function
+  var w = size/data[0].length;
+  var h = size/data.length;
 
+  var arcmap = svg.append("g")
+             .attr("transform","translate("+(x+size/2)+","+(y+size)+")");
+
+  if(name){
+    arcmap.attr("id",name);
+  }
+
+  arcmap.selectAll("g")
+  .data(data)
+  .enter()
+  .append("g")
+  .selectAll("path")
+    .data(function(d,i){ return d.map(function(val){ return {r:i, v:val};});})
+    .enter()
+    .append("path")
+    .datum(function(d,i){ d.c = i; return d; })
+    .attr("d", function(d){ return makeArc(d,size,data.length,data[d.r].length)();})
+    .attr("fill", function(d){ return z(d);});
+
+}
+
+function makeArc(d,size,rows,cols){
+  var angle = d3.scale.linear().domain([0,cols]).range([-Math.PI/6,Math.PI/6]);
+  var radius = d3.scale.linear().domain([0,rows]).range([size,0]);
+
+  var arc = d3.svg.arc()
+  .innerRadius(radius(d.r+1))
+  .outerRadius(radius(d.r))
+  .startAngle(angle(d.c))
+  .endAngle(angle(d.c+1));
+
+  return arc;
 }
 
 function lerp(v1,v2,amount){
@@ -75,11 +108,21 @@ function main(){
     [0.6,0.7,0.8]
   ];
 
+  var arcData = [
+    [1,2,3],
+    [4,5],
+    [6]
+  ];
+
   z.domain([d3.min(d3.min(data)),d3.max(d3.max(data))]);
   u.domain([0,1]);
 
   makeHeatmap(0,0,250,data,function(d){ return z(d.v);},"value");
   makeHeatmap(300,0,250,uncertainty,function(d){ return u(d.v);},"uncertainty");
+
+  makeArcmap(0,300,250,arcData,function(d){ return z(d.v);},"arc");
+
+  makeArcmap(300,300,250,arcData,function(d){ return u((d.v)/6.0);},"arcUncertainty");
 }
 
 main();
