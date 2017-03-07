@@ -70,6 +70,30 @@ function makeArc(d,size,rows,cols){
 
 //should use d3.interpolateLab for colors.
 
+function cDist(color1,color2){
+  //Euclidean distance between two colors in Lab space.
+  var c1 = d3.lab(c1);
+  var c2 = d3.lab(c2);
+
+  return Math.sqrt( Math.pow( (c1.l-c2.l),2) + Math.pow(c1.a-c2.a,2) + Math.pow(c1.b - c2.b,2));
+}
+
+function minDist(colorRamp){
+  //What's the closest distance between colors, in our array of colors?
+  var minD, D;
+
+  for(var i = 0;i<colorRamp.length;i++){
+    for(var j = i+1;j<colorRamp.length;j++){
+        D = cDist(colorRamp[i],colorRamp[j]);
+        if((i==0 && j==1) || D<minD){
+          minD = D;
+        }
+    }
+  }
+
+  return minD;
+}
+
 function main(){
   //Create all relevant maps
 
