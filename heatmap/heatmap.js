@@ -1,8 +1,12 @@
 
+//Global Variables
+
 var svg = d3.select("body").append("svg");
 var map = colorbrewer.YlGnBu[9];
 var z = d3.scale.quantize().range(map);
-var u = d3.scale.quantize().range(colorbrewer.Greys[9]);
+
+
+//Chart creation functions
 
 function makeHeatmap(x,y,size,data,z,name){
   //creates an svg heatmap with a 2d matrix of data, and a mapping function z
@@ -71,6 +75,21 @@ function makeArc(d,size,rows,cols){
   return arc;
 }
 
+//Data loading and generation
+
+function randomData(rows,cols){
+  //uniform random data
+  var data = [];
+  for(var i = 0;i<rows;i++){
+    data[i] = [];
+    for(var j=0;j<cols;j++){
+      data[i].push({ u: Math.random(), v: Math.random()});
+    }
+  }
+
+  return data;
+}
+
 //should use d3.interpolateLab for colors.
 
 function cDist(color1,color2){
@@ -83,18 +102,20 @@ function cDist(color1,color2){
 
 function minDist(colorRamp){
   //What's the closest distance between colors, in our array of colors?
-  var minD, D;
+  var minD, D,c1,c2;
 
   for(var i = 0;i<colorRamp.length;i++){
     for(var j = i+1;j<colorRamp.length;j++){
         D = cDist(colorRamp[i],colorRamp[j]);
         if((i==0 && j==1) || D<minD){
           minD = D;
+          c1 = colorRamp[i];
+          c2 = colorRamp[j];
         }
     }
   }
 
-  return minD;
+  return {"minD": minD, "c1": c1, "c2": c2};
 }
 
 function checkMap(mapName){
@@ -112,8 +133,8 @@ function checkMap(mapName){
     });
 
     var closest = minDist(colorList);
-    console.log( "The two closest colors are "+closest+" apart in CIELAB.");
-    return closest>5;
+    console.log( "The two closest colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+    return closest.minD>5;
 }
 
 function main(){
@@ -160,13 +181,15 @@ function main(){
   ];
 
   z.domain([d3.min(d3.min(data)),d3.max(d3.max(data))]);
-  u.domain([0,1]);
 
   makeHeatmap(0,0,250,scaleData, function(d){ return uL(d.v);}, "SquareLightness");
   makeArcmap(300,0,250,arcScaleData, function(d){ return uL(d.v);}, "ArcLightness");
 
   makeHeatmap(0,300,250,scaleData, function(d){ return uS(d.v);}, "SquareSaturation");
   makeArcmap(300,300,250,arcScaleData, function(d){ return uS(d.v);}, "ArcSaturation");
+
+  //var u = d3.scale.quantize().range(colorbrewer.Greys[9]);
+  //u.domain([0,1]);
   //makeArcmap(0,300,250,arcData,function(d){ return z(d.v);},"arc");
   //makeArcmap(300,300,250,arcData,function(d){ return u((d.v)/6.0);},"arcUncertainty");
 
