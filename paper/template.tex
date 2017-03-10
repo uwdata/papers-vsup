@@ -72,7 +72,7 @@
 
 %% Paper title.
 
-\title{Global Illumination for Fun and Profit}
+\title{Value-Suppressing Maps for Uncertain Data}
 
 %% This is how authors are specified in the conference style
 
@@ -93,7 +93,10 @@
      \scriptsize University of Washington %
 \and Jeffrey Heer\\ %
      \scriptsize University of Washington}
+ 
+\input{figures.tex}
 
+%\teaserFig
 %% A teaser figure can be included as follows, but is not recommended since
 %% the space is now taken up by a full width abstract.
 %\teaser{
@@ -102,29 +105,43 @@
 %}
 
 %% Abstract section.
-\abstract{Duis autem vel eum iriure dolor in hendrerit in vulputate
-velit esse molestie consequat, vel illum dolore eu feugiat nulla
-facilisis at vero eros et accumsan et iusto odio dignissim qui blandit
-praesent luptatum zzril delenit augue duis dolore te feugait nulla
-facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
-aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
-suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem
-vel eum iriure dolor in hendrerit in vulputate velit esse molestie
-consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et
-accumsan et iusto odio dignissim qui blandit praesent luptatum zzril
-delenit augue duis dolore te feugait nulla facilisi.%
+\abstract{
+	
+	% uncertainty-aware decisions.
+	% refrain from making a decision
+	% integrate uncertainty with the display
+	% value-suppressing encodings
+	% provide greater visual discriminability for values with high certainty, but alias together uncertain values
+	% ran a study
+	% results indicate X
+	
+	Uncertainty information is a vital part of many datasets, and should be accurately conveyed to the analyst.
+	Directly integrating uncertainty information with data requires that designers construct bivariate maps that encode value and uncertainty simultaneously. The design of such bivariate maps can be difficult, and the impact of different choices of encodings on decision-making under uncertainty understudied.
+    In this paper, we present a category of bivariate maps for uncertainty, ``value-suppressing maps.'' As opposed to traditional bivariate maps, value-suppressing maps make the informed decision to alias together values when uncertainty is high, in order to afford greater discriminability when uncertainty is low. That is, certain data is intrinsically easier to visually disambiguate than uncertain data. 
+    We present several examples of these value-suppressing maps, as well as a crowd-sourced evaluation showing X. We conclude that Y.
+	
+	%However, in thematic maps, strong visual variables such as position and hue are already reserved to encode location and value. 
+	
+	%Remaining visual variables with semiotic connection to uncertainty, such as transparency and saturation, are comparatively more difficult to discriminate, and can interfere with color discrimination.
+	
+
+	
+	%Uncertainty, when it is directly encoded at all, is often visualized using visual variables with lower discriminability, or relegated to tooltips or separate charts.
+ 
+	
 } % end of abstract
 
 %% ACM Computing Classification System (CCS). 
 %% See <http://www.acm.org/class/1998/> for details.
 %% The ``\CCScat'' command takes four arguments.
 
-\CCScatlist{ 
-  \CCScat{K.6.1}{Management of Computing and Information Systems}%
-{Project and People Management}{Life Cycle};
-  \CCScat{K.7.m}{The Computing Profession}{Miscellaneous}{Ethics}
-}
+\keywords{Uncertainty Visualization, Color Perception, Thematic Maps, Semiotics.}
+
+%\CCScatlist{ 
+%  \CCScat{K.6.1}{Management of Computing and Information Systems}%
+%{Project and People Management}{Life Cycle};
+%  \CCScat{K.7.m}{The Computing Profession}{Miscellaneous}{Ethics}
+%}
 
 %% Copyright space is enabled by default as required by guidelines.
 %% It is disabled by the 'review' option or via the following command:
@@ -145,31 +162,71 @@ delenit augue duis dolore te feugait nulla facilisi.%
 \maketitle
 
 %% \section{Introduction} %for journal use above \firstsection{..} instead
-This template is for papers of VGTC-sponsored conferences which are \emph{\textbf{not}} published in a special issue of TVCG.
 
+
+% What this section needs to do:
+% Uncertainty is important!
+% What do we mean by ``well-integrated'' uncertainty?
+% Scope down to thematic maps
+% Juxtapose/superimpost distinction?
+% Position bivariate maps (tacitly or explicitly) as state of the art
+% Teaser image showing what we mean
+
+Uncertainty is an inescapable component of collecting, presenting, and using data. A common goal in the communication of uncertainty is promoting \textbf{uncertainty-aware decisions}--- that is, the audience should be aware of the risks and rewards of certain decisions, modulate their confidence in their conclusions, and perhaps refrain from making a decision at all if there is too much uncertainty. A way that designers can contribute to this goal is by ensuring that uncertainty information is \textbf{well-integrated} with the rest of the data. That is, it should be difficult to discount or ignore the uncertainty in a dataset. A designer of a visualization could instantiate this principle through the simultaneous presentation of uncertainty and value. This simultaneous presentation necessitates the construction of a bivariate map--- a relation, in terms of visual variables, between a 2-tuple $(value$,$uncertainty)$ and a set of marks.
+
+In this paper, we present \textbf{Value-Suppressing Maps} (VSMs) for integrating data and uncertainty information in thematic maps. VSMs intentionally alias together data values with high uncertainty, affording greater discriminability as certainty increases. Rather than a square bivariate map, with unique outputs for each relevant combination of data and uncertainty, VSMs can be thought of as arcs: as uncertainty increases, values are mapped to smaller and smaller sets of outputs, culminating in a singularity where all inputs are mapped to an identical, highly uncertain glyph regardless of their data value. Figure X shows an example of a VSM, compared to a more traditional bivariate map. In this work, we describe the motivations behind the use of VSMs, examples of their utility for decision-making under uncertainty, and validate VDMs in a crowd-sourced experiment.
+ 
 \section{Related Works}
 
-\section{Conclusion}
+% What this section needs to do
+% State of the art in uncertainty vis, with heavy emphasis on MacEachren & co. 
+% Bivariate maps are hard!
+% Binning colormaps is de rigueur
+% The variables we'd want to use for uncertainty (like value or alpha or size) mess with color discriminability
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-invidunt ut labore et dolore magna aliquyam erat, sed diam
-voluptua. At vero eos et accusam et justo duo dolores et ea
-rebum.
+\subsection{Visual Variables for Representing Uncertainty}
+
+MacEachren et al. \cite{maceachren2012visual} evaluate a number of visual variables for representing uncertainty. 
+\subsection{Interactions Between Visual Variables}
+
+\section{Value-Suppressing Maps}
+
+
+\subsection{Design}
+
+
+\subsection{Examples}
+
+\section{Evaluation}
+
+%Show:
+% 1) Juxtaposition makes people ignore/underweight uncertainty (even when they don't screw up the search task)
+% 2) VSMs make people, surprise surprise, bad at distinguishing highly uncertain values
+% 3) But, they make uncertainty better-integrated
+%    i) lower weights on uncertain values in decision-making
+%    ii) a priori better discrimination
+
+\subsection{Methods}
+
+%conditions:
+% 1) juxtaposed d map, u map
+% 2) binned d/u map as per a priori jnds
+% 3) vsm
+% 4) continuous d/u map?
+
+\subsubsection{Participants}
+\subsection{Results}
+
+\section{Discussion}
+\subsection{Limitations and Future Work}
+% When should you use these things?
+
+\section{Conclusion}
 
 
 %% if specified like this the section will be committed in review mode
 \acknowledgments{
-The authors wish to thank A, B, C. This work was supported in part by
-a grant from XYZ.}
+Omitted for review.}
 
 %\bibliographystyle{abbrv}
 \bibliographystyle{abbrv-doi}

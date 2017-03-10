@@ -1,5 +1,8 @@
 
 var svg = d3.select("body").append("svg");
+var map = colorbrewer.YlGnBu[9];
+var z = d3.scale.quantize().range(map);
+var u = d3.scale.quantize().range(colorbrewer.Greys[9]);
 
 function makeHeatmap(x,y,size,data,z,name){
   //creates an svg heatmap with a 2d matrix of data, and a mapping function z
@@ -72,8 +75,8 @@ function makeArc(d,size,rows,cols){
 
 function cDist(color1,color2){
   //Euclidean distance between two colors in Lab space.
-  var c1 = d3.lab(c1);
-  var c2 = d3.lab(c2);
+  var c1 = d3.lab(color1);
+  var c2 = d3.lab(color2);
 
   return Math.sqrt( Math.pow( (c1.l-c2.l),2) + Math.pow(c1.a-c2.a,2) + Math.pow(c1.b - c2.b,2));
 }
@@ -94,6 +97,25 @@ function minDist(colorRamp){
   return minD;
 }
 
+function checkMap(mapName){
+  //Takes a d3 selection containing all the marks we care about
+  //Checks to make sure that colors it contains are sufficiently far apart.
+  var colorList = [];
+  var aColor;
+
+  mapName
+    .each(function(d){
+      aColor = d3.select(this).attr("fill");
+      if(!colorList.includes(aColor)){
+        colorList.push(aColor);
+      }
+    });
+
+    var closest = minDist(colorList);
+    console.log( "The two closest colors are "+closest+" apart in CIELAB.");
+    return closest>5;
+}
+
 function main(){
   //Create all relevant maps
 
@@ -104,10 +126,6 @@ function main(){
   3) Integrated map with "arc" mapping
   4) Legends for both square and arc maps.
   */
-
-  var map = colorbrewer.YlGnBu[9];
-  var z = d3.scale.quantize().range(map);
-  var u = d3.scale.quantize().range(colorbrewer.Greys[9]);
 
   var data = [
     [1,2,3],
@@ -127,15 +145,68 @@ function main(){
     [6]
   ];
 
+  var scaleData = [
+    [{v:0.25,u:0.0},{v:0.5,u:0.0},{v:0.75,u:0.0},{v:1.0,u:0.0}],
+    [{v:0.25,u:0.25},{v:0.5,u:0.25},{v:0.75,u:0.25},{v:1.0,u:0.25}],
+    [{v:0.25,u:0.5},{v:0.5,u:0.5},{v:0.75,u:0.5},{v:1.0,u:0.5}],
+    [{v:0.25,u:0.75},{v:0.5,u:0.75},{v:0.75,u:0.75},{v:1.0,u:0.75}]
+  ];
+
+  var arcScaleData = [
+    [{v:0.25,u:0.0},{v:0.5,u:0.0},{v:0.75,u:0.0},{v:1.0,u:0.0}],
+    [{v:0.25,u:0.25},{v:0.5,u:0.25},{v:1.0,u:0.25}],
+    [{v:0.25,u:0.5},{v:1.0,u:0.5}],
+    [{v:0.5,u:0.75}]
+  ];
+
   z.domain([d3.min(d3.min(data)),d3.max(d3.max(data))]);
   u.domain([0,1]);
 
-  makeHeatmap(0,0,250,data,function(d){ return z(d.v);},"value");
-  makeHeatmap(300,0,250,uncertainty,function(d){ return u(d.v);},"uncertainty");
+  makeHeatmap(0,0,250,scaleData, function(d){ return uL(d.v);}, "SquareLightness");
+  makeArcmap(300,0,250,arcScaleData, function(d){ return uL(d.v);}, "ArcLightness");
 
-  makeArcmap(0,300,250,arcData,function(d){ return z(d.v);},"arc");
-  makeArcmap(300,300,250,arcData,function(d){ return u((d.v)/6.0);},"arcUncertainty");
+  makeHeatmap(0,300,250,scaleData, function(d){ return uS(d.v);}, "SquareSaturation");
+  makeArcmap(300,300,250,arcScaleData, function(d){ return uS(d.v);}, "ArcSaturation");
+  //makeArcmap(0,300,250,arcData,function(d){ return z(d.v);},"arc");
+  //makeArcmap(300,300,250,arcData,function(d){ return u((d.v)/6.0);},"arcUncertainty");
 
+  makeHeatmap(0,600,250,scaleData, function(d){ return uSL(d.v);}, "SquareWhite");
+  makeArcmap(300,600,250,arcScaleData, function(d){ return uSL(d.v);}, "ArcWhite");
+
+}
+
+//Uncertainty maps
+
+function uL(d){
+  //use lightness to encode uncertainty
+  var cScale = d3.scale.quantize().domain([0,1]).range(map);
+  var steps = map.length;
+  var c = (d3.lab(cScale(d.v)));
+  //colors start at different lightnesses, so we have limited range here
+  var lScale = d3.scale.linear().domain([0,1]).range([c.l,100]);
+  c.l = lScale(d.u);
+
+  return c;
+}
+
+function uS(d){
+  //use saturation to encode uncertainty
+  var cScale = d3.scale.quantize().domain([0,1]).range(map);
+  var steps = map.length;
+  var c = (d3.hsl(cScale(d.v)));
+  var sScale = d3.scale.linear().domain([0,1]).range([c.s,0.0]);
+  c.s = sScale(d.u);
+
+  return c;
+}
+
+function uSL(d){
+  //interpolate to white
+  var cScale = d3.scale.quantize().domain([0,1]).range(map);
+  var steps = map.length;
+  var c = (d3.hsl(cScale(d.v)));
+  var iVal = d3.scale.linear().domain([0,1]).range([0.0,1.0]);
+  return d3.interpolateLab(c,"white")(iVal(d.u));
 }
 
 main();
