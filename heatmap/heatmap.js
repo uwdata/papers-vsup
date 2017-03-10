@@ -2,7 +2,12 @@
 //Global Variables
 
 var svg = d3.select("body").append("svg");
-var map = colorbrewer.YlGnBu[9];
+//var map = colorbrewer.Spectral[9];
+
+//part of viridis
+//d3.range(10).map(d => d3.interpolateViridis(d/9));
+var map = ["#440154", "#482878", "#3e4989", "#31688e", "#26828e", "#1f9e89", "#35b779", "#6ece58", "#b5de2b"];
+
 var z = d3.scale.quantize().range(map);
 
 
