@@ -4,11 +4,11 @@
 var svg = d3.select("body").append("svg");
 //var map = colorbrewer.Spectral[9];
 
-//part of viridis
-//d3.range(10).map(d => d3.interpolateViridis(d/9));
-var map = ["#440154", "#482878", "#3e4989", "#31688e", "#26828e", "#1f9e89", "#35b779", "#6ece58", "#b5de2b"];
+// viridis
+var NUM_STEPS = 1000;
+var map = d3.range(NUM_STEPS).map(d => d3.interpolateViridis(d/(NUM_STEPS-1)));
 
-var z = d3.scale.quantize().range(map);
+var z = d3.scaleQuantize().range(map);
 
 
 //Chart creation functions
@@ -64,14 +64,13 @@ function makeArcmap(x,y,size,data,z,name){
     .datum(function(d,i){ d.c = i; return d; })
     .attr("d", function(d){ return makeArc(d,size,data.length,data[d.r].length)();})
     .attr("fill", function(d){ return z(d);});
-
 }
 
 function makeArc(d,size,rows,cols){
-  var angle = d3.scale.linear().domain([0,cols]).range([-Math.PI/6,Math.PI/6]);
-  var radius = d3.scale.linear().domain([0,rows]).range([size,0]);
+  var angle = d3.scaleLinear().domain([0,cols]).range([-Math.PI/6,Math.PI/6]);
+  var radius = d3.scaleLinear().domain([0,rows]).range([size,0]);
 
-  var arc = d3.svg.arc()
+  var arc = d3.arc()
   .innerRadius(radius(d.r+1))
   .outerRadius(radius(d.r))
   .startAngle(angle(d.c))
@@ -187,53 +186,19 @@ function main(){
 
   z.domain([d3.min(d3.min(data)),d3.max(d3.max(data))]);
 
-  makeHeatmap(0,0,250,scaleData, function(d){ return uL(d.v);}, "SquareLightness");
-  makeArcmap(300,0,250,arcScaleData, function(d){ return uL(d.v);}, "ArcLightness");
-
-  makeHeatmap(0,300,250,scaleData, function(d){ return uS(d.v);}, "SquareSaturation");
-  makeArcmap(300,300,250,arcScaleData, function(d){ return uS(d.v);}, "ArcSaturation");
-
-  //var u = d3.scale.quantize().range(colorbrewer.Greys[9]);
-  //u.domain([0,1]);
-  //makeArcmap(0,300,250,arcData,function(d){ return z(d.v);},"arc");
-  //makeArcmap(300,300,250,arcData,function(d){ return u((d.v)/6.0);},"arcUncertainty");
-
-  makeHeatmap(0,600,250,scaleData, function(d){ return uSL(d.v);}, "SquareWhite");
-  makeArcmap(300,600,250,arcScaleData, function(d){ return uSL(d.v);}, "ArcWhite");
+  makeHeatmap(0,0,250,scaleData, function(d){ return uSL(d.v);}, "SquareWhite");
+  makeArcmap(300,0,250,arcScaleData, function(d){ return uSL(d.v);}, "ArcWhite");
 
 }
 
 //Uncertainty maps
 
-function uL(d){
-  //use lightness to encode uncertainty
-  var cScale = d3.scale.quantize().domain([0,1]).range(map);
-  var steps = map.length;
-  var c = (d3.lab(cScale(d.v)));
-  //colors start at different lightnesses, so we have limited range here
-  var lScale = d3.scale.linear().domain([0,1]).range([c.l,100]);
-  c.l = lScale(d.u);
-
-  return c;
-}
-
-function uS(d){
-  //use saturation to encode uncertainty
-  var cScale = d3.scale.quantize().domain([0,1]).range(map);
-  var steps = map.length;
-  var c = (d3.hsl(cScale(d.v)));
-  var sScale = d3.scale.linear().domain([0,1]).range([c.s,0.0]);
-  c.s = sScale(d.u);
-
-  return c;
-}
-
 function uSL(d){
   //interpolate to white
-  var cScale = d3.scale.quantize().domain([0,1]).range(map);
+  var cScale = d3.scaleQuantize().domain([0,1]).range(map);
   var steps = map.length;
   var c = (d3.hsl(cScale(d.v)));
-  var iVal = d3.scale.linear().domain([0,1]).range([0.0,1.0]);
+  var iVal = d3.scaleLinear().domain([0,1]).range([0.0,1.0]);
   return d3.interpolateLab(c,"white")(iVal(d.u));
 }
 
