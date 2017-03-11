@@ -1,0 +1,84 @@
+.stimulus {
+  position: absolute;
+  left: 25%;
+  margin: auto;
+  width: 300px;
+  text-align: center;
+}
+
+.slider {
+  width: 300px;
+}
+
+.trend {
+  fill: none;
+  stroke: #4b2e83;
+  stroke-width: 5px;
+}
+
+.question {
+  text-align: center;
+  font-weight: bold;
+}
+
+.prompt {
+  text-align: center;
+}
+
+.confirm {
+  text-align: center;
+}
+
+.button{
+  color: #fff;
+  background-color: #428bca;
+  border-color: #357ebd;
+  font-size: 14px;
+  border-radius: 4px;
+  text-align: center;
+  min-height: 1.5em;
+}
+
+.button:hover{
+  background-color: #357ebd;
+}
+
+.button:disabled{
+  border-color: #eee;
+  background-color: #bbb;
+}
+
+.fcontainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.figure{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 500px;
+  border: 1px solid black;
+}
+
+.figure img{
+  width: 50%;
+}
+
+.figure div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid black;
+}
+
+iframe{
+  width: 100%;
+  min-height: 600px;
+  height: 90%;
+}
+
