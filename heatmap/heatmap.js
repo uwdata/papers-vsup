@@ -37,7 +37,7 @@ function makeHeatmap(x,y,size,data,z,name){
     .attr("y", function(d){ return d.r*h;})
     .attr("width",w)
     .attr("height",h)
-    .attr("fill", function(d){ return z(d);});
+    .attr("fill", function(d){ return z(d.v);});
 }
 
 function makeArcmap(x,y,size,data,z,name){
@@ -62,7 +62,7 @@ function makeArcmap(x,y,size,data,z,name){
     .append("path")
     .datum(function(d,i){ d.c = i; return d; })
     .attr("d", function(d){ return makeArc(d,size,data.length,data[d.r].length)();})
-    .attr("fill", function(d){ return z(d);});
+    .attr("fill", function(d){ return z(d.v);});
 }
 
 function makeArc(d,size,rows,cols){
@@ -121,6 +121,7 @@ function minDist(colorRamp){
   return {"minD": minD, "c1": c1, "c2": c2};
 }
 
+// TODO: delete
 function checkMap(mapName){
   //Takes a d3 selection containing all the marks we care about
   //Checks to make sure that colors it contains are sufficiently far apart.
@@ -177,6 +178,13 @@ function makeArcScaleData(n) {
   return arr;
 }
 
+function colorDiff(scaleData) {
+  var colors = scaleData.reduce(function(arr, curr) {
+    return arr.concat(curr.map(uSL));
+  }, []);
+  return minDist(colors);
+}
+
 function main(){
   //Create all relevant maps
 
@@ -188,16 +196,31 @@ function main(){
   4) Legends for both square and arc maps.
   */
 
-  const N = 5;
-
   // var scaleData = [
   //   [{v:0.25,u:0.0},{v:0.5,u:0.0},{v:0.75,u:0.0},{v:1.0,u:0.0}],
   //   [{v:0.25,u:0.25},{v:0.5,u:0.25},{v:0.75,u:0.25},{v:1.0,u:0.25}],
   //   [{v:0.25,u:0.5},{v:0.5,u:0.5},{v:0.75,u:0.5},{v:1.0,u:0.5}],
   //   [{v:0.25,u:0.75},{v:0.5,u:0.75},{v:0.75,u:0.75},{v:1.0,u:0.75}]
   // ];
+ 
+  // 5 is quite low in the yellows
+  var THRESHOLD = 5;
 
-  var scaleData = makeScaleData(N);
+  var scaleData, arcScaleData, closest, n;
+  
+  n = 2;
+  while (true) {
+    var data = makeScaleData(n);
+    var c = colorDiff(data);
+    if (c.minD >= THRESHOLD) {
+      scaleData = data;
+      closest = c;
+    } else {
+      break;
+    }
+    n++;
+  }
+  console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
 
   // var arcScaleData = [
   //   [{v:0.25,u:0.0},{v:0.5,u:0.0},{v:0.75,u:0.0},{v:1.0,u:0.0}],
@@ -206,11 +229,23 @@ function main(){
   //   [{v:0.5,u:0.75}]
   // ];
 
-  var arcScaleData = makeArcScaleData(N);
+  n = 2;
+  while (true) {
+    var data = makeArcScaleData(n);
+    var c = colorDiff(data);
+    if (c.minD >= THRESHOLD) {
+      arcScaleData = data;
+      closest = c;
+    } else {
+      break;
+    }
+    n++;
+  }
+  console.log("The two closest arc colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
 
-  makeHeatmap(0,0,250,scaleData, function(d){ return uSL(d.v);}, "SquareWhite");
-  makeArcmap(300,0,250,arcScaleData, function(d){ return uSL(d.v);}, "ArcWhite");
 
+  makeHeatmap(0,0,250,scaleData, uSL, "SquareWhite");
+  makeArcmap(300,0,250,arcScaleData, uSL, "ArcWhite");
 }
 
 //Uncertainty maps
