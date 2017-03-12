@@ -2,7 +2,6 @@
 //Global Variables
 
 var svg = d3.select("body").append("svg");
-//var map = colorbrewer.Spectral[9];
 
 // viridis
 var NUM_STEPS = 1000;
