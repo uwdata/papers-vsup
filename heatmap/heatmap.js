@@ -2,7 +2,6 @@
 //Global Variables
 
 var svg = d3.select("body").append("svg");
-//var map = colorbrewer.Spectral[9];
 
 // viridis
 var NUM_STEPS = 1000;
@@ -38,7 +37,7 @@ function makeHeatmap(x,y,size,data,z,name){
     .attr("y", function(d){ return d.r*h;})
     .attr("width",w)
     .attr("height",h)
-    .attr("fill", function(d){ return z(d);});
+    .attr("fill", function(d){ return z(d.v);});
 }
 
 function makeArcmap(x,y,size,data,z,name){
@@ -63,7 +62,7 @@ function makeArcmap(x,y,size,data,z,name){
     .append("path")
     .datum(function(d,i){ d.c = i; return d; })
     .attr("d", function(d){ return makeArc(d,size,data.length,data[d.r].length)();})
-    .attr("fill", function(d){ return z(d);});
+    .attr("fill", function(d){ return z(d.v);});
 }
 
 function makeArc(d,size,rows,cols){
@@ -122,6 +121,7 @@ function minDist(colorRamp){
   return {"minD": minD, "c1": c1, "c2": c2};
 }
 
+// TODO: delete
 function checkMap(mapName){
   //Takes a d3 selection containing all the marks we care about
   //Checks to make sure that colors it contains are sufficiently far apart.
@@ -141,6 +141,50 @@ function checkMap(mapName){
     return closest.minD>5;
 }
 
+/**
+ * Uncertainty is in the range from 0 to 1-1/n.
+ * Value is in the range of 0 to 1. 
+ */
+function makeScaleData(n) {
+  var arr = [];
+  for (var u = 0; u < n; u++) {
+    var row = [];
+    for (var v = 0; v < n; v++) {
+      row.push({u: u/n, v: v/(n - 1)});
+    }
+    arr.push(row);
+  }
+  return arr;
+}
+
+/**
+ * Value is in the range 0 to 1.
+ * Uncertainty is in the range 0 to 1-1/n.
+ */
+function makeArcScaleData(n) {
+  var arr = [];
+
+  for (var u = 0; u < n - 1; u++) {
+    var row = [];
+    for (var v = 0; v < n - u; v++) {
+      row.push({u: u/n, v: v/(n - 1 - u)});
+    }
+    arr.push(row);
+  }
+
+  // tip
+  arr.push([{u: (n-1)/n, v:1/n}]);
+
+  return arr;
+}
+
+function colorDiff(scaleData) {
+  var colors = scaleData.reduce(function(arr, curr) {
+    return arr.concat(curr.map(uSL));
+  }, []);
+  return minDist(colors);
+}
+
 function main(){
   //Create all relevant maps
 
@@ -152,43 +196,56 @@ function main(){
   4) Legends for both square and arc maps.
   */
 
-  var data = [
-    [1,2,3],
-    [4,5,6],
-    [7,8,9]
-  ];
+  // var scaleData = [
+  //   [{v:0.25,u:0.0},{v:0.5,u:0.0},{v:0.75,u:0.0},{v:1.0,u:0.0}],
+  //   [{v:0.25,u:0.25},{v:0.5,u:0.25},{v:0.75,u:0.25},{v:1.0,u:0.25}],
+  //   [{v:0.25,u:0.5},{v:0.5,u:0.5},{v:0.75,u:0.5},{v:1.0,u:0.5}],
+  //   [{v:0.25,u:0.75},{v:0.5,u:0.75},{v:0.75,u:0.75},{v:1.0,u:0.75}]
+  // ];
+ 
+  // 5 is quite low in the yellows
+  var THRESHOLD = 5;
 
-  var uncertainty = [
-    [0,0.1,0.2],
-    [0.3,0.4,0.5],
-    [0.6,0.7,0.8]
-  ];
+  var scaleData, arcScaleData, closest, n;
+  
+  n = 2;
+  while (true) {
+    var data = makeScaleData(n);
+    var c = colorDiff(data);
+    if (c.minD >= THRESHOLD) {
+      scaleData = data;
+      closest = c;
+    } else {
+      break;
+    }
+    n++;
+  }
+  console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
 
-  var arcData = [
-    [1,2,3],
-    [4,5],
-    [6]
-  ];
+  // var arcScaleData = [
+  //   [{v:0.25,u:0.0},{v:0.5,u:0.0},{v:0.75,u:0.0},{v:1.0,u:0.0}],
+  //   [{v:0.25,u:0.25},{v:0.5,u:0.25},{v:1.0,u:0.25}],
+  //   [{v:0.25,u:0.5},{v:1.0,u:0.5}],
+  //   [{v:0.5,u:0.75}]
+  // ];
 
-  var scaleData = [
-    [{v:0.25,u:0.0},{v:0.5,u:0.0},{v:0.75,u:0.0},{v:1.0,u:0.0}],
-    [{v:0.25,u:0.25},{v:0.5,u:0.25},{v:0.75,u:0.25},{v:1.0,u:0.25}],
-    [{v:0.25,u:0.5},{v:0.5,u:0.5},{v:0.75,u:0.5},{v:1.0,u:0.5}],
-    [{v:0.25,u:0.75},{v:0.5,u:0.75},{v:0.75,u:0.75},{v:1.0,u:0.75}]
-  ];
+  n = 2;
+  while (true) {
+    var data = makeArcScaleData(n);
+    var c = colorDiff(data);
+    if (c.minD >= THRESHOLD) {
+      arcScaleData = data;
+      closest = c;
+    } else {
+      break;
+    }
+    n++;
+  }
+  console.log("The two closest arc colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
 
-  var arcScaleData = [
-    [{v:0.25,u:0.0},{v:0.5,u:0.0},{v:0.75,u:0.0},{v:1.0,u:0.0}],
-    [{v:0.25,u:0.25},{v:0.5,u:0.25},{v:1.0,u:0.25}],
-    [{v:0.25,u:0.5},{v:1.0,u:0.5}],
-    [{v:0.5,u:0.75}]
-  ];
 
-  z.domain([d3.min(d3.min(data)),d3.max(d3.max(data))]);
-
-  makeHeatmap(0,0,250,scaleData, function(d){ return uSL(d.v);}, "SquareWhite");
-  makeArcmap(300,0,250,arcScaleData, function(d){ return uSL(d.v);}, "ArcWhite");
-
+  makeHeatmap(0,0,250,scaleData, uSL, "SquareWhite");
+  makeArcmap(300,0,250,arcScaleData, uSL, "ArcWhite");
 }
 
 //Uncertainty maps
