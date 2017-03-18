@@ -169,7 +169,7 @@ function makeArcScaleData(n) {
   while(perRow>=2){
     var row = [];
     for (var v = 0; v < perRow; v++) {
-      row.push({u: u/numRows, v: v/(perRow)});
+      row.push({u: u/numRows, v: v/(perRow-1)});
     }
     arr.push(row);
     u++;
@@ -208,7 +208,7 @@ function main(){
   // ];
 
   // 5 is quite low in the yellows
-  var THRESHOLD = 10;
+  var THRESHOLD = 5;
 
   var scaleData, arcScaleData, closest, n;
 
