@@ -163,7 +163,7 @@ function makeScaleData(n) {
  */
 function makeArcScaleData(n) {
   var arr = [];
-  var perRow = n;
+  var perRow = n%2==0 ? n : n-1;
   var numRows = Math.floor(Math.log2(n));
   var u = 0;
   while(perRow>=2){
@@ -208,7 +208,7 @@ function main(){
   // ];
 
   // 5 is quite low in the yellows
-  var THRESHOLD = 5;
+  var THRESHOLD = 10;
 
   var scaleData, arcScaleData, closest, n;
 
