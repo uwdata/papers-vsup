@@ -143,7 +143,7 @@ function checkMap(mapName){
 
 /**
  * Uncertainty is in the range from 0 to 1-1/n.
- * Value is in the range of 0 to 1. 
+ * Value is in the range of 0 to 1.
  */
 function makeScaleData(n) {
   var arr = [];
@@ -163,13 +163,17 @@ function makeScaleData(n) {
  */
 function makeArcScaleData(n) {
   var arr = [];
-
-  for (var u = 0; u < n - 1; u++) {
+  var perRow = n;
+  var numRows = Math.floor(Math.log2(n));
+  var u = 0;
+  while(perRow>=2){
     var row = [];
-    for (var v = 0; v < n - u; v++) {
-      row.push({u: u/n, v: v/(n - 1 - u)});
+    for (var v = 0; v < perRow; v++) {
+      row.push({u: u/numRows, v: v/(perRow)});
     }
     arr.push(row);
+    u++;
+    perRow/=2;
   }
 
   // tip
@@ -202,12 +206,12 @@ function main(){
   //   [{v:0.25,u:0.5},{v:0.5,u:0.5},{v:0.75,u:0.5},{v:1.0,u:0.5}],
   //   [{v:0.25,u:0.75},{v:0.5,u:0.75},{v:0.75,u:0.75},{v:1.0,u:0.75}]
   // ];
- 
+
   // 5 is quite low in the yellows
   var THRESHOLD = 5;
 
   var scaleData, arcScaleData, closest, n;
-  
+
   n = 2;
   while (true) {
     var data = makeScaleData(n);
