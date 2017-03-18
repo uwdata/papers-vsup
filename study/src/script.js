@@ -1,7 +1,25 @@
 /*
-Code for Turk Experiments for analysis of Value Suppressing Maps for Uncertain Data
+Code for Turk Experiments for analysis of Value Suppressing Uncertainty Maps
 
+IVs:
 
+1. Map type
+A. Juxtaposed Map: Two heatmaps, one showing value, the other uncertainty.
+Color ramps have as small a bin size as possible, down to JND 5.0 in CIELAB.
+B. Superimposed Map: One heatmap, bivariate map down to as small a bin size as possible.
+Will be coarser than the juxtaposed map, since there's inteference between the two variables.
+C. VSUP: One heatmap, bivariate, but with uncertain values increasing aliased together.
+
+Procedure:
+1. Get Consent.
+2. Tutorial showing examples of tasks, as well as a general primer on uncertainty.
+   In this case, we'll be using variability as our uncertainty measure.
+3. Identification tasks. Given a heatmap, and a location (highlighted or indicated),
+   what is the value, and what is the uncertainty?
+   or: find min and max locations
+4. Roulette tasks: Given a heatmap, and n tokens, place them such that you maximize the E.V.
+   Include both gain and loss framings.
+5. Collect demographic information, including risk assay.
 */
 
 var startTime;
@@ -100,6 +118,10 @@ function finishTask(){
   //When we're finished with all tasks.
   main.selectAll("*").remove();
   postTest();
+}
+
+function riskAversion(fromElement){
+  //A risk aversion assay, from
 }
 
 function postTest(){
