@@ -200,6 +200,34 @@ function makeArcScaleData(n) {
   return arr;
 }
 
+function makeScaleFunction(scaleData){
+  //a quantized scale function from a given scale
+  return function f(d){
+    var u,v;
+    var i = 0;
+    var j = 0;
+
+    //find the right uncertainty row
+    while(scaleData[i][j].u<d.u && i<scaleData.length-1){
+      i++;
+    }
+
+    //find the right value column
+    while(scaleData[i][j].v<d.v && j<scaleData[i].length-1){
+      j++;
+    }
+
+    u = scaleData[i][j].u;
+    v = scaleData[i][j].v;
+
+    var cScale = d3.scaleQuantize().domain([0,1]).range(map);
+    var steps = map.length;
+    var c = (d3.hsl(cScale(v)));
+    var iVal = d3.scaleLinear().domain([0,1]).range([0.0,1.0]);
+    return d3.interpolateLab(c,"white")(iVal(u));
+  }
+}
+
 function colorDiff(scaleData) {
   var colors = scaleData.reduce(function(arr, curr) {
     return arr.concat(curr.map(uSL));
@@ -268,6 +296,10 @@ function main(){
 
   makeHeatmap(0,0,250,scaleData, uSL, "SquareWhite");
   makeArcmap(300,0,250,arcScaleData, uSL, "ArcWhite");
+
+  var exampleData = randomData(10,10);
+  makeHeatmap(0,300,250,exampleData, makeScaleFunction(scaleData), "exampleArc");
+  makeHeatmap(300,300,250,exampleData,makeScaleFunction(arcScaleData),"exampleSquare");
 }
 
 //Uncertainty maps
