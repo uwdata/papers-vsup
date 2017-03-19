@@ -121,6 +121,24 @@ function minDist(colorRamp){
   return {"minD": minD, "c1": c1, "c2": c2};
 }
 
+function distanceMatrix(scaleData){
+  var colors = scaleData.reduce(function(arr, curr) {
+    return arr.concat(curr.map(uSL));
+  }, []);
+  //What's the distance between all colors in the ramp?
+  var matrix = [colors.length];
+
+  for(var i = 0;i<colors.length;i++){
+    matrix[i] = [colors.length];
+    //give the row a label
+    matrix[i].name = colors[i];
+    for(var j = 0;j<colors.length;j++){
+      matrix[i][j] = cDist(colors[i],colors[j]);
+    }
+  }
+  return matrix;
+}
+
 // TODO: delete
 function checkMap(mapName){
   //Takes a d3 selection containing all the marks we care about
@@ -208,7 +226,7 @@ function main(){
   // ];
 
   // 5 is quite low in the yellows
-  var THRESHOLD = 5;
+  var THRESHOLD = 8;
 
   var scaleData, arcScaleData, closest, n;
 
