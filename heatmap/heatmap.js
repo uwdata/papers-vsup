@@ -228,78 +228,66 @@ function makeScaleFunction(scaleData){
   }
 }
 
-function colorDiff(scaleData) {
+function numBins(scaleData){
+  var colors = scaleData.reduce(function(arr, curr) {
+    return arr.concat(curr.map(uSL));
+  }, []);
+  return colors.length;
+}
+
+function colorDiff(scaleData){
   var colors = scaleData.reduce(function(arr, curr) {
     return arr.concat(curr.map(uSL));
   }, []);
   return minDist(colors);
 }
 
+function makeMaps(threshold){
+    //Create all relevant maps
+    var DEFAULT_THRESHOLD = 5;
+    var THRESHOLD = threshold ? threshold : DEFAULT_THRESHOLD;
+    var scaleData, arcScaleData, closest, n;
+
+    n = 2;
+    while (true) {
+      var data = makeScaleData(n);
+      var c = colorDiff(data);
+      if (c.minD >= THRESHOLD) {
+        scaleData = data;
+        closest = c;
+      }
+      else {
+        break;
+      }
+      n++;
+    }
+    console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+    n = 2;
+    while (true) {
+      var data = makeArcScaleData(n);
+      var c = colorDiff(data);
+      if (c.minD >= THRESHOLD) {
+        arcScaleData = data;
+        closest = c;
+      } else {
+        break;
+      }
+      n++;
+    }
+    console.log("The two closest arc colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+
+    return {square:scaleData, arc:arcScaleData};
+}
+
 function main(){
-  //Create all relevant maps
+  var maps = makeMaps(18);
 
-  /*TODO
-  We'll need:
-  1) Juxtaposed Data/Uncertainty maps
-  2) Integrated map with regular "square" mapping
-  3) Integrated map with "arc" mapping
-  4) Legends for both square and arc maps.
-  */
-
-  // var scaleData = [
-  //   [{v:0.25,u:0.0},{v:0.5,u:0.0},{v:0.75,u:0.0},{v:1.0,u:0.0}],
-  //   [{v:0.25,u:0.25},{v:0.5,u:0.25},{v:0.75,u:0.25},{v:1.0,u:0.25}],
-  //   [{v:0.25,u:0.5},{v:0.5,u:0.5},{v:0.75,u:0.5},{v:1.0,u:0.5}],
-  //   [{v:0.25,u:0.75},{v:0.5,u:0.75},{v:0.75,u:0.75},{v:1.0,u:0.75}]
-  // ];
-
-  // 5 is quite low in the yellows
-  var THRESHOLD = 8;
-
-  var scaleData, arcScaleData, closest, n;
-
-  n = 2;
-  while (true) {
-    var data = makeScaleData(n);
-    var c = colorDiff(data);
-    if (c.minD >= THRESHOLD) {
-      scaleData = data;
-      closest = c;
-    } else {
-      break;
-    }
-    n++;
-  }
-  console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
-
-  // var arcScaleData = [
-  //   [{v:0.25,u:0.0},{v:0.5,u:0.0},{v:0.75,u:0.0},{v:1.0,u:0.0}],
-  //   [{v:0.25,u:0.25},{v:0.5,u:0.25},{v:1.0,u:0.25}],
-  //   [{v:0.25,u:0.5},{v:1.0,u:0.5}],
-  //   [{v:0.5,u:0.75}]
-  // ];
-
-  n = 2;
-  while (true) {
-    var data = makeArcScaleData(n);
-    var c = colorDiff(data);
-    if (c.minD >= THRESHOLD) {
-      arcScaleData = data;
-      closest = c;
-    } else {
-      break;
-    }
-    n++;
-  }
-  console.log("The two closest arc colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
-
-
-  makeHeatmap(0,0,250,scaleData, uSL, "SquareWhite");
-  makeArcmap(300,0,250,arcScaleData, uSL, "ArcWhite");
+  makeHeatmap(0,0,250,maps.square, uSL, "SquareWhite");
+  makeArcmap(300,0,250,maps.arc, uSL, "ArcWhite");
 
   var exampleData = randomData(10,10);
-  makeHeatmap(0,300,250,exampleData, makeScaleFunction(scaleData), "exampleArc");
-  makeHeatmap(300,300,250,exampleData,makeScaleFunction(arcScaleData),"exampleSquare");
+  makeHeatmap(0,300,250,exampleData, makeScaleFunction(maps.square), "exampleSquare");
+  makeHeatmap(300,300,250,exampleData,makeScaleFunction(maps.arc),"exampleArc");
 }
 
 //Uncertainty maps
