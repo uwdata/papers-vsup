@@ -255,40 +255,40 @@ function colorDiff(scaleData){
 }
 
 function makeMaps(threshold){
-    //Create all relevant maps
-    var DEFAULT_THRESHOLD = 5;
-    var THRESHOLD = threshold ? threshold : DEFAULT_THRESHOLD;
-    var scaleData, arcScaleData, closest, n;
+  //Create all relevant maps
+  var DEFAULT_THRESHOLD = 5;
+  var THRESHOLD = threshold ? threshold : DEFAULT_THRESHOLD;
+  var scaleData, arcScaleData, closest, n;
 
-    n = 2;
-    while (true) {
-      var data = makeScaleData(n);
-      var c = colorDiff(data);
-      if (c.minD >= THRESHOLD) {
-        scaleData = data;
-        closest = c;
-      }
-      else {
-        break;
-      }
-      n++;
+  n = 2;
+  while (true) {
+    var data = makeScaleData(n);
+    var c = colorDiff(data);
+    if (c.minD >= THRESHOLD) {
+      scaleData = data;
+      closest = c;
     }
-    console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
-    n = 2;
-    while (true) {
-      var data = makeArcScaleData(n);
-      var c = colorDiff(data);
-      if (c.minD >= THRESHOLD) {
-        arcScaleData = data;
-        closest = c;
-      } else {
-        break;
-      }
-      n++;
+    else {
+      break;
     }
-    console.log("The two closest arc colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+    n++;
+  }
+  console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+  n = 2;
+  while (true) {
+    var data = makeArcScaleData(n);
+    var c = colorDiff(data);
+    if (c.minD >= THRESHOLD) {
+      arcScaleData = data;
+      closest = c;
+    } else {
+      break;
+    }
+    n++;
+  }
+  console.log("The two closest arc colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
 
-    return {square:scaleData, arc:arcScaleData};
+  return {square:scaleData, arc:arcScaleData};
 }
 
 function main(){
