@@ -214,7 +214,6 @@ function makeArcScaleData(n) {
 
 function makeScaleFunction(scaleData){
   var cScale = d3.scaleQuantize().domain([0,1]).range(map);
-  var iVal = d3.scaleLinear().domain([0,1]).range([0.0,1.0]);
 
   //a quantized scale function from a given scale
   return function f(d){
@@ -222,21 +221,17 @@ function makeScaleFunction(scaleData){
     var i = 0;
     var j = 0;
 
-    //find the right uncertainty row
-    while(scaleData[i][j].u<d.u && i<scaleData.length - 1){
-      i++;
-    }
+    var rows = d3.scaleQuantize().domain([0,1]).range(scaleData);
+    var row = rows(d.u);
 
-    //find the right value column
-    while(scaleData[i][j].v<d.v && j<scaleData[i].length - 1){
-      j++;
-    }
+    var cols = d3.scaleQuantize().domain([0,1]).range(row);
+    var value = cols(d.v);
 
-    u = scaleData[i][j].u;
-    v = scaleData[i][j].v;
+    u = value.u;
+    v = value.v;
 
     var c = (d3.hsl(cScale(v)));
-    return d3.interpolateLab(c,"white")(u);  // iVal was identity so I removed it
+    return d3.interpolateLab(c,"white")(u);
   }
 }
 
