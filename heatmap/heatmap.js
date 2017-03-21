@@ -70,10 +70,10 @@ function makeArc(d,size,rows,cols){
   var radius = d3.scaleLinear().domain([0,rows]).range([size,0]);
 
   var arc = d3.arc()
-  .innerRadius(radius(d.r+1))
-  .outerRadius(radius(d.r))
-  .startAngle(angle(d.c))
-  .endAngle(angle(d.c+1));
+    .innerRadius(radius(d.r+1))
+    .outerRadius(radius(d.r))
+    .startAngle(angle(d.c))
+    .endAngle(angle(d.c+1));
 
   return arc;
 }
@@ -213,6 +213,9 @@ function makeArcScaleData(n) {
 }
 
 function makeScaleFunction(scaleData){
+  var cScale = d3.scaleQuantize().domain([0,1]).range(map);
+  var iVal = d3.scaleLinear().domain([0,1]).range([0.0,1.0]);
+
   //a quantized scale function from a given scale
   return function f(d){
     var u,v;
@@ -220,23 +223,20 @@ function makeScaleFunction(scaleData){
     var j = 0;
 
     //find the right uncertainty row
-    while(scaleData[i][j].u<d.u && i<scaleData.length-1){
+    while(scaleData[i][j].u<d.u && i<scaleData.length - 1){
       i++;
     }
 
     //find the right value column
-    while(scaleData[i][j].v<d.v && j<scaleData[i].length-1){
+    while(scaleData[i][j].v<d.v && j<scaleData[i].length - 1){
       j++;
     }
 
     u = scaleData[i][j].u;
     v = scaleData[i][j].v;
 
-    var cScale = d3.scaleQuantize().domain([0,1]).range(map);
-    var steps = map.length;
     var c = (d3.hsl(cScale(v)));
-    var iVal = d3.scaleLinear().domain([0,1]).range([0.0,1.0]);
-    return d3.interpolateLab(c,"white")(iVal(u));
+    return d3.interpolateLab(c,"white")(u);  // iVal was identity so I removed it
   }
 }
 
