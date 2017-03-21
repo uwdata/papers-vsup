@@ -80,12 +80,24 @@ function makeArc(d,size,rows,cols){
 
 //Data loading and generation
 
+function gradientData(rows, cols) {
+  var data = [];
+  for(var i = 0; i<rows; i++){
+    data[i] = [];
+    for(var j = 0; j<cols; j++){
+      data[i].push({ u: i/(rows-1), v: j/(cols-1)});
+    }
+  }
+
+  return data;
+}
+
 function randomData(rows,cols){
   //uniform random data
   var data = [];
-  for(var i = 0;i<rows;i++){
+  for(var i = 0; i<rows; i++){
     data[i] = [];
-    for(var j=0;j<cols;j++){
+    for(var j = 0; j<cols; j++){
       data[i].push({ u: Math.random(), v: Math.random()});
     }
   }
@@ -281,11 +293,10 @@ function makeMaps(threshold){
 
 function main(){
   var maps = makeMaps(18);
+  makeHeatmap(0,0,250,maps.square, makeScaleFunction(maps.square), "legendSquare");
+  makeArcmap(300,0,250,maps.arc,makeScaleFunction(maps.arc),"legendArc");
 
-  makeHeatmap(0,0,250,maps.square, uSL, "SquareWhite");
-  makeArcmap(300,0,250,maps.arc, uSL, "ArcWhite");
-
-  var exampleData = randomData(10,10);
+  var exampleData = gradientData(10,10);
   makeHeatmap(0,300,250,exampleData, makeScaleFunction(maps.square), "exampleSquare");
   makeHeatmap(300,300,250,exampleData,makeScaleFunction(maps.arc),"exampleArc");
 }
