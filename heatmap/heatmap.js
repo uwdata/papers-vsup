@@ -293,12 +293,16 @@ function makeMaps(threshold){
 
 function main(){
   var maps = makeMaps(18);
-  makeHeatmap(0,0,250,maps.square, makeScaleFunction(maps.square), "legendSquare");
-  makeArcmap(300,0,250,maps.arc,makeScaleFunction(maps.arc),"legendArc");
 
-  var exampleData = gradientData(10,10);
-  makeHeatmap(0,300,250,exampleData, makeScaleFunction(maps.square), "exampleSquare");
-  makeHeatmap(300,300,250,exampleData,makeScaleFunction(maps.arc),"exampleArc");
+  var squareScale = makeScaleFunction(maps.square);
+  var arcScale = makeScaleFunction(maps.arc);
+
+  makeHeatmap(0,0,250,maps.square, squareScale, "legendSquare");
+  makeArcmap(300,0,250,maps.arc,arcScale,"legendArc");
+
+  var exampleData = gradientData(20,20);
+  makeHeatmap(0,300,250,exampleData, squareScale, "exampleSquare");
+  makeHeatmap(300,300,250,exampleData,arcScale,"exampleArc");
 }
 
 //Uncertainty maps
