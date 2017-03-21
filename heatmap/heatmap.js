@@ -7,6 +7,12 @@ var svg = d3.select("body").append("svg");
 var NUM_STEPS = 1000;
 var map = d3.range(NUM_STEPS).map(d => d3.interpolateViridis(d/(NUM_STEPS-1)));
 
+//Other maps to test:
+//inferno
+//var map = d3.range(NUM_STEPS).map(d => d3.interpolateInferno(d/(NUM_STEPS-1)));
+//colorbrewer spectral
+//var map = d3.schemeSpectral[11];
+
 var z = d3.scaleQuantize().range(map);
 
 
@@ -193,7 +199,7 @@ function makeScaleData(n) {
  */
 function makeArcScaleData(n) {
   var arr = [];
-  var perRow = n%2==0 ? n : n-1;
+  var perRow = n;
   var numRows = Math.floor(Math.log2(n));
   var u = 0;
   while(perRow>=2){
@@ -203,7 +209,7 @@ function makeArcScaleData(n) {
     }
     arr.push(row);
     u++;
-    perRow/=2;
+    perRow= Math.floor(perRow/2);
   }
 
   // tip
@@ -295,7 +301,8 @@ function main(){
   makeHeatmap(0,0,250,maps.square, squareScale, "legendSquare");
   makeArcmap(300,0,250,maps.arc,arcScale,"legendArc");
 
-  var exampleData = gradientData(20,20);
+  //var exampleData = gradientData(100,100);
+  var exampleData = randomData(10,10);
   makeHeatmap(0,300,250,exampleData, squareScale, "exampleSquare");
   makeHeatmap(300,300,250,exampleData,arcScale,"exampleArc");
 }
