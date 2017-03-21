@@ -172,9 +172,15 @@ function checkMap(mapName){
       }
     });
 
-    var closest = minDist(colorList);
-    console.log( "The two closest colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
-    return closest.minD>5;
+    if(colorList.length==0){
+      console.log("No valid color map");
+      return false;
+    }
+    else{
+      var closest = minDist(colorList);
+      console.log( "The two closest colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+      return closest.minD>5;
+    }
 }
 
 /**
@@ -274,7 +280,12 @@ function makeMaps(threshold){
     }
     n++;
   }
-  console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+  if(!closest){
+    console.log("No valid matrix color map at threshold "+THRESHOLD);
+  }
+  else{
+    console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+  }
   n = 2;
   while (true) {
     var data = makeArcScaleData(n);
@@ -287,7 +298,12 @@ function makeMaps(threshold){
     }
     n++;
   }
-  console.log("The two closest arc colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+  if(!closest){
+    console.log("No valid arc color map at threshold "+THRESHOLD);
+  }
+  else{
+    console.log("The two closest arc colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+  }
 
   return {square:scaleData, arc:arcScaleData};
 }
