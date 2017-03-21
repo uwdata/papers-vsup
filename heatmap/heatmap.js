@@ -295,7 +295,7 @@ function main(){
   makeHeatmap(0,0,250,maps.square, squareScale, "legendSquare");
   makeArcmap(300,0,250,maps.arc,arcScale,"legendArc");
 
-  var exampleData = randomData(20,20);
+  var exampleData = randomData(10,10);
   makeHeatmap(0,300,250,exampleData, squareScale, "exampleSquare");
   makeHeatmap(300,300,250,exampleData,arcScale,"exampleArc");
 }
