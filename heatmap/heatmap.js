@@ -80,12 +80,24 @@ function makeArc(d,size,rows,cols){
 
 //Data loading and generation
 
+function gradientData(rows, cols) {
+  var data = [];
+  for(var i = 0; i<rows; i++){
+    data[i] = [];
+    for(var j = 0; j<cols; j++){
+      data[i].push({ u: i/(rows-1), v: j/(cols-1)});
+    }
+  }
+
+  return data;
+}
+
 function randomData(rows,cols){
   //uniform random data
   var data = [];
-  for(var i = 0;i<rows;i++){
+  for(var i = 0; i<rows; i++){
     data[i] = [];
-    for(var j=0;j<cols;j++){
+    for(var j = 0; j<cols; j++){
       data[i].push({ u: Math.random(), v: Math.random()});
     }
   }
@@ -297,7 +309,7 @@ function main(){
   makeHeatmap(0,0,250,scaleData, uSL, "SquareWhite");
   makeArcmap(300,0,250,arcScaleData, uSL, "ArcWhite");
 
-  var exampleData = randomData(10,10);
+  var exampleData = gradientData(10,10);
   makeHeatmap(0,300,250,exampleData, makeScaleFunction(scaleData), "exampleArc");
   makeHeatmap(300,300,250,exampleData,makeScaleFunction(arcScaleData),"exampleSquare");
 }
