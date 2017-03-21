@@ -119,13 +119,7 @@
 	% ran a study
 	% results indicate X
 	
-	Uncertainty is a vital part of many datasets, and should be conveyed accurately to the analyst.
-	Directly incorporating uncertainty requires that designers construct bivariate mappings that encode value and uncertainty simultaneously.
-	In this paper, we present a technique for generating such bivariate maps for uncertainty, ``Value-suppressing uncertainty maps'' (VSUMs).
-	As opposed to traditional bivariate maps, VSUMs make the informed choice to alias together values when uncertainty is high, in order to afford greater discriminability between categories when uncertainty is low. That is, certain data is intrinsically easier to visually disambiguate than uncertain data.
-	Values with low uncertainty can be more precisely compared, whereas similar values with higher uncertainty will be harder to differentiate in accordance with their variability.
-	By making informed decisions about where to create category bins, VSUMs make better use of the limited budget of discriminable marks in bivariate maps, and dissuade analysts from making decisions based on data with sufficiently high uncertainty.
-	We present several examples of VSUMs, as well as a crowd-sourced evaluation showing that, compared to more traditional bivariate maps, VSUMs promote decision-making that places greater weight on uncertainty information compared to traditional bivariate maps.
+Uncertainty is a vital concern in many datasets. Visualizations often use bivariate mappings to encode value and uncertainty simultaneously. Due to interference between visual channels, these bivariate maps are often limited in resolution. We contribute Value-Suppressing Uncertainty Maps (VSUMs), an encoding technique that intentionally impairs value discrimination as uncertainty increases. In contrast to traditional bivariate maps, VSUMs alias values when uncertainty is high: expected values with lower uncertainty can be more precisely compared, whereas similar values with higher uncertainty are made harder to differentiate. By making informed binning decisions, VSUMs seek to better use the limited budget of discriminable marks in bivariate maps, and dissuade analysts from making decisions based on data with high uncertainty. We demonstrate several examples of VSUMs and present a crowdsourced evaluation showing that, compared to traditional bivariate maps, VSUMs bias analysts to more heavily weight uncertainty information in decision-making tasks.
 	
 } % end of abstract
 
@@ -172,7 +166,7 @@
 
 Uncertainty is an inescapable component of collecting, presenting, and using data. A common goal in the communication of uncertainty is promoting \textbf{uncertainty-aware decisions}--- that is, the audience should be aware of the risks and rewards of certain decisions, modulate their confidence in their conclusions, and perhaps refrain from making a decision at all if there is too much uncertainty. In general, a goal of designers of visualizations of uncertain data is the \emph{information fusion} of data and uncertainty~\cite{riveiro2007evaluation}. A way that designers can contribute to this goal is by ensuring that uncertainty information is \textbf{well-integrated} with the rest of the data. That is, it should be difficult to discount or ignore the uncertainty in a dataset. Simultaneous presentation of uncertainty and value necessitates the construction of a bivariate map--- a relation, in terms of visual variables, between a 2-tuple $(value$,$uncertainty)$ and a set of marks.
 
-In this paper, we present \textbf{Value-Suppressing Uncertainty Maps} (VSUMs) for integrating data and uncertainty information in thematic maps. VSUMs intentionally alias together data values with high uncertainty, affording greater discriminability as certainty increases. Rather than a square bivariate map, with unique outputs for each relevant combination of data and uncertainty, VSUMs can be thought of as arcs: as uncertainty increases, values are mapped to smaller and smaller sets of outputs, culminating in a singularity where all inputs are mapped to an identical, highly uncertain mark regardless of their data value. Figure X shows an example of a VSUM, compared to a more traditional bivariate map. In this work, we describe the motivations behind the use of VSUMs, examples of their utility for decision-making under uncertainty, and validate that VSUMs in a crowd-sourced experiment.
+In this paper, we present \textbf{Value-Suppressing Uncertainty Maps} (VSUMs) for integrating data and uncertainty information in thematic maps. VSUMs intentionally alias together data values with high uncertainty, affording greater discriminability as certainty increases. Rather than a traditional two dimensional bivariate map, with unique outputs for each relevant combination of data and uncertainty, VSUMs can be thought of as arcs: as uncertainty increases, values are mapped to smaller and smaller sets of outputs, culminating in a singularity where all inputs are mapped to an identical, highly uncertain mark regardless of their data value. Figure X shows an example of a VSUM, compared to a more traditional bivariate map. In this work, we describe the motivations behind the use of VSUMs, examples of their utility for decision-making under uncertainty, and validate that VSUMs in a crowd-sourced experiment.
  
 \section{Related Works}
 
@@ -191,6 +185,7 @@ MacEachren et al.~\cite{maceachren2012visual} evaluate a number of visual variab
 
 \section{Value-Suppressing Uncertainty Maps}
 
+Correll et al. use a version of VSUMs in their LayerCake genomics visualization tool \cite{correll2015layercake,correll2011visualizing}, where the reads with insufficient certainty are mapped to a smaller and smaller set of increasing grey colors, creating the effect of uncertain values retreating into ``fog'' while highly certain values remain prominent.
 
 \subsection{Design}
 
