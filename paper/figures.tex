@@ -10,8 +10,18 @@
 \newcommand{\teaserFig}{
   \teaser{
 		\centering
-		\includegraphics[width=1.5in]{sample.eps}
+		\includegraphics[width=0.9\textwidth]{example.pdf}
 		\caption{Lookit! Lookit!}
 		\label{fig:teaser}
 	}
+}
+
+\newcommand{\exampleFig}{
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\columnwidth]{example.pdf}
+	\caption{A comparison between a standard bivariate map and a VSUM. Both use the same visual channels to encode value (position along the Viridis color map) and uncertainty (lightness and saturation), and have an equal standard of perceptual discriminability (at least 18 units of distance in CIELAB color space between colors). However, highly uncertain values result in colors that are very close together in the bivariate case, meaning the full bivariate map is only 9 bins under these constraints--- a 4x4 map would result in colors that are perceptually too close together. By contrast, the VSUM intentionally reduces bins when uncertainty is high, eventually aliasing all highly uncertain values to the same color. This decision affords more distinct colors in other regions of the map, and so an increase in overall bins to 15. The resulting map suppresses the value of uncertain data, but increases the discriminability of highly certain data.}
+	\label{fig:example}
+\end{figure}
+
 }

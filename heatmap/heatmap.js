@@ -318,7 +318,7 @@ function main(){
   makeArcmap(300,0,250,maps.arc,arcScale,"legendArc");
 
   //var exampleData = gradientData(100,100);
-  var exampleData = randomData(10,10);
+  var exampleData = randomData(5,5);
   makeHeatmap(0,300,250,exampleData, squareScale, "exampleSquare");
   makeHeatmap(300,300,250,exampleData,arcScale,"exampleArc");
 }
