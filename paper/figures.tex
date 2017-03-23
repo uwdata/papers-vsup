@@ -23,5 +23,20 @@
 	\caption{A comparison between a standard bivariate map and a VSUM. Both use the same visual channels to encode value (position along the Viridis color map) and uncertainty (lightness and saturation), and have an equal standard of perceptual discriminability (at least 18 units of distance in CIELAB color space between colors). However, highly uncertain values result in colors that are very close together in the bivariate case, meaning the full bivariate map is only 9 bins under these constraints--- a 4x4 map would result in colors that are perceptually too close together. By contrast, the VSUM intentionally reduces bins when uncertainty is high, eventually aliasing all highly uncertain values to the same color. This decision affords more distinct colors in other regions of the map, and so an increase in overall bins to 15. The resulting map suppresses the value of uncertain data, but increases the discriminability of certain data.}
 	\label{fig:example}
 \end{figure}
+}
 
+\newcommand{\performanceFig}{
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.9\columnwidth]{performance.pdf}
+		\caption{
+			The number of discrete color categories in traditional bivariate color maps versus VSUMs, assuming value is encoded by the Viridis color map~\protect\cite{garnier2015viridis}, and uncertainty is encoded by saturation/value (whiter values are more uncertain). Since uncertain colors are closer together than certain colors, and VSUMs intentionally require fewer color bins in those regions, VSUMs always have more color categories than the corresponding 2D bivariate map. The red lines denote:\\
+		    \textbf{1)} Theoretical 50\% JND from CIELAB specification. \\
+			\textbf{2)} 50\% JND from controlled lab study of Mahy et al.~\protect\cite{mahy1994evaluation}.\\
+			\textbf{3)} 50\% JND from Szafir et al.\protect\cite{szafir2014adapting}.\\
+			\textbf{4)} 50\% JND for small visual targets from Stone et al.~\protect\cite{stone2014engineering}.\\
+			\textbf{5)} 50\% The threshold resulting in the simplest possible (2x2) bivariate map. \\
+	    }
+		\label{fig:example}
+	\end{figure}
 }
