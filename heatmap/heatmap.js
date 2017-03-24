@@ -84,6 +84,62 @@ function makeArc(d,size,rows,cols){
   return arc;
 }
 
+function makeArcHexmap(x,y,size,data,z,name){
+  //creates an svg "wedge" map
+  var w = size/data[0].length;
+  var h = size/data.length;
+
+  var arcmap = svg.append("g")
+             .attr("transform","translate("+(x+size/2)+","+(y+size)+")");
+
+  if(name){
+    arcmap.attr("id",name);
+  }
+
+  arcmap.selectAll("g")
+  .data(data)
+  .enter()
+  .append("g")
+  .selectAll("path")
+    .data(function(d,i){ return d.map(function(val){ return {r:i, v:val};});})
+    .enter()
+    .append("path")
+    .datum(function(d,i){ d.c = i; return d; })
+    .attr("d", function(d){ return makeHexagon(d,size,data.length,data[d.r].length);})
+    .attr("fill", function(d){ return z(d.v);});
+}
+
+function makeHexagon(d,size,rows,cols){
+  var angle = d3.scaleLinear().domain([0,cols]).range([-Math.PI/6,Math.PI/6]);
+  var radius = d3.scaleLinear().domain([0,rows]).range([size,0]);
+
+  var x,y,a,r;
+  a = angle(d.c+0.5);
+  //punt on determining the radius for now, it should really be a function of
+  // a) the number of bins in a rows
+  // b) some scale function passed by the user.
+  r = (radius(d.r+1)-radius(d.r))/2;
+
+  //convert from polar to cartesian
+  x = Math.cos(a-(Math.PI/2))*radius(d.r+0.5);
+  y = Math.sin(a-(Math.PI/2))*radius(d.r+0.5);
+  var h = Math.sqrt(3)/2;
+  var points = [
+    {"x": r+x, "y": y },
+    {"x": (r/2)+x, "y": y+(h*r) },
+    {"x": (-r/2)+x, "y": y+(h*r)},
+    {"x": -r+x, "y": y },
+    {"x": (-r/2)+x, "y": (-r*h)+y },
+    {"x": (r/2)+x, "y": (-r*h)+y }
+  ];
+
+  var line = d3.line()
+    .x(function(d){ return d.x;})
+    .y(function(d){ return d.y;});
+
+  return line(points);
+}
+
 //Data loading and generation
 
 function gradientData(rows, cols) {
@@ -315,7 +371,7 @@ function main(){
   var arcScale = makeScaleFunction(maps.arc);
 
   makeHeatmap(0,0,250,maps.square, squareScale, "legendSquare");
-  makeArcmap(300,0,250,maps.arc,arcScale,"legendArc");
+  makeArcHexmap(300,0,250,maps.arc,arcScale,"legendArc");
 
   //var exampleData = gradientData(100,100);
   var exampleData = randomData(5,5);
