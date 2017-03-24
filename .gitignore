@@ -3,3 +3,7 @@ node_modules
 *.blg
 *.fdb_latexmk
 *.fls
+paper/template.out
+paper/template.log
+paper/template.aux
+paper/pictures/sample-eps-converted-to.pdf
