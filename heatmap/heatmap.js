@@ -67,7 +67,7 @@ function makeArcmap(x,y,size,data,z,name){
     .enter()
     .append("path")
     .datum(function(d,i){ d.c = i; return d; })
-    .attr("d", function(d){ return makeArc(d,size,data.length,data[d.r].length)();})
+    .attr("d", function(d){ return makeArc(d,size,data.length,data[d.r].length);})
     .attr("fill", function(d){ return z(d.v);});
 }
 
@@ -81,14 +81,19 @@ function makeArc(d,size,rows,cols){
     .startAngle(angle(d.c))
     .endAngle(angle(d.c+1));
 
-  return arc;
+  return arc();
 }
 
 function makeArcHexmap(x,y,size,data,z,name){
   //creates an svg "wedge" map
   var w = size/data[0].length;
   var h = size/data.length;
+  var r;
 
+  var angle = d3.scaleLinear().domain([0,data.length]).range([-Math.PI/6,Math.PI/6]);
+  var radius = d3.scaleLinear().domain([0,data[0].length]).range([size,0]);
+  r = (Math.cos(angle(0.5)-(Math.PI/2))*radius(0.5))-(Math.cos(angle(0)-(Math.PI/2))*radius(0.5));
+  r/=2;
   var arcmap = svg.append("g")
              .attr("transform","translate("+(x+size/2)+","+(y+size)+")");
 
@@ -105,11 +110,11 @@ function makeArcHexmap(x,y,size,data,z,name){
     .enter()
     .append("path")
     .datum(function(d,i){ d.c = i; return d; })
-    .attr("d", function(d){ return makeHexagon(d,size,data.length,data[d.r].length);})
+    .attr("d", function(d){ return makeHexagon(d,r,size,data.length,data[d.r].length);})
     .attr("fill", function(d){ return z(d.v);});
 }
 
-function makeHexagon(d,size,rows,cols){
+function makeHexagon(d,r,size,rows,cols){
   var angle = d3.scaleLinear().domain([0,cols]).range([-Math.PI/6,Math.PI/6]);
   var radius = d3.scaleLinear().domain([0,rows]).range([size,0]);
 
@@ -118,7 +123,6 @@ function makeHexagon(d,size,rows,cols){
   //punt on determining the radius for now, it should really be a function of
   // a) the number of bins in a rows
   // b) some scale function passed by the user.
-  r = (radius(d.r+1)-radius(d.r))/2;
 
   //convert from polar to cartesian
   x = Math.cos(a-(Math.PI/2))*radius(d.r+0.5);
