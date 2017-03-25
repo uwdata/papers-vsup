@@ -91,13 +91,16 @@ function makeArcHexmap(x,y,size,data,z,name){
   var h = size/data.length;
   r/=2;
 
-  var xPos = d3.scaleLinear().domain([0,data[0].length]).range([r,size-r]);
+  //other display options:
+  //var xPos = d3.scaleLinear().domain([0,data[0].length]).range([r,size-r]);
   //pack hexs as tightly as possible in y
   //var yPos = d3.scaleLinear().domain([0,data.length]).range([r,2*data.length*r]);
   //pack hexs as loosely as possible in y
-  var yPos = d3.scaleLinear().domain([0,data.length-1]).range([h/2,size-(h/2)]);
+  //var yPos = d3.scaleLinear().domain([0,data.length-1]).range([h/2,size-(h/2)]);
+
+  //currently, lay hexes out in radial fashion.
   var arcmap = svg.append("g")
-             .attr("transform","translate("+(x)+","+(y)+")");
+             .attr("transform","translate("+(x+size/2)+","+(y+size)+")");
 
   if(name){
     arcmap.attr("id",name);
@@ -112,11 +115,23 @@ function makeArcHexmap(x,y,size,data,z,name){
     .enter()
     .append("path")
     .datum(function(d,i){ d.c = i; return d; })
-    .attr("d", function(d){ return makeHexagon(d,r,xPos(d.c + ((data[0].length - data[d.r].length)/2)),yPos(d.r));})
+    .attr("d", function(d){ return makeArcHexagon(d,r,data.length,data[d.r].length,size);})
+  //  .attr("d", function(d){ return makeHexagon(r,xPos(d.c + ((data[0].length - data[d.r].length)/2)),yPos(d.r));})
     .attr("fill", function(d){ return z(d.v);});
 }
 
-function makeHexagon(d,r,x,y){
+function makeArcHexagon(d,r,rows,cols,size){
+  //radial layout
+  var x,y,a;
+  var angle = d3.scaleLinear().domain([0,cols]).range([-Math.PI/6,Math.PI/6]);
+  var radius = d3.scaleLinear().domain([0,rows]).range([size,0]);
+  a = angle(d.c+0.5);
+  x = Math.cos(a-(Math.PI/2))*radius(d.r+0.5);
+  y = Math.sin(a-(Math.PI/2))*radius(d.r+0.5);
+  return makeHexagon(r,x,y);
+}
+
+function makeHexagon(r,x,y){
   var h = Math.sqrt(3)/2;
   var points = [
     {"x": r+x, "y": y },
@@ -365,12 +380,12 @@ function main(){
   var arcScale = makeScaleFunction(maps.arc);
 
   makeHeatmap(0,0,250,maps.square, squareScale, "legendSquare");
-  makeArcHexmap(300,0,250,maps.arc,arcScale,"legendArc");
+  makeArcmap(300,0,250,maps.arc,arcScale,"legendArc");
 
   //var exampleData = gradientData(100,100);
   var exampleData = randomData(5,5);
   makeHeatmap(0,300,250,exampleData, squareScale, "exampleSquare");
-  makeHeatmap(300,300,250,exampleData,arcScale,"exampleArc");
+  makeArcHexmap(300,300,250,maps.arc,arcScale,"exampleArc");
 }
 
 //Uncertainty maps
