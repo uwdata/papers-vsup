@@ -1,4 +1,8 @@
+body {
+  margin: 0;
+}
+
 svg {
-  width: 550px;
-  height: 850px;
+  width: 100vw;
+  height: 100vh;
 }

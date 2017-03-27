@@ -1,7 +1,7 @@
 
 //Global Variables
 
-var svg = d3.select("body").append("svg");
+var svg = d3.select("body").append("svg").append("g").attr("transform","translate(10, 10)");
 
 var map = d3.interpolateViridis;
 
@@ -348,11 +348,11 @@ function main(){
 
   makeHeatmap(0,0,250,maps.square, squareScale, "legendSquare");
   makeArcmap(300,0,250,maps.arc,arcScale,"legendArc");
+  makeArcHexmap(600,0,250,maps.arc,arcScale,"exampleArc");
 
   //var exampleData = gradientData(100,100);
   var exampleData = randomData(5,5);
   makeHeatmap(0,300,250,exampleData, squareScale, "exampleSquare");
-  makeArcHexmap(300,300,250,maps.arc,arcScale,"exampleArc");
 }
 
 //Uncertainty maps
