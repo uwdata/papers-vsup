@@ -358,6 +358,7 @@ function main(){
   makeHeatmap(0,600,250,random, squareScale);
   makeHeatmap(300,600,250,random, arcScale);
 
+  // flight data example heatmap
   d3.csv("data.csv", function(data) {
     data = data.map(function(d) {
       return {
@@ -372,8 +373,10 @@ function main(){
     var h = 260;
 
     var x = d3.scaleBand().range([0, w]).domain(data.map(function(d) { return d.DepTimeBlk; }));
-    var xAxis = d3.scalePoint().range([0, w]).domain([0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
     var y = d3.scaleBand().range([0, h]).domain(data.map(function(d) { return d.DayOfWeek; }));
+
+    // special scales for axes
+    var xAxis = d3.scalePoint().range([0, w]).domain([0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
     var yAxis = d3.scaleBand().range([0, h]).domain(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
    
     var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.StdMeanErr; }))).range([0,1]);
@@ -391,11 +394,13 @@ function main(){
       .attr("width", x.bandwidth())
       .attr("height", y.bandwidth())
       .attr("title", JSON.stringify)
+      // set the color scale here
       .attr("fill", function(d) { return arcScale({
         u: uScale(d.StdMeanErr),
         v: vScale(d.DepDelay)
       });});
 
+    // axes
     heatmap.append("g")
       .attr("transform", "translate(0," + h + ")")
       .call(d3.axisBottom(xAxis));
