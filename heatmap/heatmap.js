@@ -1,7 +1,9 @@
 
 //Global Variables
 
-var svg = d3.select("body").append("svg").append("g").attr("transform","translate(15, 15)");
+var body = d3.select("body");
+
+var svg = body.append("svg").attr("height", 900).append("g").attr("transform","translate(10, 10)");
 
 var map = d3.interpolateViridis;
 
@@ -14,7 +16,7 @@ var map = d3.interpolateViridis;
 
 //Chart creation functions
 
-function makeHeatmap(x,y,size,data,z,name){
+function makeHeatmap(svg, x, y, size, data, z, name){
   //creates an svg heatmap with a 2d matrix of data, and a mapping function z
   var w = size/data[0].length;
   var h = size/data.length;
@@ -346,17 +348,17 @@ function main(){
   var squareScale = makeScaleFunction(maps.square);
   var arcScale = makeScaleFunction(maps.arc);
 
-  makeHeatmap(0,0,250,maps.square, squareScale, "legendSquare");
+  makeHeatmap(svg, 0,0,250,maps.square, squareScale, "legendSquare");
   makeArcmap(300,0,250,maps.arc,arcScale,"legendArc");
   makeArcHexmap(600,0,250,maps.arc,arcScale,"exampleArc");
 
   var gradient = gradientData(20,20);
-  makeHeatmap(0,300,250,gradient, squareScale);
-  makeHeatmap(300,300,250,gradient, arcScale);
+  makeHeatmap(svg, 0,300,250,gradient, squareScale);
+  makeHeatmap(svg, 300,300,250,gradient, arcScale);
 
   var random = randomData(5,5);
-  makeHeatmap(0,600,250,random, squareScale);
-  makeHeatmap(300,600,250,random, arcScale);
+  makeHeatmap(svg, 0,600,250,random, squareScale);
+  makeHeatmap(svg, 300,600,250,random, arcScale);
 
   // flight data example heatmap
   d3.csv("data.csv", function(data) {
@@ -369,8 +371,8 @@ function main(){
       }
     });
 
-    var w = 600;
-    var h = 260;
+    var w = 580;
+    var h = 240;
 
     var x = d3.scaleBand().range([0, w]).domain(data.map(function(d) { return d.DepTimeBlk; }));
     var y = d3.scaleBand().range([0, h]).domain(data.map(function(d) { return d.DayOfWeek; }));
@@ -382,8 +384,8 @@ function main(){
     var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.StdMeanErr; }))).range([0,1]);
     var vScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.DepDelay; }))).range([0,1]);
 
-    var heatmap = svg.append("g")
-              .attr("transform","translate(0,900)");
+    var heatmap = body.append("svg").attr("width", w + 100).attr("height", h + 60).append("g")
+              .attr("transform","translate(10,10)");
 
     heatmap.selectAll("rect")
       .data(data)
@@ -419,7 +421,10 @@ function main(){
       .style("text-anchor", "middle")
       .style("font-size", 13)
       .attr("transform", "translate(" + (w + 80) + ", " + (h / 2) + ")rotate(90)")
-      .text("Day of the Week")
+      .text("Day of the Week");
+
+    // legend
+
   }); 
 }
 
