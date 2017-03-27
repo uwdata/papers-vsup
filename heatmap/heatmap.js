@@ -6,7 +6,11 @@ var svg = d3.select("body").append("svg");
 var map = d3.interpolateViridis;
 
 //Other maps to test:
+// interpolateViridis
 // interpolateInferno
+// interpolatePlasma
+// interpolateWarm
+// interpolateCool
 
 //Chart creation functions
 
