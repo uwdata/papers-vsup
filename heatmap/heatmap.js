@@ -44,7 +44,7 @@ function makeHeatmap(svg, x, y, size, data, z, name){
     .attr("fill", function(d){ return z(d.v);});
 }
 
-function makeArcmap(x,y,size,data,z,name){
+function makeArcmap(svg, x, y, size, data, z, name){
   //creates an svg "wedge" map
   var w = size/data[0].length;
   var h = size/data.length;
@@ -82,7 +82,7 @@ function makeArc(d,size,rows,cols){
   return arc();
 }
 
-function makeArcHexmap(x,y,size,data,z,name){
+function makeArcHexmap(svg, x, y, size, data, z, name){
   //creates an svg "hexwedge" map of regular hexagons
 
   var r = size/data[0].length;
@@ -349,8 +349,8 @@ function main(){
   var arcScale = makeScaleFunction(maps.arc);
 
   makeHeatmap(svg, 0,0,250,maps.square, squareScale, "legendSquare");
-  makeArcmap(300,0,250,maps.arc,arcScale,"legendArc");
-  makeArcHexmap(600,0,250,maps.arc,arcScale,"exampleArc");
+  makeArcmap(svg, 300,0,250,maps.arc,arcScale,"legendArc");
+  makeArcHexmap(svg, 600,0,250,maps.arc,arcScale,"exampleArc");
 
   var gradient = gradientData(20,20);
   makeHeatmap(svg, 0,300,250,gradient, squareScale);
@@ -370,62 +370,64 @@ function main(){
         StdMeanErr: +d.StdMeanErr
       }
     });
-
-    var w = 580;
-    var h = 240;
-
-    var x = d3.scaleBand().range([0, w]).domain(data.map(function(d) { return d.DepTimeBlk; }));
-    var y = d3.scaleBand().range([0, h]).domain(data.map(function(d) { return d.DayOfWeek; }));
-
-    // special scales for axes
-    var xAxis = d3.scalePoint().range([0, w]).domain([0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
-    var yAxis = d3.scaleBand().range([0, h]).domain(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
-   
-    var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.StdMeanErr; }))).range([0,1]);
-    var vScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.DepDelay; }))).range([0,1]);
-
-    var heatmap = body.append("svg").attr("width", w + 100).attr("height", h + 60).append("g")
-              .attr("transform","translate(10,10)");
-
-    heatmap.selectAll("rect")
-      .data(data)
-      .enter()
-      .append("rect")
-      .attr("x", function(d) { return x(d.DepTimeBlk); })
-      .attr("y", function(d) { return y(d.DayOfWeek); })
-      .attr("width", x.bandwidth())
-      .attr("height", y.bandwidth())
-      .attr("title", JSON.stringify)
-      // set the color scale here
-      .attr("fill", function(d) { return arcScale({
-        u: uScale(d.StdMeanErr),
-        v: vScale(d.DepDelay)
-      });});
-
-    // axes
-    heatmap.append("g")
-      .attr("transform", "translate(0," + h + ")")
-      .call(d3.axisBottom(xAxis));
-
-    heatmap.append("text")
-      .style("text-anchor", "middle")
-      .style("font-size", 13)
-      .attr("transform", "translate(" + (w / 2) + ", " + (h + 40) + ")")
-      .text("Departure Time")
-
-    heatmap.append("g")
-      .attr("transform", "translate(" + w + ", 0)")
-      .call(d3.axisRight(yAxis));
-
-    heatmap.append("text")
-      .style("text-anchor", "middle")
-      .style("font-size", 13)
-      .attr("transform", "translate(" + (w + 80) + ", " + (h / 2) + ")rotate(90)")
-      .text("Day of the Week");
-
-    // legend
-
+    makeFlightExample(arcScale, maps.arcmap, data);
   }); 
+}
+
+function makeFlightExample(colorScale, map, data) {
+  var w = 580;
+  var h = 240;
+
+  var x = d3.scaleBand().range([0, w]).domain(data.map(function(d) { return d.DepTimeBlk; }));
+  var y = d3.scaleBand().range([0, h]).domain(data.map(function(d) { return d.DayOfWeek; }));
+
+  // special scales for axes
+  var xAxis = d3.scalePoint().range([0, w]).domain([0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
+  var yAxis = d3.scaleBand().range([0, h]).domain(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
+  
+  var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.StdMeanErr; }))).range([0,1]);
+  var vScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.DepDelay; }))).range([0,1]);
+
+  var heatmap = body.append("svg").attr("width", w + 100).attr("height", h + 60).append("g")
+            .attr("transform","translate(10,10)");
+
+  heatmap.selectAll("rect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.DepTimeBlk); })
+    .attr("y", function(d) { return y(d.DayOfWeek); })
+    .attr("width", x.bandwidth())
+    .attr("height", y.bandwidth())
+    .attr("title", JSON.stringify)
+    .attr("fill", function(d) { return colorScale({
+      u: uScale(d.StdMeanErr),
+      v: vScale(d.DepDelay)
+    });});
+
+  // axes
+  heatmap.append("g")
+    .attr("transform", "translate(0," + h + ")")
+    .call(d3.axisBottom(xAxis));
+
+  heatmap.append("text")
+    .style("text-anchor", "middle")
+    .style("font-size", 13)
+    .attr("transform", "translate(" + (w / 2) + ", " + (h + 40) + ")")
+    .text("Departure Time")
+
+  heatmap.append("g")
+    .attr("transform", "translate(" + w + ", 0)")
+    .call(d3.axisRight(yAxis));
+
+  heatmap.append("text")
+    .style("text-anchor", "middle")
+    .style("font-size", 13)
+    .attr("transform", "translate(" + (w + 80) + ", " + (h / 2) + ")rotate(90)")
+    .text("Day of the Week");
+
+  // legend
+  makeArcmap(heatmap, w + 60,0,200,map,colorScale);
 }
 
 //Uncertainty maps
