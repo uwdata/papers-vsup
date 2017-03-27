@@ -184,31 +184,115 @@ function cDist(color1,color2){
   return Math.sqrt(Math.pow( (c1.l-c2.l),2) + Math.pow(c1.a-c2.a,2) + Math.pow(c1.b - c2.b,2));
 }
 
-function cSizeDist(color1,color2,size){
-  //Based on Stone 2014, we expect the same color difference to
-  //"count" for less, as sizes decrease.
-  //since we are defining tolerances as initial distances, rather than
-  //JNDs, "size" is the [0,1] percentage of the original glyph size.
+function toVisualAngle(pixels){
+  //assume 96 dpi and 24" from screen,
+  // so each pixel is 0.0213 degrees of visual angle.
+  return Math.abs(pixels*0.0213);
+}
 
+function sizeThreshold(color1,color2,size,p){
+  //Are two colors sufficiently distinct such that
+  //p% of people will discriminate between them?
+  var c1 = d3.lab(color1);
+  var c2 = d3.lab(color2);
 
-  //if ND(p,s) = tolerance
-  //then ND(p,s*size) = tolerance + 1/size * K
-  //where K(L) = 0.75, K(a) = 1.54, K(b) = 2.87
+  //per axis values
+  dist = [
+    Math.abs(c1.l-c2.l),
+    Math.abs(c1.a-c2.a),
+    Math.abs(c1.b-c2.b)
+  ];
 
-  if(size==1){
-    return cDist(color1,color2);
+  var nd = ND(p,size);
+
+  return (dist[0]>=nd[0] || dist[1]>=nd[1] || dist[2]>=nd[2]);
+}
+
+function pGivenS(color1,color2,size){
+  //What's the probability that these colors will be distinguished,
+  //given their size?
+  var c1 = d3.lab(color1);
+  var c2 = d3.lab(color2);
+  var axes = ["l","a","b"];
+  A = [
+    10.16,
+    10.68,
+    10.70
+  ];
+
+  B = [
+    1.50,
+    3.08,
+    5.74
+  ];
+
+  var p,diff;
+  var maxP = 0;
+
+  for(var i = 0;i<axes.length;i++){
+    diff = Math.abs(c1[axes[i]]-c2[axes[i]]);
+    p = diff/(A[i] + (B[i]/size));
+    if(p>maxP){
+      maxP = p;
+    }
   }
-  else{
-    var c1 = d3.lab(color1);
-    var c2 = d3.lab(color2);
 
-    var Lab = [
-      Math.abs(c1.l-c2.l)  +  ((1/(size)) * 0.75),
-      Math.abs(c1.a-c2.a) + ((1/(size)) * 1.54),
-      Math.abs(c1.b-c2.b) + ((1/(size)) * 0.75)
-    ];
-    return Math.sqrt( Math.pow(Lab[0],2) + Math.pow(Lab[1],2) + Math.pow(Lab[2],2));
+  return Math.min(1,maxP);
+}
+
+function pGivenS(threshold,size){
+  //What's the probability that a given CIELAB distance will be distinguished,
+  //given a size?
+  var axes = ["l","a","b"];
+  A = [
+    10.16,
+    10.68,
+    10.70
+  ];
+
+  B = [
+    1.50,
+    3.08,
+    5.74
+  ];
+
+  var p;
+  var maxP = 0;
+
+  for(var i = 0;i<axes.length;i++){
+    p = threshold/(A[i] + (B[i]/size));
+    if(p>maxP){
+      maxP = p;
+    }
   }
+
+  return Math.min(1,maxP);
+}
+
+function ND(p,s){
+  //The step size, per axis in CIELAB color space
+  //to suggest that p% of people will distinguish between two colors
+  //From Stone et al. 2014
+
+  A = [
+    10.16,
+    10.68,
+    10.70
+  ];
+
+  B = [
+    1.50,
+    3.08,
+    5.74
+  ];
+
+  nd = [
+    p*(A[0] + (B[0]/s)),
+    p*(A[1] + (B[1]/s)),
+    p*(A[2] + (B[2]/s))
+  ];
+
+  return nd;
 }
 
 function minDist(colorRamp){
@@ -229,24 +313,20 @@ function minDist(colorRamp){
   return {"minD": minD, "c1": c1, "c2": c2};
 }
 
-function minSizeDist(colorRamp){
-  //What's the closest distance between colors, in our 2D array of colors?
-  var minD, D,c1,c2,size;
+function passesSizeThreshold(colorRamp,p,size,threshold){
+  //Are the colors really distinct enough, given how small the marks get?
+  var minD, D,c1,c2;
 
   for(var i = 0;i<colorRamp.length;i++){
     for(var j = 0;j<colorRamp[i].length-1;j++){
       for(var k = j+1;k<colorRamp[i].length;k++){
-        D = cSizeDist(colorRamp[i][j].c,colorRamp[i][k].c, colorRamp[i][j].s);
-        if((i==0 && j==0 && k==1) || D<minD){
-          minD = D;
-          c1 = colorRamp[i][j].c;
-          c2 = colorRamp[i][k].c;
-          size = colorRamp[i][j].s;
+        if(!sizeThreshold(colorRamp[i][j].c,colorRamp[i][k].c,size*colorRamp[i][j].s,p)){
+          return false;
         }
       }
     }
   }
-  return {"minD": minD, "c1": c1, "c2": c2, "size": size };
+  return true;
 }
 
 function distanceMatrix(scaleData){
@@ -344,11 +424,15 @@ function colorDiff(scaleData){
   return minDist(colors);
 }
 
-function colorSizeDiff(scaleData){
+function colorSizeDiff(scaleData,threshold,startSize){
+  //Returns difference not in terms of color distance,
+  //but as a function of whether or not the colors are at least
+  //as descriminable as our target threshold, given their decreasing size.
   var colors = scaleData.map(function(row) {
     return row.map(uSize);
   });
-  return minSizeDist(colors);
+  var p = pGivenS(threshold,startSize);
+  return passesSizeThreshold(colors,p,startSize);
 }
 
 function makeMaps(threshold){
@@ -396,11 +480,11 @@ function makeMaps(threshold){
 
   n = 2;
   while (true) {
+    var startsize = toVisualAngle(25);
     var data = makeArcScaleData(n);
-    var c = colorSizeDiff(data);
-    if (c.minD >= THRESHOLD) {
+    if(colorSizeDiff(data,THRESHOLD,startsize)){
       arcSizeScaleData = data;
-      closest = c;
+      closest = colorDiff(data);
     } else {
       break;
     }
@@ -409,7 +493,7 @@ function makeMaps(threshold){
   if (!closest) {
     console.log("No valid arc size color map at threshold "+THRESHOLD);
   } else {
-    console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" pseudo-units apart in CIELAB, at a size ratio of "+closest.size);
+    console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" units apart in CIELAB");
   }
 
   return {square:scaleData, arc:arcScaleData, arcSize: arcSizeScaleData};
