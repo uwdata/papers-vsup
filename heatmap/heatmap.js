@@ -444,7 +444,7 @@ function main(){
         StdMeanErr: +d.StdMeanErr
       }
     });
-    makeFlightExample(arcScale, maps.arcmap, data);
+    makeFlightExample(arcScale, maps.arc, data);
   }); 
 }
 
@@ -501,7 +501,15 @@ function makeFlightExample(colorScale, map, data) {
     .text("Day of the Week");
 
   // legend
-  // makeArcmap(heatmap, w + 60,0,200,map,colorScale);
+  var legendX = w + 140;
+  var legendY = 30;
+  var legendSize = 160;
+  makeArcmap(heatmap, legendX, legendY, legendSize,map,colorScale);
+  makeArcLegend(heatmap, legendX, legendY, legendSize, [0,1], [0,1]);
+}
+
+function makeArcLegend(svg, x, y, size, vRange, uRange) {
+  
 }
 
 //Uncertainty maps
