@@ -350,9 +350,13 @@ function main(){
   makeArcmap(300,0,250,maps.arc,arcScale,"legendArc");
   makeArcHexmap(600,0,250,maps.arc,arcScale,"exampleArc");
 
-  //var exampleData = gradientData(100,100);
-  var exampleData = randomData(5,5);
-  makeHeatmap(0,300,250,exampleData, squareScale, "exampleSquare");
+  var gradient = gradientData(20,20);
+  makeHeatmap(0,300,250,gradient, squareScale);
+  makeHeatmap(300,300,250,gradient, arcScale);
+
+  var random = randomData(5,5);
+  makeHeatmap(0,600,250,random, squareScale);
+  makeHeatmap(300,600,250,random, arcScale); 
 }
 
 //Uncertainty maps
