@@ -207,7 +207,7 @@ function cSizeDist(color1,color2,size){
       Math.abs(c1.a-c2.a) + ((1/(size)) * 1.54),
       Math.abs(c1.b-c2.b) + ((1/(size)) * 0.75)
     ];
-    return 0.1*Math.sqrt( Math.pow(Lab[0],2) + Math.pow(Lab[1],2) + Math.pow(Lab[2],2));
+    return Math.sqrt( Math.pow(Lab[0],2) + Math.pow(Lab[1],2) + Math.pow(Lab[2],2));
   }
 }
 
@@ -499,7 +499,7 @@ function main(){
 
     // legend
 
-  }); 
+  });
 }
 
 //Uncertainty maps
