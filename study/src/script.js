@@ -25,6 +25,7 @@ Procedure:
 5. Collect demographic information, including risk assay.
 */
 
+var experiment = "Pilot";
 var startTime;
 var main = d3.select("#fcontainer");
 var done = false;
@@ -39,7 +40,6 @@ function gup(name){
   else
     return results[1];
 }
-
 
 var workerId = gup("workerId");
 if(!workerId){
@@ -71,19 +71,29 @@ function consent(){
 }
 
 function finishConsent(){
-  main.selectAll("*").remove();
-  postTest();
   //Thing to do when we've consented.
   //Ought to be setting up for a tutorial.
+  tutorial();
 }
 
 function tutorial(){
   //Set up tutorial. When we're done, start the main task
+  d3.select("iframe").attr("src","tutorial.html");
+  d3.select("#answer")
+    .attr("value","Ready")
+    .on("click",finishTutorial);
+}
+
+function finishTutorial(){
+  main.selectAll("#answer").remove();
+  main.selectAll("iframe").remove();
+  task();
 }
 
 function task(){
  //Set up the main task. Should have a button that calls "writeAnswer"
 }
+
 
 function initialize(){
   //What to do when we have a new question
@@ -91,10 +101,14 @@ function initialize(){
 
 }
 
+function answer(){
+  var rt = (new Date()).getTime() - startTime;
+  writeAnswer({ "rt": rt});
+}
+
 function writeAnswer(response){
   //Called when we answer a question in the main task
   //XML to call out to a php script to store our data in a csv over in ./data/
-  var rt = (new Date()).getTime() - startTime;
   var writeRequest = new XMLHttpRequest();
   var writeString = "answer="+JSON.stringify(response);
   writeRequest.open("GET","data/writeJSON.php?"+writeString,true);

@@ -111,9 +111,9 @@ function makeArcHexmap(x,y,size,data,z,name){
     .enter()
     .append("path")
     .datum(function(d,i){ d.c = i; return d; })
-    .attr("d", function(d){ return makeArcHexagon(d,r,data.length,data[d.r].length,size);})
+    .attr("d", function(d){ return makeArcHexagon(d,r*z(d.v).s,data.length,data[d.r].length,size);})
   //  .attr("d", function(d){ return makeHexagon(r,xPos(d.c + ((data[0].length - data[d.r].length)/2)),yPos(d.r));})
-    .attr("fill", function(d){ return z(d.v);});
+    .attr("fill", function(d){ return z(d.v).c;});
 }
 
 function makeArcHexagon(d,r,rows,cols,size){
@@ -182,6 +182,33 @@ function cDist(color1,color2){
   return Math.sqrt(Math.pow( (c1.l-c2.l),2) + Math.pow(c1.a-c2.a,2) + Math.pow(c1.b - c2.b,2));
 }
 
+function cSizeDist(color1,color2,size){
+  //Based on Stone 2014, we expect the same color difference to
+  //"count" for less, as sizes decrease.
+  //since we are defining tolerances as initial distances, rather than
+  //JNDs, "size" is the [0,1] percentage of the original glyph size.
+
+
+  //if ND(p,s) = tolerance
+  //then ND(p,s*size) = tolerance + 1/size * K
+  //where K(L) = 0.75, K(a) = 1.54, K(b) = 2.87
+
+  if(size==1){
+    return cDist(color1,color2);
+  }
+  else{
+    var c1 = d3.lab(color1);
+    var c2 = d3.lab(color2);
+
+    var Lab = [
+      Math.abs(c1.l-c2.l)  +  ((1/(size)) * 0.75),
+      Math.abs(c1.a-c2.a) + ((1/(size)) * 1.54),
+      Math.abs(c1.b-c2.b) + ((1/(size)) * 0.75)
+    ];
+    return 0.1*Math.sqrt( Math.pow(Lab[0],2) + Math.pow(Lab[1],2) + Math.pow(Lab[2],2));
+  }
+}
+
 function minDist(colorRamp){
   //What's the closest distance between colors, in our array of colors?
   var minD, D,c1,c2;
@@ -198,6 +225,26 @@ function minDist(colorRamp){
   }
 
   return {"minD": minD, "c1": c1, "c2": c2};
+}
+
+function minSizeDist(colorRamp){
+  //What's the closest distance between colors, in our 2D array of colors?
+  var minD, D,c1,c2,size;
+
+  for(var i = 0;i<colorRamp.length;i++){
+    for(var j = 0;j<colorRamp[i].length-1;j++){
+      for(var k = j+1;k<colorRamp[i].length;k++){
+        D = cSizeDist(colorRamp[i][j].c,colorRamp[i][k].c, colorRamp[i][j].s);
+        if((i==0 && j==0 && k==1) || D<minD){
+          minD = D;
+          c1 = colorRamp[i][j].c;
+          c2 = colorRamp[i][k].c;
+          size = colorRamp[i][j].s;
+        }
+      }
+    }
+  }
+  return {"minD": minD, "c1": c1, "c2": c2, "size": size };
 }
 
 function distanceMatrix(scaleData){
@@ -259,7 +306,7 @@ function makeArcScaleData(n) {
   return arr;
 }
 
-function makeScaleFunction(scaleData){
+function makeScaleFunction(scaleData,mappingFunction){
   //a quantized scale function from a given scale
   return function f(d){
     var u,v;
@@ -272,11 +319,12 @@ function makeScaleFunction(scaleData){
     var cols = d3.scaleQuantize().domain([0,1]).range(row);
     var value = cols(d.v);
 
-    u = value.u;
-    v = value.v;
-
-    var c = (d3.hsl(map(v)));
-    return d3.interpolateLab(c,"white")(u);
+    if(!mappingFunction){
+      return uSL(value);
+    }
+    else{
+      return mappingFunction(value);
+    }
   }
 }
 
@@ -294,11 +342,18 @@ function colorDiff(scaleData){
   return minDist(colors);
 }
 
+function colorSizeDiff(scaleData){
+  var colors = scaleData.map(function(row) {
+    return row.map(uSize);
+  });
+  return minSizeDist(colors);
+}
+
 function makeMaps(threshold){
   //Create all relevant maps
   var DEFAULT_THRESHOLD = 5;
   var THRESHOLD = threshold ? threshold : DEFAULT_THRESHOLD;
-  var scaleData, arcScaleData, closest, n;
+  var scaleData, arcScaleData, arcSizeScaleData, closest, n;
 
   n = 2;
   while (true) {
@@ -317,7 +372,7 @@ function makeMaps(threshold){
     console.log("No valid matrix color map at threshold "+THRESHOLD);
   }
   else{
-    console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+    console.log("The two closest arc size colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
   }
   n = 2;
   while (true) {
@@ -337,18 +392,37 @@ function makeMaps(threshold){
     console.log("The two closest arc colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
   }
 
-  return {square:scaleData, arc:arcScaleData};
+  n = 2;
+  while (true) {
+    var data = makeArcScaleData(n);
+    var c = colorSizeDiff(data);
+    if (c.minD >= THRESHOLD) {
+      arcSizeScaleData = data;
+      closest = c;
+    } else {
+      break;
+    }
+    n++;
+  }
+  if (!closest) {
+    console.log("No valid arc size color map at threshold "+THRESHOLD);
+  } else {
+    console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" pseudo-units apart in CIELAB, at a size ratio of "+closest.size);
+  }
+
+  return {square:scaleData, arc:arcScaleData, arcSize: arcSizeScaleData};
 }
 
 function main(){
-  var maps = makeMaps(18);
+  var maps = makeMaps(15);
 
   var squareScale = makeScaleFunction(maps.square);
   var arcScale = makeScaleFunction(maps.arc);
+  var arcSizeScale = makeScaleFunction(maps.arcSize,uSize);
 
   makeHeatmap(0,0,250,maps.square, squareScale, "legendSquare");
   makeArcmap(300,0,250,maps.arc,arcScale,"legendArc");
-  makeArcHexmap(600,0,250,maps.arc,arcScale,"exampleArc");
+  makeArcHexmap(600,0,250,maps.arcSize,arcSizeScale,"legendSizeArc");
 
   var gradient = gradientData(20,20);
   makeHeatmap(0,300,250,gradient, squareScale);
@@ -378,7 +452,7 @@ function main(){
     // special scales for axes
     var xAxis = d3.scalePoint().range([0, w]).domain([0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
     var yAxis = d3.scaleBand().range([0, h]).domain(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
-   
+
     var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.StdMeanErr; }))).range([0,1]);
     var vScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.DepDelay; }))).range([0,1]);
 
@@ -420,7 +494,7 @@ function main(){
       .style("font-size", 13)
       .attr("transform", "translate(" + (w + 80) + ", " + (h / 2) + ")rotate(90)")
       .text("Day of the Week")
-  }); 
+  });
 }
 
 //Uncertainty maps
@@ -430,6 +504,13 @@ function uSL(d){
   var c = (d3.hsl(map(d.v)));
   var iVal = d3.scaleLinear().domain([0,1]).range([0.0,1.0]);
   return d3.interpolateLab(c,"white")(iVal(d.u));
+}
+
+function uSize(d){
+  //size and color
+  var c = (d3.hsl(map(d.v)));
+  var sizeVal = d3.scaleLinear().domain([0,1]).range([1,0]);
+  return {"c": c, "s" : sizeVal(d.u)};
 }
 
 main();

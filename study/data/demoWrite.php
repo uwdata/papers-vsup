@@ -15,6 +15,7 @@ $education = $_POST['education'];
 $experience = $_POST['experience'];
 $comments = $_POST['comments'];
 $comments = str_replace(",","_",$comments);
+$risk = $_POST['risk'];
 
 $time = date('c');
 $ip = $_SERVER['REMOTE_ADDR'];
@@ -22,7 +23,7 @@ if(!$id || $id==""){
   $id = $ip;
 }
 
-$writestr = "$time,$experiment,$id,$ip,$gender,$age,$education,$experience,$comments";
+$writestr = "$time,$experiment,$id,$ip,$gender,$age,$education,$experience,$risk,$comments";
 //echo $writestr;
 fwrite($file,$writestr.PHP_EOL);
 fclose($file);
