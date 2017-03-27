@@ -10,6 +10,9 @@ B. Superimposed Map: One heatmap, bivariate map down to as small a bin size as p
 Will be coarser than the juxtaposed map, since there's inteference between the two variables.
 C. VSUP: One heatmap, bivariate, but with uncertain values increasing aliased together.
 
+2. Map
+A. Value: (Viridis, Spectral?). Uncertainty: (Lightness, Size).
+
 Procedure:
 1. Get Consent.
 2. Tutorial showing examples of tasks, as well as a general primer on uncertainty.
@@ -68,6 +71,8 @@ function consent(){
 }
 
 function finishConsent(){
+  main.selectAll("*").remove();
+  postTest();
   //Thing to do when we've consented.
   //Ought to be setting up for a tutorial.
 }
@@ -120,8 +125,73 @@ function finishTask(){
   postTest();
 }
 
-function riskAversion(fromElement){
-  //A risk aversion assay, from
+function riskAversion(form){
+  //A risk aversion assay, from Mandrik and Bao 2005:
+
+  var items = [
+    "I do not feel comfortable taking chances.",
+    "I prefer situations that have foreseeable outcomes.",
+    "Before I make a decision, I like to be absolutely sure how things turn out.",
+    "I avoid situations that have uncertain outcomes",
+    "I feel comfortable improvising in new situations",
+    "I feel nervous when I have to make decisions in uncertain situations"
+  ];
+
+  var valences = [
+   1,
+   1,
+   1,
+   1,
+   -1,
+   1
+  ];
+
+  //Another option is the ROQ from Rohrmann 1997
+  //http://www.rohrmannresearch.net/pdfs/rohrmann-rac-roq.pdf
+
+  form.append("div")
+  .html("For the following items indicate how strongly you agree or disagree, where 1=\"Strongly Disagree\" and 7=\"Strongly Agree\":");
+
+  var dlist = form.append("ol");
+  var index = 0;
+
+  for(var item of items){
+    var question = dlist.append("li");
+
+    question.html(item);
+
+    var label = question.append("div");
+
+    label.classed("likert",true);
+
+    label.append("span")
+    .html("Strongly Disagree")
+    .attr("style","align-self: left");
+
+    label.append("span")
+    .html("Strongly Agree")
+    .attr("style","align-self: right");
+
+    var numbers = question.append("div");
+
+    numbers.classed("likert",true);
+
+    var questions = question.append("div");
+
+    questions.classed("likert",true);
+
+    for(var i = 1;i<=7;i++){
+      numbers.append("span")
+      .html(i+"");
+
+      questions.append("input")
+      .attr("type","radio")
+      .attr("name","risk"+index)
+      .attr("value",i*valences[index]);
+
+    }
+    index++;
+  }
 }
 
 function postTest(){
@@ -132,10 +202,7 @@ function postTest(){
   var format = d3.format(".3f");
 
   main.append("div")
-    .html("Thank you for your participation!");
-
-  main.append("div")
-    .html("We will now ask for demographic information. You will also have the chance to give feedback.");
+    .html("This concludes the main task of the study. Thank you for your participation!");
 
   form = main.append("form")
   .attr("id","mturk_form")
@@ -148,11 +215,29 @@ function postTest(){
     form.attr("action","https://www.mturk.com/mturk/externalSubmit");
   }
 
+  riskAversion(form);
+
+  form.append("div")
+  .html("We will now ask for demographic information. You will also have the chance to give feedback. <br />");
+
   var dlist = form.append("ol");
 
   var genders = ["Male","Female","Other","Decline to state"];
   var educations = ["Some high school","High school degree","Some college","College degree","Graduate degree"];
   var experiences = ["1. No experience","2.","3. Some experience","4.","5. A great deal of experience"];
+
+  var visionQ = dlist.append("li").html("Do you have normal vision (or vision which has been corrected to normal)? <br />");
+
+  visionQ.append("input")
+  .attr("type","radio")
+  .attr("name","vision")
+  .attr("value","Yes");
+  visionQ.append("span").html("Yes <br />");
+  visionQ.append("input")
+  .attr("type","radio")
+  .attr("name","vision")
+  .attr("value","No");
+  visionQ.append("span").html("No <br />");
 
   var genderQ = dlist.append("li").html("What is your gender <br />");
 
@@ -165,7 +250,7 @@ function postTest(){
     genderQ.append("span").html(gender +"<br />");
   }
 
-  var eduQ = dlist.append("li").html("What is your highest level of education <br />");
+  var eduQ = dlist.append("li").html("What is your highest level of education? <br />");
 
   for(var education of educations){
     eduQ.append("input")

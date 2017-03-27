@@ -76,9 +76,16 @@
   border: 1px solid black;
 }
 
+.likert{
+  min-width: 400px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
 iframe{
   width: 100%;
   min-height: 600px;
   height: 90%;
 }
-
