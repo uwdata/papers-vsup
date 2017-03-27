@@ -3,18 +3,10 @@
 
 var svg = d3.select("body").append("svg");
 
-// viridis
-var NUM_STEPS = 1000;
-var map = d3.range(NUM_STEPS).map(d => d3.interpolateViridis(d/(NUM_STEPS-1)));
+var map = d3.interpolateViridis;
 
 //Other maps to test:
-//inferno
-//var map = d3.range(NUM_STEPS).map(d => d3.interpolateInferno(d/(NUM_STEPS-1)));
-//colorbrewer spectral
-//var map = d3.schemeSpectral[11];
-
-var z = d3.scaleQuantize().range(map);
-
+// interpolateInferno
 
 //Chart creation functions
 
@@ -183,7 +175,7 @@ function cDist(color1,color2){
   var c1 = d3.lab(color1);
   var c2 = d3.lab(color2);
 
-  return Math.sqrt( Math.pow( (c1.l-c2.l),2) + Math.pow(c1.a-c2.a,2) + Math.pow(c1.b - c2.b,2));
+  return Math.sqrt(Math.pow( (c1.l-c2.l),2) + Math.pow(c1.a-c2.a,2) + Math.pow(c1.b - c2.b,2));
 }
 
 function minDist(colorRamp){
@@ -237,11 +229,10 @@ function checkMap(mapName){
       }
     });
 
-    if(colorList.length==0){
+    if (colorList.length==0) {
       console.log("No valid color map");
       return false;
-    }
-    else{
+    } else {
       var closest = minDist(colorList);
       console.log( "The two closest colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
       return closest.minD>5;
@@ -290,8 +281,6 @@ function makeArcScaleData(n) {
 }
 
 function makeScaleFunction(scaleData){
-  var cScale = d3.scaleQuantize().domain([0,1]).range(map);
-
   //a quantized scale function from a given scale
   return function f(d){
     var u,v;
@@ -307,7 +296,7 @@ function makeScaleFunction(scaleData){
     u = value.u;
     v = value.v;
 
-    var c = (d3.hsl(cScale(v)));
+    var c = (d3.hsl(map(v)));
     return d3.interpolateLab(c,"white")(u);
   }
 }
@@ -345,7 +334,7 @@ function makeMaps(threshold){
     }
     n++;
   }
-  if(!closest){
+  if (!closest) {
     console.log("No valid matrix color map at threshold "+THRESHOLD);
   }
   else{
@@ -363,10 +352,9 @@ function makeMaps(threshold){
     }
     n++;
   }
-  if(!closest){
+  if (!closest) {
     console.log("No valid arc color map at threshold "+THRESHOLD);
-  }
-  else{
+  } else {
     console.log("The two closest arc colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
   }
 
@@ -392,9 +380,7 @@ function main(){
 
 function uSL(d){
   //interpolate to white
-  var cScale = d3.scaleQuantize().domain([0,1]).range(map);
-  var steps = map.length;
-  var c = (d3.hsl(cScale(d.v)));
+  var c = (d3.hsl(map(d.v)));
   var iVal = d3.scaleLinear().domain([0,1]).range([0.0,1.0]);
   return d3.interpolateLab(c,"white")(iVal(d.u));
 }
