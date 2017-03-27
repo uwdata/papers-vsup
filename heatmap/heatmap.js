@@ -1,7 +1,7 @@
 
 //Global Variables
 
-var svg = d3.select("body").append("svg").append("g").attr("transform","translate(10, 10)");
+var svg = d3.select("body").append("svg").append("g").attr("transform","translate(15, 15)");
 
 var map = d3.interpolateViridis;
 
@@ -356,7 +356,66 @@ function main(){
 
   var random = randomData(5,5);
   makeHeatmap(0,600,250,random, squareScale);
-  makeHeatmap(300,600,250,random, arcScale); 
+  makeHeatmap(300,600,250,random, arcScale);
+
+  d3.csv("data.csv", function(data) {
+    data = data.map(function(d) {
+      return {
+        DayOfWeek: +d.DayOfWeek,
+        DepDelay: +d.DepDelay,
+        DepTimeBlk: d.DepTimeBlk,
+        StdMeanErr: +d.StdMeanErr
+      }
+    });
+
+    var w = 600;
+    var h = 260;
+
+    var x = d3.scaleBand().range([0, w]).domain(data.map(function(d) { return d.DepTimeBlk; }));
+    var xAxis = d3.scalePoint().range([0, w]).domain([0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
+    var y = d3.scaleBand().range([0, h]).domain(data.map(function(d) { return d.DayOfWeek; }));
+    var yAxis = d3.scaleBand().range([0, h]).domain(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
+   
+    var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.StdMeanErr; }))).range([0,1]);
+    var vScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.DepDelay; }))).range([0,1]);
+
+    var heatmap = svg.append("g")
+              .attr("transform","translate(0,900)");
+
+    heatmap.selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("x", function(d) { return x(d.DepTimeBlk); })
+      .attr("y", function(d) { return y(d.DayOfWeek); })
+      .attr("width", x.bandwidth())
+      .attr("height", y.bandwidth())
+      .attr("title", JSON.stringify)
+      .attr("fill", function(d) { return arcScale({
+        u: uScale(d.StdMeanErr),
+        v: vScale(d.DepDelay)
+      });});
+
+    heatmap.append("g")
+      .attr("transform", "translate(0," + h + ")")
+      .call(d3.axisBottom(xAxis));
+
+    heatmap.append("text")
+      .style("text-anchor", "middle")
+      .style("font-size", 13)
+      .attr("transform", "translate(" + (w / 2) + ", " + (h + 40) + ")")
+      .text("Departure Time")
+
+    heatmap.append("g")
+      .attr("transform", "translate(" + w + ", 0)")
+      .call(d3.axisRight(yAxis));
+
+    heatmap.append("text")
+      .style("text-anchor", "middle")
+      .style("font-size", 13)
+      .attr("transform", "translate(" + (w + 80) + ", " + (h / 2) + ")rotate(90)")
+      .text("Day of the Week")
+  }); 
 }
 
 //Uncertainty maps
