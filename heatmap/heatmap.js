@@ -480,7 +480,7 @@ function makeMaps(threshold){
 
   n = 2;
   while (true) {
-    var startsize = toVisualAngle(25);
+    var startsize = toVisualAngle(45);
     var data = makeArcScaleData(n);
     if(colorSizeDiff(data,THRESHOLD,startsize)){
       arcSizeScaleData = data;
@@ -529,7 +529,7 @@ function main(){
       }
     });
     makeFlightExample(arcScale, maps.arc, data);
-  }); 
+  });
 }
 
 function makeFlightExample(colorScale, map, data) {
@@ -593,7 +593,7 @@ function makeFlightExample(colorScale, map, data) {
 }
 
 function makeArcLegend(svg, x, y, size, vRange, uRange) {
-  
+
 }
 
 //Uncertainty maps
