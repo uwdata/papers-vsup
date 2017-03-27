@@ -165,7 +165,7 @@ function randomData(rows,cols){
   for(var i = 0; i<rows; i++){
     data[i] = [];
     for(var j = 0; j<cols; j++){
-      data[i].push({ u: Math.random(), v: Math.random()});
+      data[i].push({ u: Math.random(), v: Math.random() });
     }
   }
 
@@ -216,31 +216,6 @@ function distanceMatrix(scaleData){
     }
   }
   return matrix;
-}
-
-// TODO: delete
-function checkMap(mapName){
-  //Takes a d3 selection containing all the marks we care about
-  //Checks to make sure that colors it contains are sufficiently far apart.
-  var colorList = [];
-  var aColor;
-
-  mapName
-    .each(function(d){
-      aColor = d3.select(this).attr("fill");
-      if(!colorList.includes(aColor)){
-        colorList.push(aColor);
-      }
-    });
-
-    if (colorList.length==0) {
-      console.log("No valid color map");
-      return false;
-    } else {
-      var closest = minDist(colorList);
-      console.log( "The two closest colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
-      return closest.minD>5;
-    }
 }
 
 /**
