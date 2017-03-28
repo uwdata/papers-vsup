@@ -528,11 +528,12 @@ function main(){
         StdMeanErr: +d.StdMeanErr
       }
     });
-    makeFlightExample(arcScale, maps.arc, data);
+    makeFlightExample(arcScale, maps.arc, data, "arc");
+    makeFlightExample(squareScale, maps.square, data, "square");
   });
 }
 
-function makeFlightExample(colorScale, map, data) {
+function makeFlightExample(colorScale, map, data, type) {
   var w = 560;
   var h = 240;
 
@@ -587,17 +588,22 @@ function makeFlightExample(colorScale, map, data) {
   // legend
   var legendX = w + 140;
   var legendY = 40;
-  var legendSize = 180;
-  makeArcmap(heatmap, legendX, legendY, legendSize,map,colorScale);
-
-  makeArcLegend(heatmap, legendX, legendY, legendSize, map, vScale.ticks(10), uScale.domain(), "Departure Delay (minutes)", "Standard Mean Error");
+  if (type === "arc") {
+    var legendSize = 180;
+    makeArcmap(heatmap, legendX, legendY, legendSize,map,colorScale);
+    makeArcLegend(heatmap, legendX, legendY, legendSize, map, vScale.ticks(10), uScale.domain(), "Departure Delay (minutes)", "Standard Mean Error");
+  } else {
+    var legendSize = 160;
+    makeHeatmap(heatmap, legendX, legendY, legendSize,map,colorScale);
+    makeHeatmapLegend(heatmap, legendX, legendY, legendSize, map, vScale.domain(), uScale.domain(), "Departure Delay (minutes)", "Standard Mean Error");
+  }
 }
 
 function makeArcLegend(svg, x, y, size, map, vTicks, uDom, vTitle, uTitle) {
   var uStep = (uDom[1] - uDom[0]) / map.length;
   var uDom = d3.range(uDom[0], uDom[1] + uStep, uStep);
 
-  var legend = svg.append("g").attr("transform", "translate(" + x + "," + y + ")")
+  var legend = svg.append("g").attr("transform", "translate(" + x + "," + y + ")");
 
   var uScale = d3.scalePoint().domain(uDom).range([0, size]);
   var uAxis = d3.axisRight(uScale);
@@ -657,6 +663,40 @@ function makeArcLegend(svg, x, y, size, map, vTicks, uDom, vTitle, uTitle) {
     .attr("x", size/2)
     .attr("y", -35)
     .text(vTitle);
+}
+
+function makeHeatmapLegend(svg, x, y, size, map, vDom, uDom, vTitle, uTitle) {
+  var legend = svg.append("g").attr("transform", "translate(" + x + "," + y + ")");
+
+  var uStep = (uDom[1] - uDom[0]) / map.length;
+  var uDom = d3.range(uDom[0], uDom[1] + uStep, uStep);
+
+  var vStep = (vDom[1] - vDom[0]) / map[0].length;
+  var vDom = d3.range(vDom[0], vDom[1] + vStep, vStep);
+
+  var xAxis = d3.scalePoint().range([0, size]).domain(vDom);
+
+  legend.append("g")
+    .attr("transform", "translate(0, 0)")
+    .call(d3.axisTop(xAxis).tickFormat(d3.format("d")));
+
+  legend.append("text")
+    .style("text-anchor", "middle")
+    .style("font-size", 13)
+    .attr("transform", "translate(" + (size / 2) + ", " + (-40) + ")")
+    .text(vTitle);
+
+  var yAxis = d3.scalePoint().range([0, size]).domain(uDom);
+
+  legend.append("g")
+    .attr("transform", "translate(" + size + ", 0)")
+    .call(d3.axisRight(yAxis).tickFormat(d3.format("d")));
+
+  legend.append("text")
+    .style("text-anchor", "middle")
+    .style("font-size", 13)
+    .attr("transform", "translate(" + (size + 40) + ", " + (size / 2) + ")rotate(90)")
+    .text(uTitle);
 }
 
 //Uncertainty maps
