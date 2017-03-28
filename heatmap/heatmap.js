@@ -533,7 +533,7 @@ function main(){
 }
 
 function makeFlightExample(colorScale, map, data) {
-  var w = 580;
+  var w = 560;
   var h = 240;
 
   var x = d3.scaleBand().range([0, w]).domain(data.map(function(d) { return d.DepTimeBlk; }));
@@ -543,8 +543,8 @@ function makeFlightExample(colorScale, map, data) {
   var xAxis = d3.scalePoint().range([0, w]).domain([0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
   var yAxis = d3.scaleBand().range([0, h]).domain(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
   
-  var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.StdMeanErr; }))).range([0,1]);
-  var vScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.DepDelay; }))).range([0,1]);
+  var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.StdMeanErr; }))).range([0,1]).nice();
+  var vScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.DepDelay; }))).range([0,1]).nice(map[0].length);
 
   var heatmap = body.append("svg").attr("width", w + 100).attr("height", h + 60).append("g")
             .attr("transform","translate(10,10)");
@@ -586,14 +586,77 @@ function makeFlightExample(colorScale, map, data) {
 
   // legend
   var legendX = w + 140;
-  var legendY = 30;
-  var legendSize = 160;
+  var legendY = 40;
+  var legendSize = 180;
   makeArcmap(heatmap, legendX, legendY, legendSize,map,colorScale);
-  makeArcLegend(heatmap, legendX, legendY, legendSize, [0,1], [0,1]);
+
+  makeArcLegend(heatmap, legendX, legendY, legendSize, map, vScale.ticks(10), uScale.domain(), "Departure Delay", "Standard Mean Error");
 }
 
-function makeArcLegend(svg, x, y, size, vRange, uRange) {
+function makeArcLegend(svg, x, y, size, map, vTicks, uDom, vTitle, uTitle) {
+  var uStep = (uDom[0] - uDom[1]) / map.length;
+  var uDom = d3.range(uDom[1], uDom[0] + uStep, uStep);
+
+  var legend = svg.append("g").attr("transform", "translate(" + x + "," + y + ")")
+
+  var uScale = d3.scalePoint().domain(uDom).range([0, size]);
+  var uAxis = d3.axisRight(uScale);
+  legend.append("g")
+    .attr("transform", "translate(" + (size + 5) + "," + 24 + ")rotate(30)")
+    .call(uAxis);
+
+  legend.append("text")
+    .attr("transform", "translate(" + (size + 10) + "," + (28 + size / 2) + ")rotate(-60)")
+    .style("text-anchor", "middle")
+    .style("font-size", 13)
+    .text(uTitle);
+
+  var angle = d3.scaleLinear()
+    .domain([vTicks[0], vTicks[vTicks.length - 1]])
+    .range([-30, 30]);
+
+  var offset = 3;
+
+  var arc = d3.arc()
+    .innerRadius(size + offset)
+    .outerRadius(size + offset + 1)
+    .startAngle(-Math.PI/6)
+    .endAngle(Math.PI/6);
+
+  var arcAxis = legend.append("g")
+    .attr("transform", "translate(" + (size / 2) + "," + (size - offset) + ")");
   
+  arcAxis.append("path")
+    .attr("fill", "black")
+    .attr("stroke", "transparent")
+    .attr("d", arc);
+
+  var labelEnter = arcAxis.selectAll(".arc-label").data(vTicks).enter()
+    .append("g")
+      .attr("class", "arc-label")
+      .attr("transform", function(d) {
+        return "rotate(" + angle(d) + ")translate(" + 0 + "," + (-size - offset) + ")";
+      })
+  
+  labelEnter.append("text")
+    .style("font-size", "11")
+    .style("text-anchor", "middle")
+    .attr("y", -10)
+    .text(d3.format(".1f"));
+
+  labelEnter.append("line")
+    .attr("x1", 0.5)
+    .attr("x2", 0.5)
+    .attr("y1", -6)
+    .attr("y2", 0)
+    .attr("stroke", "#000");
+
+  legend.append("text")
+    .style("text-anchor", "middle")
+    .style("font-size", 13)
+    .attr("x", size/2)
+    .attr("y", -35)
+    .text(vTitle);
 }
 
 //Uncertainty maps
