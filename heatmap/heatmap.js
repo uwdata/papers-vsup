@@ -432,6 +432,7 @@ function colorSizeDiff(scaleData,threshold,startSize){
     return row.map(uSize);
   });
   var p = pGivenS(threshold,startSize);
+
   return passesSizeThreshold(colors,p,startSize);
 }
 
@@ -500,7 +501,7 @@ function makeMaps(threshold){
 }
 
 function main(){
-  var maps = makeMaps(15);
+  var maps = makeMaps(18);
 
   var squareScale = makeScaleFunction(maps.square);
   var arcScale = makeScaleFunction(maps.arc);
@@ -631,7 +632,7 @@ function makeArcLegend(svg, x, y, size, map, vTicks, uDom, vTitle, uTitle) {
 
   var arcAxis = legend.append("g")
     .attr("transform", "translate(" + (size / 2) + "," + (size - offset) + ")");
-  
+
   arcAxis.append("path")
     .attr("fill", "black")
     .attr("stroke", "transparent")
@@ -643,7 +644,7 @@ function makeArcLegend(svg, x, y, size, map, vTicks, uDom, vTitle, uTitle) {
       .attr("transform", function(d) {
         return "rotate(" + angle(d) + ")translate(" + 0 + "," + (-size - offset) + ")";
       })
-  
+
   labelEnter.append("text")
     .style("font-size", "11")
     .style("text-anchor", "middle")
