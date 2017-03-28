@@ -590,7 +590,7 @@ function makeFlightExample(colorScale, map, data) {
   var legendSize = 180;
   makeArcmap(heatmap, legendX, legendY, legendSize,map,colorScale);
 
-  makeArcLegend(heatmap, legendX, legendY, legendSize, map, vScale.ticks(10), uScale.domain(), "Departure Delay", "Standard Mean Error");
+  makeArcLegend(heatmap, legendX, legendY, legendSize, map, vScale.ticks(10), uScale.domain(), "Departure Delay (minutes)", "Standard Mean Error");
 }
 
 function makeArcLegend(svg, x, y, size, map, vTicks, uDom, vTitle, uTitle) {
