@@ -480,7 +480,7 @@ function makeMaps(threshold){
 
   n = 2;
   while (true) {
-    var startsize = toVisualAngle(25);
+    var startsize = toVisualAngle(45);
     var data = makeArcScaleData(n);
     if(colorSizeDiff(data,THRESHOLD,startsize)){
       arcSizeScaleData = data;
@@ -529,7 +529,7 @@ function main(){
       }
     });
     makeFlightExample(arcScale, maps.arc, data);
-  }); 
+  });
 }
 
 function makeFlightExample(colorScale, map, data) {
@@ -542,8 +542,8 @@ function makeFlightExample(colorScale, map, data) {
   // special scales for axes
   var xAxis = d3.scalePoint().range([0, w]).domain([0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
   var yAxis = d3.scaleBand().range([0, h]).domain(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
-  
-  var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.StdMeanErr; }))).range([0,1]).nice();
+
+  var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.StdMeanErr; }))).range([0,1]).nice(map.length);
   var vScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.DepDelay; }))).range([0,1]).nice(map[0].length);
 
   var heatmap = body.append("svg").attr("width", w + 100).attr("height", h + 60).append("g")
