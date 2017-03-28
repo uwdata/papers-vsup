@@ -594,8 +594,8 @@ function makeFlightExample(colorScale, map, data) {
 }
 
 function makeArcLegend(svg, x, y, size, map, vTicks, uDom, vTitle, uTitle) {
-  var uStep = (uDom[0] - uDom[1]) / map.length;
-  var uDom = d3.range(uDom[1], uDom[0] + uStep, uStep);
+  var uStep = (uDom[1] - uDom[0]) / map.length;
+  var uDom = d3.range(uDom[0], uDom[1] + uStep, uStep);
 
   var legend = svg.append("g").attr("transform", "translate(" + x + "," + y + ")")
 
