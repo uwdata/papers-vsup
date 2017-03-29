@@ -53,6 +53,22 @@ var vMap = scaleGenerator(d3.interpolateViridis);
 var pMap = scaleGenerator(d3.interpolatePlasma);
 var cMap = scaleGenerator(d3.interpolateCool);
 
+var vV = function(d){
+  return d3.interpolateViridis(d.v);
+}
+
+var vP = function(d){
+  return d3.interpolatePlasma(d.v);
+}
+
+var vC = function(d){
+  return d3.interpolateCool(d.v);
+}
+
+var u = function(d){
+  return d3.interpolateGreys(1-d.u);
+}
+
 function gup(name){
   var regexS = "[\\?&]"+name+"=([^&#]*)";
   var regex = new RegExp( regexS );
@@ -188,7 +204,7 @@ function makeTaskOneStimuli(){
   var stimuli = [];
 
   var types = ["juxta","2D","vsum"];
-  var ramps = ["virdisLightness","viridisSize","plasmaLightness","plasmaSize"];
+  var ramps = ["viridisLightness","viridisSize","plasmaLightness","plasmaSize"];
   var sizes = ["4","8"];
   var questions = [
     "Click on the map location with the <b>highest</b> uncertainty",
@@ -314,6 +330,14 @@ function revealTaskOne(){
     makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.arcScale);
     makeArcmap(legendSvg, 20, 60, 80,vMap.arc,vMap.arcScale);
     makeArcLegend(legendSvg, 20, 60, 80, vMap.arc, [0,100], [0,100], "Value", "Uncertainty");
+    break;
+
+    case "juxta":
+    var tempMap = makeTaskOneMap(stim.size);
+    makeHeatmap(mapSvg,0,0,200,tempMap,vV);
+    makeHeatmap(mapSvg,200,0,200,tempMap,u);
+    //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
+    //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
     break;
 
     case "2D":
