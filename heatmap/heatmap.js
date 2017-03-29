@@ -1,19 +1,3 @@
-
-//Global Variables
-
-var body = d3.select("body");
-
-var svg = body.append("svg").attr("height", 900).append("g").attr("transform","translate(10, 10)");
-
-var map = d3.interpolateViridis;
-
-//Other maps to test:
-// interpolateViridis
-// interpolateInferno
-// interpolatePlasma
-// interpolateWarm
-// interpolateCool
-
 //Chart creation functions
 
 function makeHeatmap(svg, x, y, size, data, z, name){
@@ -388,7 +372,7 @@ function makeArcScaleData(n) {
   return arr;
 }
 
-function makeScaleFunction(scaleData,mappingFunction){
+function makeScaleFunction(scaleData, mappingFunction){
   //a quantized scale function from a given scale
   return function f(d){
     var u,v;
@@ -401,30 +385,18 @@ function makeScaleFunction(scaleData,mappingFunction){
     var cols = d3.scaleQuantize().domain([0,1]).range(row);
     var value = cols(d.v);
 
-    if(!mappingFunction){
-      return uSL(value);
-    }
-    else{
-      return mappingFunction(value);
-    }
+    return mappingFunction(value);
   }
 }
 
-function numBins(scaleData){
-  var colors = scaleData.reduce(function(arr, curr) {
-    return arr.concat(curr.map(uSL));
-  }, []);
-  return colors.length;
-}
-
-function colorDiff(scaleData){
+function colorDiff(scaleData, uSL){
   var colors = scaleData.reduce(function(arr, curr) {
     return arr.concat(curr.map(uSL));
   }, []);
   return minDist(colors);
 }
 
-function colorSizeDiff(scaleData,threshold,startSize){
+function colorSizeDiff(scaleData, threshold, startSize, uSize){
   //Returns difference not in terms of color distance,
   //but as a function of whether or not the colors are at least
   //as descriminable as our target threshold, given their decreasing size.
@@ -436,16 +408,19 @@ function colorSizeDiff(scaleData,threshold,startSize){
   return passesSizeThreshold(colors,p,startSize);
 }
 
-function makeMaps(threshold){
+function makeMaps(map, threshold){
   //Create all relevant maps
   var DEFAULT_THRESHOLD = 5;
   var THRESHOLD = threshold ? threshold : DEFAULT_THRESHOLD;
   var scaleData, arcScaleData, arcSizeScaleData, closest, n;
 
+  var uSL = makeuSL(map);
+  var uSize = makeuSize(map);
+
   n = 2;
   while (true) {
     var data = makeScaleData(n);
-    var c = colorDiff(data);
+    var c = colorDiff(data, uSL);
     if (c.minD >= THRESHOLD) {
       scaleData = data;
       closest = c;
@@ -464,7 +439,7 @@ function makeMaps(threshold){
   n = 2;
   while (true) {
     var data = makeArcScaleData(n);
-    var c = colorDiff(data);
+    var c = colorDiff(data, uSL);
     if (c.minD >= THRESHOLD) {
       arcScaleData = data;
       closest = c;
@@ -483,9 +458,9 @@ function makeMaps(threshold){
   while (true) {
     var startsize = toVisualAngle(45);
     var data = makeArcScaleData(n);
-    if(colorSizeDiff(data,THRESHOLD,startsize)){
+    if(colorSizeDiff(data,THRESHOLD,startsize,uSize)){
       arcSizeScaleData = data;
-      closest = colorDiff(data);
+      closest = colorDiff(data, uSL);
     } else {
       break;
     }
@@ -500,41 +475,7 @@ function makeMaps(threshold){
   return {square:scaleData, arc:arcScaleData, arcSize: arcSizeScaleData};
 }
 
-function main(){
-  var maps = makeMaps(18);
-
-  var squareScale = makeScaleFunction(maps.square);
-  var arcScale = makeScaleFunction(maps.arc);
-  var arcSizeScale = makeScaleFunction(maps.arcSize,uSize);
-
-  makeHeatmap(svg, 0,0,250,maps.square, squareScale, "legendSquare");
-  makeArcmap(svg, 300,0,250,maps.arc,arcScale,"legendArc");
-  makeArcHexmap(svg, 600,0,250,maps.arcSize,arcSizeScale,"legendSizeArc");
-
-  var gradient = gradientData(20,20);
-  makeHeatmap(svg, 0,300,250,gradient, squareScale);
-  makeHeatmap(svg, 300,300,250,gradient, arcScale);
-
-  var random = randomData(5,5);
-  makeHeatmap(svg, 0,600,250,random, squareScale);
-  makeHeatmap(svg, 300,600,250,random, arcScale);
-
-  // flight data example heatmap
-  d3.csv("data.csv", function(data) {
-    data = data.map(function(d) {
-      return {
-        DayOfWeek: +d.DayOfWeek,
-        DepDelay: +d.DepDelay,
-        DepTimeBlk: d.DepTimeBlk,
-        StdMeanErr: +d.StdMeanErr
-      }
-    });
-    makeFlightExample(arcScale, maps.arc, data, "arc");
-    makeFlightExample(squareScale, maps.square, data, "square");
-  });
-}
-
-function makeFlightExample(colorScale, map, data, type) {
+function makeFlightExample(svg, colorScale, map, data, type) {
   var w = 560;
   var h = 240;
 
@@ -548,7 +489,7 @@ function makeFlightExample(colorScale, map, data, type) {
   var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.StdMeanErr; }))).range([0,1]).nice(map.length);
   var vScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.DepDelay; }))).range([0,1]).nice(map[0].length);
 
-  var heatmap = body.append("svg").attr("width", w + 100).attr("height", h + 60).append("g")
+  var heatmap = svg.attr("width", w + 100).attr("height", h + 60).append("g")
             .attr("transform","translate(10,10)");
 
   heatmap.selectAll("rect")
@@ -702,18 +643,19 @@ function makeHeatmapLegend(svg, x, y, size, map, vDom, uDom, vTitle, uTitle) {
 
 //Uncertainty maps
 
-function uSL(d){
-  //interpolate to white
-  var c = (d3.hsl(map(d.v)));
-  var iVal = d3.scaleLinear().domain([0,1]).range([0.0,1.0]);
-  return d3.interpolateLab(c,"white")(iVal(d.u));
+function makeuSL(map) {
+  return function(d) {
+    var c = (d3.hsl(map(d.v)));
+    var iVal = d3.scaleLinear().domain([0,1]).range([0.0,1.0]);
+    return d3.interpolateLab(c,"white")(iVal(d.u));
+  }
 }
 
-function uSize(d){
-  //size and color
-  var c = (d3.hsl(map(d.v)));
-  var sizeVal = d3.scaleLinear().domain([0,1]).range([1,0]);
-  return {"c": c, "s" : sizeVal(d.u)};
+function makeuSize(map) {
+  return function(d) {
+    //size and color
+    var c = (d3.hsl(map(d.v)));
+    var sizeVal = d3.scaleLinear().domain([0,1]).range([1,0]);
+    return {"c": c, "s" : sizeVal(d.u)};
+  }
 }
-
-main();
