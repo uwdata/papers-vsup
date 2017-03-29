@@ -8,8 +8,8 @@
 function main(){
   var body = d3.select("body");
   var svg = body.append("svg").attr("height", 900).append("g").attr("transform","translate(10, 10)");
-  
-  var map = d3.interpolateViridis;
+
+  var map = d3.interpolatePlasma;
 
   var maps = makeMaps(map, 18);
 

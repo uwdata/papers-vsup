@@ -16,12 +16,12 @@ A. Value: (Viridis, Spectral?). Uncertainty: (Lightness, Size).
 Procedure:
 1. Get Consent.
 2. Tutorial showing examples of tasks, as well as a general primer on uncertainty.
-   In this case, we'll be using variability as our uncertainty measure.
+In this case, we'll be using variability as our uncertainty measure.
 3. Identification tasks. Given a heatmap, and a location (highlighted or indicated),
-   what is the value, and what is the uncertainty?
-   or: find min and max locations
+what is the value, and what is the uncertainty?
+or: find min and max locations
 4. Roulette tasks: Given a heatmap, and n tokens, place them such that you maximize the E.V.
-   Include both gain and loss framings.
+Include both gain and loss framings.
 5. Collect demographic information, including risk assay.
 */
 
@@ -29,15 +29,29 @@ var experiment = "Pilot";
 var startTime;
 var main = d3.select("#fcontainer");
 var done = false;
+var questionNum = 1;
 
+var taskOneStimuli = [];
+var taskTwoStimuli = [];
 
-var taskOneQuestions = [
-  "Click on the most uncertain location in the map",
-  "Click on the lowest uncertainty, highest value location in the map",
-  "Click on the lowest uncertainty, lowest value location in the map"
-];
+//var map = d3.interpolateViridis;
 
-var attacking = false;
+function scaleGenerator(map){
+  var maps = makeMaps(map, 18);
+  var uSL = makeuSL(map);
+  var uSize = makeuSize(map);
+
+  var squareScale = makeScaleFunction(maps.square, uSL);
+  var arcScale = makeScaleFunction(maps.arc, uSL);
+  var arcSizeScale = makeScaleFunction(maps.arcSize, uSize);
+
+  return {"square":maps.square, "arc":maps.arc, "arcSize":maps.arcSize,
+  "cs":uSize, "cl":uSL, "squareScale": squareScale, "arcScale": arcScale, "arcSizeScale":arcSizeScale};
+}
+
+var vMap = scaleGenerator(d3.interpolateViridis);
+var pMap = scaleGenerator(d3.interpolatePlasma);
+var cMap = scaleGenerator(d3.interpolateCool);
 
 function gup(name){
   var regexS = "[\\?&]"+name+"=([^&#]*)";
@@ -45,9 +59,9 @@ function gup(name){
   var tmpURL = window.location.href;
   var results = regex.exec( tmpURL );
   if( results == null )
-    return "";
+  return "";
   else
-    return results[1];
+  return results[1];
 }
 
 var workerId = gup("workerId");
@@ -101,7 +115,7 @@ function ishihara(){
   var numPlates = 3;
 
   var platesDiv = main.append("div")
-    .attr("id","plates");
+  .attr("id","plates");
 
   for(var i = 0;i<3;i++){
     platesDiv.append("div")
@@ -170,14 +184,85 @@ function finishTutorial(){
   taskOne();
 }
 
+function makeTaskOneStimuli(){
+  var stimuli = [];
+
+  var types = ["juxta","2D","vsum"];
+  var ramps = ["virdisLightness","viridisSize","plasmaLightness","plasmaSize"];
+  var sizes = ["4","8"];
+  var questions = [
+    "Click on the map location with the <b>highest</b> uncertainty",
+    "Click on the map location with the <b>lowest</b> uncertainty AND <b>highest</b> value",
+    "Click on the map location with the <b>lowest</b> uncertainty AND <b>lowest</b> value"
+  ];
+
+  for(type of types){
+    for(size of sizes){
+      for(question of questions){
+        stimuli.push( {"type":type, "size": size, "question":question});
+      }
+    }
+  }
+
+  dl.permute(stimuli);
+  return stimuli;
+}
+
+function makeTaskOneMap(size){
+  //want to ensure that:
+  // there is at least one of each combination of
+  // high/low value and uncertainty
+  // potentially multiple answers, but no ambiguity
+
+  var mid = dl.random.uniform(0.34,0.65);
+  var high = dl.random.uniform(0.34,1.0);
+  var low = dl.random.uniform(0.0,0.65);
+
+  var values = [];
+  values.push({"v": 1.0, "u": 0.0});
+  values.push({"v": 0.0, "u": 0.0});
+  values.push({"v": 1.0, "u": 1.0});
+  values.push({"v": 0.0, "u": 1.0});
+  values.push({"v": mid(), "u": 1.0});
+  values.push({"v": 0.0, "u": mid()});
+
+
+
+  for(var i = 5;i<(size*size);i++){
+    if(Math.random()<0.5){
+      values.push({"v": Math.random(), "u": mid()});
+    }
+    else{
+      values.push({"v": mid(), "u": low()});
+    }
+  }
+
+  dl.permute(values);
+
+  var matrix = [];
+
+  for(var i = 0;i<size;i++){
+    matrix.push(Array(size));
+    for(var j = 0;j<size;j++){
+      matrix[i][j] = values[i*size + j];
+    }
+  }
+
+  return matrix;
+}
+
 function taskOne(){
+  taskOneStimuli = makeTaskOneStimuli();
+
   main.append("p")
-  .attr("id","questionTitle");
+  .attr("id","questionTitle")
+  .html("Question <span id=\"questionNum\">"+questionNum+"</span>/<span id=\"maxQuestions\">"+taskOneStimuli.length+"</span>");
 
   main.append("p")
   .html("You will be asked to find a location on a map that fits a certain criteria. Multiple locations might fit the criteria, in which case choose the any valid location.");
 
   main.append("p")
+  .attr("id","prompt")
   .html("Click the \"Ready\" button to begin.");
 
   main.append("p")
@@ -187,47 +272,94 @@ function taskOne(){
   .attr("id","answer")
   .attr("name","answer")
   .attr("value","Ready")
-  .on("click",initializeTaskOne);
+  .attr("style","position: relative; top: 225px;")
+  .on("click",revealTaskOne);
 
   main.append("svg")
-  .attr("id","map");
+  .attr("id","map")
+  .attr("style","width: 400px; height: 200px;");
 
   main.append("svg")
-  .attr("id","legend");
+  .attr("id","legend")
+  .attr("style","width: 150px; height: 200px;");
 
 }
-
 
 function initializeTaskOne(){
+  d3.select("#map").selectAll("*").remove();
+  d3.select("#legend").selectAll("*").remove();
+
+  d3.select("#prompt")
+  .html("Click the \"Ready\" button to begin.");
+
+  d3.select("#question").append("input")
+  .attr("class","button")
+  .attr("id","answer")
+  .attr("name","answer")
+  .attr("value","Ready")
+  .attr("style","position: relative; top: 225px;")
+  .on("click",revealTaskOne);
+
+}
+
+function revealTaskOne(){
   main.select("#answer").remove();
+  var mapSvg = d3.select("#map");
+  var legendSvg = d3.select("#legend");
+  var stim = taskOneStimuli[questionNum-1];
+  //"viridisLightness","viridisSize","plasmaLightness","plasmaSize"
 
-  starttime = (new Date()).getTime();
+  switch(stim.type){
+    case "vsum":
+    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.arcScale);
+    makeArcmap(legendSvg, 20, 60, 80,vMap.arc,vMap.arcScale);
+    makeArcLegend(legendSvg, 20, 60, 80, vMap.arc, [0,100], [0,100], "Value", "Uncertainty");
+    break;
+
+    case "2D":
+    default:
+    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
+    makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
+    makeHeatmapLegend(legendSvg, 20, 60, 80, vMap.square, [0,100], [0,100], "Value", "Uncertainty");
+    break;
+  }
+
+  mapSvg.selectAll("rect")
+  .on("click",answerTaskOne);
+
+  main.select("#prompt").html(stim.question);
+  startTime = (new Date()).getTime();
 }
 
 
-function answer(){
+function answerTaskOne(){
   var rt = (new Date()).getTime() - startTime;
-  writeAnswer({ "rt": rt});
+  var d = d3.select(this).datum();
+  writeAnswerTaskOne({ "workerId": workerId, "index": questionNum, "rt": rt, "v": d.v.v, "u": d.v.u});
 }
 
-function writeAnswer(response){
+function writeAnswerTaskOne(response){
+  console.log(response);
   //Called when we answer a question in the main task
   //XML to call out to a php script to store our data in a csv over in ./data/
   var writeRequest = new XMLHttpRequest();
   var writeString = "answer="+JSON.stringify(response);
   writeRequest.open("GET","data/writeJSON.php?"+writeString,true);
   writeRequest.setRequestHeader("Content-Type", "application/json");
-  writeRequest.addEventListener("load",doneAnswer);
+  writeRequest.addEventListener("load",doneAnswerTaskOne);
   writeRequest.send();
 }
 
-function doneAnswer(){
+function doneAnswerTaskOne(){
   //What to do when we get our XML request back.
 
   //TODO error handling here
-  //console.log(this.responseText);
 
   //Should check to see if we've run out of questions to answer
+  questionNum++;
+  done = questionNum>taskOneStimuli.length;
+  d3.select("#questionNum").html(questionNum);
+
   if(done){
     taskTwo();
   }
@@ -238,20 +370,17 @@ function doneAnswer(){
 }
 
 function taskTwo(){
+  main.selectAll("*").remove();
+
   main.append("div")
   .attr("id","questionTitle");
 
 
-if(attacking){
   main.append("p")
-  .html("Click to place missiles on the map on locations where you think you will sink the most ships.");
-}
-else{
-  main.append("p")
-  .html("Click to place ships on the map on locations where you think they will be safest from missiles.");
-}
+  .attr("id","question");
 
   main.append("p")
+  .attr("prompt")
   .html("Click the \"Ready\" button to confirm your choices.");
 
   main.append("svg")
@@ -274,6 +403,18 @@ else{
 
 function initializeTaskTwo(){
   starttime = (new Date()).getTime();
+
+  var stim;
+
+  if(stim.role=="attacking"){
+    d3.select("#question")
+    .html("Click to place missiles on the map on locations where you think you will sink the most ships.");
+  }
+  else{
+    d3.select("#question")
+    .html("Click to place ships on the map on locations where you think they will be safest from missiles.");
+  }
+
 }
 
 
@@ -296,12 +437,12 @@ function riskAversion(form){
   ];
 
   var valences = [
-   1,
-   1,
-   1,
-   1,
-   -1,
-   1
+    1,
+    1,
+    1,
+    1,
+    -1,
+    1
   ];
 
   //Another option is the ROQ from Rohrmann 1997
@@ -360,7 +501,7 @@ function postTest(){
   var format = d3.format(".3f");
 
   main.append("div")
-    .html("This concludes the main task of the study. Thank you for your participation!");
+  .html("This concludes the main task of the study. Thank you for your participation!");
 
   form = main.append("form")
   .attr("id","mturk_form")
@@ -401,9 +542,9 @@ function postTest(){
 
   for(var gender of genders){
     genderQ.append("input")
-      .attr("type","radio")
-      .attr("name","gender")
-      .attr("value",gender);
+    .attr("type","radio")
+    .attr("name","gender")
+    .attr("value",gender);
 
     genderQ.append("span").html(gender +"<br />");
   }
@@ -412,9 +553,9 @@ function postTest(){
 
   for(var education of educations){
     eduQ.append("input")
-      .attr("type","radio")
-      .attr("name","education")
-      .attr("value",education);
+    .attr("type","radio")
+    .attr("name","education")
+    .attr("value",education);
 
     eduQ.append("span").html(education + "<br />");
   }
@@ -423,27 +564,27 @@ function postTest(){
 
   for(var i = 0;i<experiences.length;i++){
     expQ.append("input")
-      .attr("type","radio")
-      .attr("name","experience")
-      .attr("value",i);
+    .attr("type","radio")
+    .attr("name","experience")
+    .attr("value",i);
 
     expQ.append("span").html(experiences[i]+"<br />");
   }
 
   var ageQ = dlist.append("li").html("What is your age? <br />");
   ageQ.append("input")
-    .attr("type","number")
-    .attr("name","age")
-    .attr("min","18")
-    .attr("max","100");
+  .attr("type","number")
+  .attr("name","age")
+  .attr("min","18")
+  .attr("max","100");
 
 
   var commentQ = dlist.append("li").html("Any additional comments of feedback? <br />");
 
   commentQ.append("textarea")
-    .attr("name","comments")
-    .attr("rows","4")
-    .attr("cols","50");
+  .attr("name","comments")
+  .attr("rows","4")
+  .attr("cols","50");
 
 
   form.append("input")
@@ -465,4 +606,4 @@ function ineligible(){
 
 }
 
-consent();
+taskOne();

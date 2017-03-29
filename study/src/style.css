@@ -89,3 +89,12 @@ iframe{
   min-height: 600px;
   height: 90%;
 }
+
+#map rect:hover{
+  stroke: black;
+  stroke-width: 3px;
+}
+
+#map rect{
+
+}
