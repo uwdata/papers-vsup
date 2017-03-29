@@ -30,6 +30,15 @@ var startTime;
 var main = d3.select("#fcontainer");
 var done = false;
 
+
+var taskOneQuestions = [
+  "Click on the most uncertain location in the map",
+  "Click on the lowest uncertainty, highest value location in the map",
+  "Click on the lowest uncertainty, lowest value location in the map"
+];
+
+var attacking = false;
+
 function gup(name){
   var regexS = "[\\?&]"+name+"=([^&#]*)";
   var regex = new RegExp( regexS );
@@ -73,33 +82,128 @@ function consent(){
 function finishConsent(){
   //Thing to do when we've consented.
   //Ought to be setting up for a tutorial.
-  tutorial();
+  ishihara();
+}
+
+function ishihara(){
+  var plates = [5,6,8,12,42];
+  dl.permute(plates);
+
+  main.selectAll("iframe").remove();
+  main.select("#answer").remove();
+
+  main.append("p")
+  .html("In order to be eligible for this study, you must be capable of distinguishing colors. That is, you should be free from color vision deficiency (color blindness).");
+
+  main.append("p")
+  .html("To verify this, for each of the following images, input the number that you see in each circle:");
+
+  var numPlates = 3;
+
+  var platesDiv = main.append("div")
+    .attr("id","plates");
+
+  for(var i = 0;i<3;i++){
+    platesDiv.append("div")
+    .append("img")
+    .attr("width","300px")
+    .attr("src","img/ishihara/"+plates[i]+".png");
+
+    platesDiv.append("div")
+    .html("Visible number:")
+    .append("input")
+    .attr("type","number")
+    .attr("name","plate"+plates[i])
+    .attr("id","plate"+plates[i]);
+
+  }
+
+  main.append("p")
+  .append("input")
+  .attr("class","button")
+  .attr("id","answer")
+  .attr("name","answer")
+  .attr("value","Ready")
+  .on("click",finishIshihara);
+
+}
+
+function finishIshihara(){
+  var plates = [];
+  main.select("#plates").selectAll("input").each( function(){
+    plates.push({"right": d3.select(this).attr("name").replace("plate",""), "guess": d3.select(this).property("value")});
+  });
+  console.log(plates);
+  var correct = true;
+
+  for(plate of plates){
+    correct = correct && plate.right==(plate.guess+"");
+  }
+
+  if(correct){
+    tutorial();
+  }
+  else{
+    ineligible();
+  }
+
 }
 
 function tutorial(){
   //Set up tutorial. When we're done, start the main task
-  d3.select("iframe").attr("src","tutorial.html");
-  d3.select("#answer")
-    .attr("value","Ready")
-    .on("click",finishTutorial);
+  main.selectAll("*").remove();
+
+  main.append("iframe")
+  .attr("src","tutorial.html");
+
+  main.append("input")
+  .attr("class","button")
+  .attr("id","answer")
+  .attr("name","answer")
+  .attr("value","Ready")
+  .on("click",finishTutorial);
 }
 
 function finishTutorial(){
   main.selectAll("#answer").remove();
   main.selectAll("iframe").remove();
-  task();
+  taskOne();
 }
 
-function task(){
- //Set up the main task. Should have a button that calls "writeAnswer"
+function taskOne(){
+  main.append("p")
+  .attr("id","questionTitle");
+
+  main.append("p")
+  .html("You will be asked to find a location on a map that fits a certain criteria. Multiple locations might fit the criteria, in which case choose the any valid location.");
+
+  main.append("p")
+  .html("Click the \"Ready\" button to begin.");
+
+  main.append("p")
+  .attr("id","question")
+  .append("input")
+  .attr("class","button")
+  .attr("id","answer")
+  .attr("name","answer")
+  .attr("value","Ready")
+  .on("click",initializeTaskOne);
+
+  main.append("svg")
+  .attr("id","map");
+
+  main.append("svg")
+  .attr("id","legend");
+
 }
 
 
-function initialize(){
-  //What to do when we have a new question
+function initializeTaskOne(){
+  main.select("#answer").remove();
+
   starttime = (new Date()).getTime();
-
 }
+
 
 function answer(){
   var rt = (new Date()).getTime() - startTime;
@@ -125,13 +229,53 @@ function doneAnswer(){
 
   //Should check to see if we've run out of questions to answer
   if(done){
-    finishTask();
+    taskTwo();
   }
   else{
-    initialize();
+    initializeTaskOne();
   }
 
 }
+
+function taskTwo(){
+  main.append("div")
+  .attr("id","questionTitle");
+
+
+if(attacking){
+  main.append("p")
+  .html("Click to place missiles on the map on locations where you think you will sink the most ships.");
+}
+else{
+  main.append("p")
+  .html("Click to place ships on the map on locations where you think they will be safest from missiles.");
+}
+
+  main.append("p")
+  .html("Click the \"Ready\" button to confirm your choices.");
+
+  main.append("svg")
+  .attr("id","tokenBar");
+
+  main.append("svg")
+  .attr("id","map");
+
+  main.append("svg")
+  .attr("id","legend");
+
+  main.append("input")
+  .attr("class","button")
+  .attr("id","answer")
+  .attr("name","answer")
+  .attr("value","Ready")
+  .on("click",answer);
+
+}
+
+function initializeTaskTwo(){
+  starttime = (new Date()).getTime();
+}
+
 
 function finishTask(){
   //When we're finished with all tasks.
@@ -308,6 +452,16 @@ function postTest(){
   .attr("class","button")
   .attr("name","submit")
   .attr("value","Submit");
+
+}
+
+function ineligible(){
+  main.selectAll("*").remove();
+  main.append("p")
+  .html("We're sorry, but your responses indicate that you are not eligible to participate in this study.");
+
+  main.append("p")
+  .html("Please consult our <a href=\"consent.html\" target=\"_blank\">consent form</a> for more information.");
 
 }
 
