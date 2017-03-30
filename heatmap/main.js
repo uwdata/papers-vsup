@@ -42,7 +42,7 @@ function main(){
   makeHexmap(svg, 900,300,250,gradient, arcSizeScale, MAX_SIZE);
   makeHeatmap(svg, 1200,300,250,gradient, juxtaposedValueScale);
   makeHeatmap(svg, 1500,300,250,gradient, juxtaposedUncertaintyScale);
-  
+
   var random = randomData(5,5);
   makeHeatmap(svg, 0,600,250,random, squareScale);
   makeHeatmap(svg, 300,600,250,random, arcScale);

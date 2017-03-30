@@ -524,7 +524,7 @@ function makeMaps(map, threshold, maxSize){
   // for size and color
   n = 2;
   while (true) {
-    var startsize = toVisualAngle(45);
+    var startsize = toVisualAngle(maxSize);
     var data = makeScaleData(n);
     var c = minDist(data[0].map(uSL));
     if(c.minD >=THRESHOLD && colorSizeDiff(data,THRESHOLD,startsize,uSize)){
@@ -544,7 +544,7 @@ function makeMaps(map, threshold, maxSize){
   // for size and color arc
   n = 2;
   while (true) {
-    var startsize = toVisualAngle(45);
+    var startsize = toVisualAngle(maxSize);
     var data = makeArcScaleData(n);
     var c = minDist(data[0].map(uSL));
     if(c.minD>=THRESHOLD && colorSizeDiff(data,THRESHOLD,startsize,uSize)){
