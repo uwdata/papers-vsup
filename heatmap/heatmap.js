@@ -810,7 +810,39 @@ function makeSimpleLegend(svg, x, y, height, size, data, map, title) {
     .attr("width", w)
     .attr("fill", map);
 
-  var xAxis = d3.scalePoint().range([0, size]).domain(data);
+  var step = (data[data.length-1] - data[0]) / (data.length + 1);
+  var dom = d3.range(data[0], data[data.length-1] + step, step);
+
+  var xAxis = d3.scalePoint().range([0, size]).domain(dom);
+
+  legend.append("g")
+    .attr("transform", "translate(0, " + height + ")")
+    .call(d3.axisBottom(xAxis).tickFormat(d3.format(".2f")));
+
+  legend.append("text")
+    .style("text-anchor", "middle")
+    .style("font-size", 13)
+    .attr("transform", "translate(" + (size / 2) + ", " + (height + 30) + ")")
+    .text(title);
+}
+
+function makeHexLegend(svg, x, y, height, size, data, map, title) {
+  var legend = svg.append("g").attr("transform", "translate(" + x + "," + y + ")");
+
+  var w = size / data.length;
+
+  legend.selectAll("path")
+    .data(data)
+    .enter()
+      .append("path")
+      .datum(function(d,i){ d.c = i; return d; })
+      .attr("d", function(d,i){ console.log(d, map(d)); return makeHexagon(map(d), i * w + w/2,-height/2);})
+      .attr("fill", "black");
+
+  var step = (data[data.length-1] - data[0]) / (data.length + 1);
+  var dom = d3.range(data[0], data[data.length-1] + step, step);
+
+  var xAxis = d3.scalePoint().range([0, size]).domain(dom);
 
   legend.append("g")
     .attr("transform", "translate(0, " + height + ")")
@@ -819,7 +851,7 @@ function makeSimpleLegend(svg, x, y, height, size, data, map, title) {
   legend.append("text")
     .style("text-anchor", "middle")
     .style("font-size", 13)
-    .attr("transform", "translate(" + (size / 2) + ", " + (height + 26) + ")")
+    .attr("transform", "translate(" + (size / 2) + ", " + (height + 30) + ")")
     .text(title);
 }
 
