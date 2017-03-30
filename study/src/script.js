@@ -134,7 +134,7 @@ function consent(){
 
   if(assignmentId=="ASSIGNMENT_ID_NOT_AVAILABLE"){
     readyBtn.attr("disabled","disabled");
-    readyBtn.txt("PREVIEW");
+    readyBtn.text("PREVIEW");
   }
 
 }
