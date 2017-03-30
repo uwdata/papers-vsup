@@ -387,7 +387,7 @@ function taskOne(){
   main.append("div").html("<br />");
 
   main.append("p")
-  .html("You will be asked to find a location on a map that fits a certain criteria. Multiple locations might fit the criteria, in which case choose the any valid location.");
+  .html("You will be asked to find a location on a map that fits a certain criteria. Multiple locations might fit the criteria, in which case choose any valid location.");
 
 }
 
@@ -1118,4 +1118,4 @@ function ineligible(){
 
 }
 
-taskOne();
+consent();
