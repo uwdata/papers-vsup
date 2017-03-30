@@ -198,10 +198,9 @@ A further hurdle is that not all visual variables are well-suited for conveying 
  
 \subsection{Bivariate Maps}
 
-In for visualizations like choropleth maps, heatmaps, or treemaps, visual channels such as position and length are reserved for data variables other than value (such as geographic location or relative size). In these situations, data value is habitually encoded using color. Colors in such univariate quantitative color maps should be sufficiently far apart as to be perceptually distinguishable~\cite{ware1988color}, and vary in lightness as well as hue in order to afford an implicit ordering of value~\cite{borland2007rainbow,rogowitz2001blair}. Different choices of color maps can highlight different features of the data, and should be chosen with care based on the data types and important features to be visualized~\cite{rogowitz1996not}. Given these constraints, and the perceptual non-orthogonality of color channels, the construction of \emph{bivariate} color maps is difficult. Viewers need to be able to independently assess the variables of interest, but the resulting bivariate map should also be expressive and easy to interpret. Bivariate maps with these constraints are often limited to relatively few categories (say, a 3x3 matrix as in Figure \ref{fig:example}) \cite{robertson1986generation,trumbo1981theory}. However, even simple bivariate maps can be difficult for the general audience to interpret \cite{wainer1980empirical}.
+In for visualizations like choropleth maps, heatmaps, or treemaps, visual channels such as position and length are reserved for data variables other than value (such as geographic location or relative size). In these situations, data value is habitually encoded using color. Colors in such univariate quantitative color maps should be sufficiently far apart as to be perceptually distinguishable~\cite{ware1988color}, and vary in lightness as well as hue in order to afford an implicit ordering of value~\cite{borland2007rainbow,rogowitz2001blair}. Different choices of color maps can highlight different features of the data, and should be chosen with care based on the data types and important features to be visualized~\cite{rogowitz1996not}. Given these considerations, and the perceptual non-orthogonality of color channels, the construction of \emph{bivariate} color maps is difficult. Viewers need to be able to independently assess the variables of interest, but the resulting bivariate map should also be expressive and easy to interpret. Bivariate maps with these constraints are often limited to relatively few categories (say, a 3x3 matrix as in Figure \ref{fig:example}) \cite{robertson1986generation,trumbo1981theory}. In general, the quality of bivariate color maps is a multivariate measure involving consideration of not just the component color channels, but also the interpolation scheme and the color of the surround~\cite{bernard2015survey}. However, even simple bivariate maps can be difficult for the general audience to interpret \cite{wainer1980empirical}.
 
-
-Dunn~\cite{dunn1989dynamic} attempts to circumvent these issues by dynamically allocating bins to the bivariate map. Since distinct, separable colors are limited, the dynamic approach allocates bins to regions of the highest utility. For instance, placing the dividing line between bins in areas aligned with a trend line allows the color to encode information about the sign of the residual with respect to each variable. This insight, that the bins in a bivariate map are a limited resource and so should be ``spent'' wisely, drives the creation of VSUMs, which allocate more bins in a bivariate map to regions with less uncertainty. 
+Dunn~\cite{dunn1989dynamic} attempts to circumvent these issues by dynamically allocating bins to the bivariate map. Since the amount of distinct, separable colors is limited, the dynamic approach allocates bins to regions of the highest utility. For instance, placing the dividing line between bins in areas aligned with a trend line allows the color to encode information about the sign of the residual with respect to each variable. This insight, that the bins in a bivariate map are a limited resource and so should be ``spent'' wisely, drives the creation of VSUMs, which allocate more bins in a bivariate map to regions with less uncertainty. 
 
 \section{Value-Suppressing Uncertainty Maps}
 
@@ -249,7 +248,25 @@ How quickly the number of bins decreases is another parameter of VSUMs. If this 
 
 \section{Evaluation}
 
-We performed a crowd-sourced experiment on Amazon's Mechanical Turk in order to evaluate the effectiveness of VSUMs for integrating uncertainty and value information in thematic maps.
+We performed a crowd-sourced experiment on Amazon's Mechanical Turk in order to evaluate the effectiveness of VSUMs for integrating uncertainty and value information in thematic maps. This focus on integration meant that we limited our experimental tasks to scenarios where the participants needed to consider both value and uncertainty before making a decision. After a pretest and short tutorial, we gave participants two main tasks:
+
+\begin{enumerate}
+	\item [T1] an \textbf{identification} task, where we gaves participants charts with value and uncertainty information, and asked them to locate specific regions. E.g., ``click on the region of the chart with highest uncertainty \emph{and} lowest value.''
+	\item [T2] a \textbf{prediction} task, similar to Battleship, where we gave participants charts with both \emph{forecast} and \emph{forecast uncertainty} information, and asked the participants to place tokens on the board in order to optimize expected value. E.g., ``place your $4$ ships on the safest locations on the board.''
+\end{enumerate}
+We discuss the two experimental tasks in more detail in the following sections.
+
+After completion of the main task, we solicited demographics information, and performed a domain-agnostic general risk aversion assay~\cite{mandrik2005exploring}. 
+
+\subsubsection{Identification Task}
+
+
+\subsubsection{Prediction Task}
+
+For the prediction task, participants were given the rules of a game similar to Battleship. Greis et al.~\cite{greis2016decision} employ these game-like experimental tasks to frame uncertainty information, which can be abstract or complex, to the general audience. In our task, the participant and a (fictional) adversary have to place tokens representing ships on a spatial grid. Without direct access to the location of the opponent's ships, the player then has to place tokens representing missile strikes on their opponent's grid. If a player fires a missile at a square containing a ship, then that ship is sunk. The objective is the maximize the number of enemy ships hit, while minimizing the number of your own ships that are hit. In our task, participants were given a chart encoding predictions on the location of enemy ships (in the attacking case) or potential missile strikes (in the defending case). The \emph{value} component of the prediction was the likelihood of a item being present in a particular region. The \emph{uncertainty} component was the confidence in this prediction.
+
+We included both a \textbf{gain} framing (given predictions of where your opponent's ships are, where should you launch your missiles?), and a \textbf{loss} framing (given predictions of where your opponent's missiles are, where should you place your ships?) in order to account for systematic differences in human judgments under uncertainty. Tversky \& Kahneman~\cite{tversky1985framing} illustrate that framings in terms of gains or losses produce reliably different outcomes. In general, the function of the value of gains is concave, but is convex for losses~\cite{kahneman1979prospect}. That is, avoiding a large gain is often more valuable than striving for a similarly large gain. 
+
 
 %Show:
 % 1) Juxtaposition makes people ignore/underweight uncertainty (even when they don't screw up the search task)
@@ -264,7 +281,6 @@ We performed a crowd-sourced experiment on Amazon's Mechanical Turk in order to 
 % 3) vsm
 % 4) continuous d/u map?
 
-\subsection{Methods}
 \subsubsection{Hypotheses}
 
 \subsection{Results}
@@ -272,7 +288,6 @@ We performed a crowd-sourced experiment on Amazon's Mechanical Turk in order to 
 
 We limited our population to Turkers from the United States, with a prior task approval rate of at least 90\%. As the experimental tasks required multi-hue color perception, we presented participants with a set of Ishihara plates as a pretest, and excluded participants who either misidentified the values in the plates, or who self-reported as having a color vision deficiency (CVD) in the post-test. Based on piloting, we paid participants \$X dollars an hour, for a target rate of \$8/hour. 
 
-Certain stimuli in the identification task had no uncertainty
 \section{Discussion}
 \subsection{Limitations and Future Work}
 % When should you use these things?

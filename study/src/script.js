@@ -34,6 +34,9 @@ var questionNum = 1;
 var taskOneStimuli = [];
 var taskTwoStimuli = [];
 
+var taskTwoGrid = [];
+var taskTwoTokens = 0;
+
 //var map = d3.interpolateViridis;
 
 function scaleGenerator(map){
@@ -163,7 +166,6 @@ function finishIshihara(){
   main.select("#plates").selectAll("input").each( function(){
     plates.push({"right": d3.select(this).attr("name").replace("plate",""), "guess": d3.select(this).property("value")});
   });
-  console.log(plates);
   var correct = true;
 
   for(plate of plates){
@@ -180,7 +182,7 @@ function finishIshihara(){
 }
 
 function tutorial(){
-  //Set up tutorial. When we're done, start the main task
+  //Set up tutorial. When we're done, start the first task
   main.selectAll("*").remove();
 
   main.append("iframe")
@@ -204,7 +206,7 @@ function makeTaskOneStimuli(){
   var stimuli = [];
 
   var types = ["juxta","2D","vsum"];
-  var ramps = ["viridisLightness","viridisSize","plasmaLightness","plasmaSize"];
+  var ramps = ["viridisLightness","viridisSize"];
   var sizes = ["4","8"];
   var questions = [
     "Click on the map location with the <b>highest</b> uncertainty",
@@ -212,10 +214,42 @@ function makeTaskOneStimuli(){
     "Click on the map location with the <b>lowest</b> uncertainty AND <b>lowest</b> value"
   ];
 
+  var perLevel = 1;
+
   for(type of types){
     for(size of sizes){
       for(question of questions){
-        stimuli.push( {"type":type, "size": size, "question":question});
+        for(ramp of ramps){
+          for(var i = 0;i<perLevel;i++){
+            stimuli.push( {"type":type, "ramp": ramp, "size": size, "question":question});
+          }
+        }
+      }
+    }
+  }
+
+  dl.permute(stimuli);
+  return stimuli;
+}
+
+function makeTaskTwoStimuli(){
+  var stimuli = [];
+
+  var types = ["juxta","2D","vsum"];
+  var ramps = ["lightness","size"];
+  var sizes = ["4","8"];
+  var roles = ["att","def"];
+
+  var perLevel = 1;
+
+  for(type of types){
+    for(size of sizes){
+      for(ramp of ramps){
+        for(role of roles){
+          for(var i = 0;i<perLevel;i++){
+            stimuli.push( {"type":type, "size": size, "ramp": ramp, "role": role});
+          }
+        }
       }
     }
   }
@@ -359,12 +393,11 @@ function revealTaskOne(){
 function answerTaskOne(){
   var rt = (new Date()).getTime() - startTime;
   var d = d3.select(this).datum();
-  writeAnswerTaskOne({ "workerId": workerId, "index": questionNum, "rt": rt, "v": d.v.v, "u": d.v.u});
+  writeAnswerTaskOne({ "workerId": workerId, "task": "One", "index": questionNum, "rt": rt, "v": d.v.v, "u": d.v.u, "stim":taskOneStimuli[questionNum-1]});
 }
 
 function writeAnswerTaskOne(response){
-  console.log(response);
-  //Called when we answer a question in the main task
+  //Called when we answer a question in the first task
   //XML to call out to a php script to store our data in a csv over in ./data/
   var writeRequest = new XMLHttpRequest();
   var writeString = "answer="+JSON.stringify(response);
@@ -394,43 +427,66 @@ function doneAnswerTaskOne(){
 }
 
 function taskTwo(){
+  questionNum = 1;
+  taskTwoStimuli = makeTaskTwoStimuli();
   main.selectAll("*").remove();
 
-  main.append("div")
-  .attr("id","questionTitle");
-
+  main.append("p")
+  .attr("id","questionTitle")
+  .html("Question <span id=\"questionNum\">"+questionNum+"</span>/<span id=\"maxQuestions\">"+taskTwoStimuli.length+"</span>");
 
   main.append("p")
   .attr("id","question");
 
   main.append("p")
-  .attr("prompt")
-  .html("Click the \"Ready\" button to confirm your choices.");
+  .attr("id","prompt")
+  .html("Once you have placed all targets, click the \"Confirm\" button to confirm your choices.");
 
   main.append("svg")
-  .attr("id","tokenBar");
+  .attr("id","tokenBar")
+  .attr("style","width: 400px; height: 50px;");
 
   main.append("svg")
-  .attr("id","map");
+  .attr("id","map")
+  .attr("style","width: 400px; height: 200px;");
 
   main.append("svg")
-  .attr("id","legend");
+  .attr("id","legend")
+  .attr("style","width: 150px; height: 200px;");
 
   main.append("input")
   .attr("class","button")
   .attr("id","answer")
   .attr("name","answer")
-  .attr("value","Ready")
-  .on("click",answer);
+  .attr("value","Confirm")
+  .attr("disabled","disabled")
+  .on("click",answerTaskTwo);
+
+  initializeTaskTwo();
 
 }
 
 function initializeTaskTwo(){
-  starttime = (new Date()).getTime();
 
-  var stim;
+  d3.select("#map").selectAll("*").remove();
+  d3.select("#legend").selectAll("*").remove();
+  d3.select("#tokenBar").selectAll("*").remove();
 
-  if(stim.role=="attacking"){
+  startTime = (new Date()).getTime();
+  var stim = taskTwoStimuli[questionNum-1];
+
+  var tokens = stim.size;
+  var mapSvg = d3.select("#map");
+  var legendSvg = d3.select("#legend");
+
+  taskTwoTokens = stim.size;
+
+  taskTwoGrid = [];
+  for(var i = 0;i<size;i++){
+    taskTwoGrid.push(dl.repeat(false,size));
+  }
+
+  if(stim.role=="att"){
     d3.select("#question")
     .html("Click to place missiles on the map on locations where you think you will sink the most ships.");
   }
@@ -439,8 +495,127 @@ function initializeTaskTwo(){
     .html("Click to place ships on the map on locations where you think they will be safest from missiles.");
   }
 
+  var tokenSize = 200/tokens;
+
+  var tokenImg = stim.role=="att" ? "boom.png" : "ship.png";
+  for(var i =0;i<tokens;i++){
+    d3.select("#tokenBar").append("svg:image")
+    .attr("x", i*tokenSize)
+    .attr("height", tokenSize)
+    .attr("width", tokenSize)
+    .attr("xlink:href","img/"+tokenImg)
+    .datum({"placed":false, "r": -1, "c": -1});
+
+  }
+
+  switch(stim.type){
+    case "vsum":
+    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.arcScale);
+    makeArcmap(legendSvg, 20, 60, 80,vMap.arc,vMap.arcScale);
+    makeArcLegend(legendSvg, 20, 60, 80, vMap.arc, [0,100], [0,100], "Value", "Uncertainty");
+    break;
+
+    case "juxta":
+    var tempMap = makeTaskOneMap(stim.size);
+    makeHeatmap(mapSvg,0,0,200,tempMap,vV);
+    makeHeatmap(mapSvg,200,0,200,tempMap,u);
+    //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
+    //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
+    break;
+
+    case "2D":
+    default:
+    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
+    makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
+    makeHeatmapLegend(legendSvg, 20, 60, 80, vMap.square, [0,100], [0,100], "Value", "Uncertainty");
+    break;
+  }
+
+  mapSvg.selectAll("rect")
+  .on("click",placeToken);
+
 }
 
+function placeToken(){
+  if(taskTwoTokens>0){
+    var d = d3.select(this).datum();
+    taskTwoGrid[d.r][d.c] = true;
+    //gimme the first unplaced token
+    var token = d3.select("#tokenBar").selectAll("image").filter(function(t){ return !t.placed;});
+    token = d3.select(token.node());
+    token.attr("y","-50px");
+    token.datum().placed = true;
+    token.datum().r = d.r;
+    token.datum().c = d.c;
+    token.datum().v = d.v.v;
+    token.datum().u = d.v.u;
+
+    d3.select("#map").append("svg:image")
+    .attr("x",d.c*token.attr("width"))
+    .attr("y",d.r*token.attr("height"))
+    .attr("width",token.attr("width"))
+    .attr("height",token.attr("height"))
+    .attr("transform",d3.select("#map").select("g").attr("transform"))
+    .attr("xlink:href",token.attr("xlink:href"))
+    .datum({"r": d.r, "c": d.c})
+    .on("click",removeToken);
+
+    taskTwoTokens--;
+    if(taskTwoTokens==0){
+      d3.select("#answer").attr("disabled",null);
+    }
+  }
+}
+
+function removeToken(){
+    var d = d3.select(this).datum();
+    taskTwoGrid[d.r][d.c] = false;
+    //gimme the token that was placed here
+    var token = d3.select("#tokenBar").selectAll("image").filter(function(t){ return d.r==t.r && d.c==t.c;});
+    token.attr("y","0px");
+    token.datum().placed = false;
+    token.datum().u = -1;
+    token.datum().v = -1;
+    taskTwoTokens++;
+    d3.select(this).remove();
+}
+
+function answerTaskTwo(){
+  var rt = (new Date()).getTime() - startTime;
+  var data = [];
+  var d = d3.select("#tokenBar").selectAll("image").each(function(d){ data.push({"v":d.v, "u":d.u});});
+  writeAnswerTaskTwo({ "workerId": workerId, "task": "Two", "index": questionNum, "rt": rt, "items": data, "stim":taskTwoStimuli[questionNum-1]});
+}
+
+function writeAnswerTaskTwo(response){
+  //Called when we answer a question in the second task
+  //XML to call out to a php script to store our data in a csv over in ./data/
+  var writeRequest = new XMLHttpRequest();
+  var writeString = "answer="+JSON.stringify(response);
+  writeRequest.open("GET","data/writeJSON.php?"+writeString,true);
+  writeRequest.setRequestHeader("Content-Type", "application/json");
+  writeRequest.addEventListener("load",doneAnswerTaskTwo);
+  writeRequest.send();
+}
+
+function doneAnswerTaskTwo(){
+  //What to do when we get our XML request back.
+
+  //TODO error handling here
+
+  //Should check to see if we've run out of questions to answer
+  questionNum++;
+  done = questionNum>taskTwoStimuli.length;
+  d3.select("#questionNum").html(questionNum);
+
+  if(done){
+    finishTask();
+  }
+  else{
+    initializeTaskTwo();
+  }
+
+}
 
 function finishTask(){
   //When we're finished with all tasks.
@@ -630,4 +805,4 @@ function ineligible(){
 
 }
 
-taskOne();
+consent();
