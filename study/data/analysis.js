@@ -11,9 +11,9 @@ function process(){
   // 6. save that sucker for the repo (in cleandata.csv)
   // 7. do analysis.
 
-  var demoTable = dl.csv("./demo.csv");
-  var dataOneTable = dl.csv("./dataOne.csv");
-  var dataTwoTable = dl.csv("./dataTwo.csv");
+  var demoTable = dl.csv("demo.csv");
+  var dataOneTable = dl.csv("dataOne.csv");
+  var dataTwoTable = dl.csv("dataTwo.csv");
 
   var cleanedOne = [];
   var cleanedTwo = [];
@@ -23,7 +23,7 @@ function process(){
 
   for(var i = 0;i<demoTable.length;i++){
     row = demoTable[i];
-    turkId = row.WorkerId;
+    turkId = row.workerId;
     valids = dataOneTable.filter(function(x){ return x.id == turkId;});
     valids = cleanRows(valids,i);
     cleanedOne = cleanedOne.concat(valids);
@@ -40,7 +40,7 @@ function process(){
   for(var i = 0;i<cleanedTwo.length;i++){
     writeRow(cleanedTwo[i]);
   }
-  
+
   dataOne = cleanedOne;
   dataTwo = cleanedTwo;
 }
