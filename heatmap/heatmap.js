@@ -618,15 +618,81 @@ function makeFlightExample(svg, colorScale, map, data, type) {
 
   // legend
   var legendX = w + 140;
-  var legendY = 40;
   if (type === "arc") {
-    var legendSize = 180;
+    var legendY = 60;
+    var legendSize = 160;
     makeArcmap(heatmap, legendX, legendY, legendSize,map,colorScale);
     makeArcLegend(heatmap, legendX, legendY, legendSize, map, vScale.ticks(10), uScale.domain(), "Departure Delay (minutes)", "Standard Mean Error");
   } else {
-    var legendSize = 160;
+    var legendY = 80;
+    var legendSize = 140;
     makeHeatmap(heatmap, legendX, legendY, legendSize,map,colorScale);
     makeHeatmapLegend(heatmap, legendX, legendY, legendSize, map, vScale.domain(), uScale.domain(), "Departure Delay (minutes)", "Standard Mean Error");
+  }
+}
+
+function makeViralExample(svg, colorScale, map, data, type) {
+  var w = 560;
+  var h = 240;
+
+  var x = d3.scaleBand().range([0, w]).domain(data.map(function(d) { return d.Position; }));
+  var y = d3.scaleBand().range([0, h]).domain(data.map(function(d) { return d.Individual; }));
+
+  var xAxis = d3.scaleLinear().range([0, w]).domain(d3.extent(data.map(function(d) { return d.Position; })));
+
+  var uScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.Mutation; }))).range([0,1]).nice(map.length);
+  var vScale = d3.scaleLinear().domain(d3.extent(data.map(function(d) { return d.BadReads; }))).range([0,1]).nice(map[0].length);
+
+  var heatmap = svg.attr("width", w + 100).attr("height", h + 60).append("g")
+            .attr("transform","translate(10,10)");
+
+  heatmap.selectAll("rect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.Position); })
+    .attr("y", function(d) { return y(d.Individual); })
+    .attr("width", x.bandwidth())
+    .attr("height", y.bandwidth())
+    .attr("title", JSON.stringify)
+    .attr("fill", function(d) { return colorScale({
+      u: uScale(d.Mutation),
+      v: vScale(d.BadReads)
+    });});
+
+  // axes
+  heatmap.append("g")
+    .attr("transform", "translate(0," + h + ")")
+    .call(d3.axisBottom(xAxis));
+
+  heatmap.append("text")
+    .style("text-anchor", "middle")
+    .style("font-size", 13)
+    .attr("transform", "translate(" + (w / 2) + ", " + (h + 40) + ")")
+    .text("Position")
+
+  heatmap.append("g")
+    .attr("transform", "translate(" + w + ", 0)")
+    .call(d3.axisRight(y));
+
+  heatmap.append("text")
+    .style("text-anchor", "middle")
+    .style("font-size", 13)
+    .attr("transform", "translate(" + (w + 80) + ", " + (h / 2) + ")rotate(90)")
+    .text("Individual");
+
+  // legend
+  var legendX = w + 140;
+  if (type === "arc") {
+    var legendY = 60;
+    var legendSize = 160;
+    makeArcmap(heatmap, legendX, legendY, legendSize,map,colorScale);
+    makeArcLegend(heatmap, legendX, legendY, legendSize, map, vScale.ticks(10), uScale.domain(), "Mutations", "Bad Reads");
+  } else {
+    var legendY = 80;
+    var legendSize = 140;
+    makeHeatmap(heatmap, legendX, legendY, legendSize,map,colorScale);
+    makeHeatmapLegend(heatmap, legendX, legendY, legendSize, map, vScale.domain(), uScale.domain(), "Mutations", "Bad Reads");
   }
 }
 
@@ -693,7 +759,7 @@ function makeArcLegend(svg, x, y, size, map, vTicks, uDom, vTitle, uTitle) {
     .style("text-anchor", "middle")
     .style("font-size", 13)
     .attr("x", size/2)
-    .attr("y", -35)
+    .attr("y", -40)
     .text(vTitle);
 }
 
@@ -715,7 +781,7 @@ function makeHeatmapLegend(svg, x, y, size, map, vDom, uDom, vTitle, uTitle) {
   legend.append("text")
     .style("text-anchor", "middle")
     .style("font-size", 13)
-    .attr("transform", "translate(" + (size / 2) + ", " + (-40) + ")")
+    .attr("transform", "translate(" + (size / 2) + ", " + (-30) + ")")
     .text(vTitle);
 
   var yAxis = d3.scalePoint().range([0, size]).domain(uDom);
@@ -753,7 +819,7 @@ function makeSimpleLegend(svg, x, y, height, size, data, map, title) {
   legend.append("text")
     .style("text-anchor", "middle")
     .style("font-size", 13)
-    .attr("transform", "translate(" + (size / 2) + ", " + (height + 30) + ")")
+    .attr("transform", "translate(" + (size / 2) + ", " + (height + 26) + ")")
     .text(title);
 }
 

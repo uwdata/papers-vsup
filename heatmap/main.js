@@ -65,6 +65,23 @@ function main(){
     makeFlightExample(body.append("svg"), arcScale, maps.arc, data, "arc");
     makeFlightExample(body.append("svg"), squareScale, maps.square, data, "square");
   });
+
+  // genome data example heatmap
+  d3.csv("viraldata.csv", function(data) {
+    data = data.map(function(d) {
+      return {
+        Individual: d.Individual,
+        Position: +d.Position,
+        Mutation: +d.Mutation,
+        BadReads: +d.BadReads
+      }
+    }).filter(function(d) {
+      return d.Position < 500 && d.Position < 700
+    });
+
+    makeViralExample(body.append("svg"), arcScale, maps.arc, data, "arc");
+    makeViralExample(body.append("svg"), squareScale, maps.square, data, "square");
+  });
 }
 
 main();
