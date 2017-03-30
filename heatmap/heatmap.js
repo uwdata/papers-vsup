@@ -435,11 +435,57 @@ function makeMaps(map, threshold, maxSize){
   //Create all relevant maps
   var DEFAULT_THRESHOLD = 5;
   var THRESHOLD = threshold ? threshold : DEFAULT_THRESHOLD;
-  var scaleData, arcScaleData, arcSizeScaleData, closest, n;
+  var scaleData, arcScaleData, arcSizeScaleData, linearValueData, linearUncertaintyData, closest, n;
 
   var uSL = makeuSL(map);
   var uSize = makeuSize(map, maxSize);
 
+  // for juxtaposed
+  n = 2;
+  while (true) {
+    var data = d3.range(0, 1 + 1/n, 1/n);
+    var c = colorDiff([data], map);
+    if (c.minD >= THRESHOLD) {
+      linearValueData = data;
+      closest = c;
+    }
+    else {
+      break;
+    }
+    n++;
+  }
+  if (!closest) {
+    console.log("No valid linear color map at threshold "+THRESHOLD);
+  }
+  else{
+    console.log("The two closest linear value colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+  }
+
+  var bw = d3.scaleLinear()
+    .domain([0,1])
+    .range(["white", "black"]);
+
+  n = 2;
+  while (true) {
+    var data = d3.range(0, 1 + 1/n, 1/n);
+    var c = colorDiff([data], bw);
+    if (c.minD >= THRESHOLD) {
+      linearUncertaintyData = data;
+      closest = c;
+    }
+    else {
+      break;
+    }
+    n++;
+  }
+  if (!closest) {
+    console.log("No valid linear color map at threshold "+THRESHOLD);
+  }
+  else{
+    console.log("The two closest linear uncertainty colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+  }
+
+  // for matrix
   n = 2;
   while (true) {
     var data = makeScaleData(n);
@@ -457,8 +503,10 @@ function makeMaps(map, threshold, maxSize){
     console.log("No valid matrix color map at threshold "+THRESHOLD);
   }
   else{
-    console.log("The two closest arc size colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
+    console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
   }
+
+  // for arc
   n = 2;
   while (true) {
     var data = makeArcScaleData(n);
@@ -477,6 +525,7 @@ function makeMaps(map, threshold, maxSize){
     console.log("The two closest arc colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
   }
 
+  // for size and color
   n = 2;
   while (true) {
     var startsize = toVisualAngle(45);
@@ -492,10 +541,10 @@ function makeMaps(map, threshold, maxSize){
   if (!closest) {
     console.log("No valid arc size color map at threshold "+THRESHOLD);
   } else {
-    console.log("The two closest matrix colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" units apart in CIELAB");
+    console.log("The two closest arc size colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" units apart in CIELAB");
   }
 
-  return {square:scaleData, arc:arcScaleData, arcSize: arcSizeScaleData};
+  return {square:scaleData, arc:arcScaleData, arcSize: arcSizeScaleData, linearValue: linearValueData, linearUncertainty: linearUncertaintyData};
 }
 
 function makeFlightExample(svg, colorScale, map, data, type) {
