@@ -103,6 +103,7 @@ function consent(){
   .attr("id","answer")
   .attr("name","answer")
   .attr("value","I Consent")
+  .attr("type", "button")
   .on("click",finishConsent);
 
   if(assignmentId=="ASSIGNMENT_ID_NOT_AVAILABLE"){
