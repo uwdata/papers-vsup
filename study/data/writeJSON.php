@@ -9,9 +9,7 @@
   echo $_GET['answer']."\n";
   $answer = json_decode($_GET['answer'],true);
   $cleaned = $_GET['clean'];
-  if($cleaned=='true'){
-    $path = 'cleandata.csv';
-  }
+
   else{
     if($_GET['task']=="Two"){
       $path = 'dataTwo.csv';
@@ -20,6 +18,11 @@
       $path = 'dataOne.csv';
     }
   }
+
+  if($cleaned=='true'){
+    $path = 'clean'.$path;
+  }
+
   $file = fopen($path,'a');
   $keys = array_keys($answer);
   if(filesize($path)==0){
