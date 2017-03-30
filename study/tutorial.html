@@ -6,12 +6,6 @@
   <body class="fcontainer">
       <h3>Uncertainty in Heat Maps</h3>
         <p>
-          Data often has an associated uncertainty.
-          A weather forecast, for instance, might say that there's a 40% chance of 2 inches of snow accumulation.
-          The <i>2 inches of snow</i> is the prediction, and the <i>40%</i> might be our confidence in this prediction.
-        </p>
-
-        <p>
           In this study, you will be asked to interpret charts of data and uncertainty, and make predictions based on these charts.
           These charts represent <b>maps</b> of a region, where each location has an associated <b>value</b> and an <b>uncertainty</b> about that value.
           You will be presented with three kinds of charts.
@@ -19,57 +13,57 @@
 
           <div class="figure">
             <div>
-              <img src="./img/juxtaposed.jng" />
+              <img src="img/juxtaposed.png" />
               <span>Two <i>side by side</i> charts. The map showing the data is on the left, and the map showing uncertainty is on the right. </span>
             </div>
           </div>
 
           <div class="figure">
             <div>
-              <img src="./img/superimposed.jng" />
+              <img src="img/superimposed.png" />
               <span>A <i>single</i> map where each combination of data and uncertainty is given a different, unique color.</span>
             </div>
           </div>
 
           <div class="figure">
             <div>
-              <img src="./img/vsum.jng" />
+              <img src="img/vsum.png" />
               <span>A <i>single</i> map where, as we become more uncertain about data, the number of colors for showing the data decreases.</span>
             </div>
           </div>
 
          <p>
            There are two tasks in this study.
-           In the first <b>identification</b> task, you will be given a chart, and asked to select a region in the chart that fits some criteria.
-           For instance, you may be asked to find the location on the map with the color representing the highest uncertainty.
-           There may be multiple locations that fit the requirements.
+           In the first task, you will be given a chart, and asked to select a region in the chart that meets some criteria.
+           For instance, you may be asked to find the location on the map with the highest uncertainty.
+           There may be multiple locations that meet the requirements.
            Select the <b>first location you see</b> that meets the requirements. Click on a location to input your answer.
          </p>
 
          <div class="figure">
            <div>
-             <img src="./img/task1.jng" />
-             <span>An example of the identification task. The participant has to find a location with <i>the lowest uncertainty, and the lowest value</i>. Any of the locations highlighted in red would be valid answers.</span>
+             <img src="img/task1.png" />
+             <span>An example of the first task. You have to find a location with <i>the lowest uncertainty, and the lowest value</i>. Any of the locations highlighted in red would be valid answers.</span>
            </div>
          </div>
 
          <p>
-           In the second task, you are either <i>attacking</i> or <i>defending</i> in a simulated ship sinking game.
+           In the second task, you are either <i>attacking</i> or <i>defending</i> in a game like Battleship.
            In this game, each opponent places their ships on locations on the board, without letting the opponent see where they are placed.
            The player then selects locations to fire missiles. If a player fires missiles in the same square as an opponent's ship, that ship is sunk.
-           The player with the most ships left at the end of the game is the winner.
            A simulated forecasting model has indicated the likely locations of ships and missiles, but there are varying levels of uncertainty in the model's predictions.
-           This means that, even if the model has predicted that an area is safe or dangerous, if there is high enough uncertainty, the model's predictions may not be trustworthy.
+           This means that predictions with high uncertainty may not be trustworthy.
          </p>
 
          <p>
-           The attacker will be given a map showing the likely locations of ships, along with the uncertainty in this prediction.
-           Click locations to target them, or to remove targets. Once you have selected all of your targets, click the "Ready" button.
+           As an attacker, you will be shown a prediction of the likely locations of ships, along with the uncertainty in this prediction.
+           Click locations to target them, or to remove targets. Once you have selected all of your targets, click the "Confirm" button.
+           Your objective is to hit as many ships as possible.
          </p>
 
          <div class="figure">
            <div>
-             <img src="./img/task2a.jng" />
+             <img src="img/task2a.png" />
              <span>An example of the <i>attacker</i> task. The participant must target 4 locations to attack.
                The locations circled here in red are forecasted as being highly likely to contain ships, and the confidence in that forecast is high.
                The location circled in orange is also forecasted as highly likely to contain ships, but the confidence is much lower.
@@ -80,13 +74,14 @@
          </div>
 
          <p>
-           The defender will be given a map showing the likely location of missile strikes, along with the uncertainty in these predictions.
+           As a defender, you will be shown a prediction of the likely locations of missile strikes, along with the uncertainty in these predictions.
            Click locations to place your ships, or to remove ships you previously placed. Once you have placed all of your ships, click the "Ready" button.
+           Your objective is to have as few of your ships hit as possible.
          </p>
 
       <div class="figure">
         <div>
-          <img src="./img/task2b.jng" />
+          <img src="img/task2b.jng" />
           <span>An example of the <i>defender</i> task. Here, ships should be placed in the safest locations.
             The locations marked in red is listed as unlikely to be targeted, and confidence in this prediction is high.
             The location in orange is listed as unlikely to be targeted, but confidence is low.

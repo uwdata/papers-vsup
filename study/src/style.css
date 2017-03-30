@@ -61,7 +61,8 @@ iframe {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: 100%;
+  margin: auto;
+  width: 95%
 }
 
 .figure{
@@ -96,6 +97,7 @@ iframe{
   width: 100%;
   min-height: 600px;
   height: 90%;
+  border: none;
 }
 
 #map rect:hover{

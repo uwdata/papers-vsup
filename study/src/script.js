@@ -40,7 +40,7 @@ var taskTwoTokens = 0;
 //var map = d3.interpolateViridis;
 
 function scaleGenerator(map){
-  var maps = makeMaps(map, 18);
+  var maps = makeMaps(map, 15);
   var uSL = makeuSL(map);
   var uSize = makeuSize(map);
 
@@ -100,6 +100,7 @@ function consent(){
 
   var readyBtn = main.append("button")
   .attr("class","button")
+  .attr("type","button")
   .attr("id","answer")
   .attr("name","answer")
   .text("I Consent")
@@ -154,6 +155,7 @@ function ishihara(){
   main.append("p")
   .append("button")
   .attr("class","button")
+  .attr("type","button")
   .attr("id","answer")
   .attr("name","answer")
   .text("Ready")
@@ -190,6 +192,7 @@ function tutorial(){
 
   main.append("button")
   .attr("class","button")
+  .attr("type","button")
   .attr("id","answer")
   .attr("name","answer")
   .text("Ready")
@@ -319,6 +322,7 @@ function taskOne(){
   .attr("id","question")
   .append("button")
   .attr("class","button")
+  .attr("type","button")
   .attr("id","answer")
   .attr("name","answer")
   .text("Ready")
@@ -327,11 +331,11 @@ function taskOne(){
 
   main.append("svg")
   .attr("id","map")
-  .attr("style","width: 400px; height: 200px;");
+  .attr("style","width: 450px; height: 200px;");
 
   main.append("svg")
   .attr("id","legend")
-  .attr("style","width: 400px; height: 200px;");
+  .attr("style","width: 250px; height: 250px;");
 
 }
 
@@ -344,6 +348,7 @@ function initializeTaskOne(){
 
   d3.select("#question").append("button")
   .attr("class","button")
+  .attr("type","button")
   .attr("id","answer")
   .attr("name","answer")
   .text("Ready")
@@ -359,17 +364,20 @@ function revealTaskOne(){
   var stim = taskOneStimuli[questionNum-1];
   //"viridisLightness","viridisSize","plasmaLightness","plasmaSize"
 
+  var vLabel = "Value";
+  var uLabel = "Uncertainty";
+
   switch(stim.type){
     case "vsum":
     makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.arcScale);
-    makeArcmap(legendSvg, 20, 60, 160,vMap.arc,vMap.arcScale);
-    makeArcLegend(legendSvg, 20, 60, 160, vMap.arc, [0,100], [0,100], "Value", "Uncertainty");
+    makeArcmap(legendSvg, 20, 50, 160,vMap.arc,vMap.arcScale);
+    makeArcLegend(legendSvg, 20, 50, 160, vMap.arc, [0,100], [0,100], vLabel, uLabel);
     break;
 
     case "juxta":
     var tempMap = makeTaskOneMap(stim.size);
     makeHeatmap(mapSvg,0,0,200,tempMap,vV);
-    makeHeatmap(mapSvg,200,0,200,tempMap,u);
+    makeHeatmap(mapSvg,225,0,200,tempMap,u);
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
     break;
@@ -377,8 +385,8 @@ function revealTaskOne(){
     case "2D":
     default:
     makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
-    makeHeatmap(legendSvg, 20, 60, 160,vMap.square,vMap.squareScale);
-    makeHeatmapLegend(legendSvg, 20, 60, 160, vMap.square, [0,100], [0,100], "Value", "Uncertainty");
+    makeHeatmap(legendSvg, 20, 50, 160,vMap.square,vMap.squareScale);
+    makeHeatmapLegend(legendSvg, 20, 50, 160, vMap.square, [0,100], [0,100], vLabel, uLabel);
     break;
   }
 
@@ -393,12 +401,18 @@ function revealTaskOne(){
 function answerTaskOne(){
   var rt = (new Date()).getTime() - startTime;
   var d = d3.select(this).datum();
-  writeAnswerTaskOne({ "workerId": workerId, "task": "One", "index": questionNum, "rt": rt, "v": d.v.v, "u": d.v.u, "stim":taskOneStimuli[questionNum-1]});
+  var stim = taskOneStimuli[questionNum-1];
+  var answerData = { "workerId": workerId, "task": "One", "index": questionNum, "rt": rt, "v": d.v.v, "u": d.v.u};
+  for(stimProp in stim){
+    answerData[stimProp] = stim[stimProp];
+  }
+  writeAnswerTaskOne(answerData);
 }
 
 function writeAnswerTaskOne(response){
   //Called when we answer a question in the first task
   //XML to call out to a php script to store our data in a csv over in ./data/
+  console.log(response);
   var writeRequest = new XMLHttpRequest();
   var writeString = "answer="+JSON.stringify(response);
   writeRequest.open("GET","data/writeJSON.php?"+writeString,true);
@@ -448,14 +462,15 @@ function taskTwo(){
 
   main.append("svg")
   .attr("id","map")
-  .attr("style","width: 400px; height: 200px;");
+  .attr("style","width: 450px; height: 200px;");
 
   main.append("svg")
   .attr("id","legend")
-  .attr("style","width: 400px; height: 200px;");
+  .attr("style","width: 250px; height: 250px;");
 
   main.append("input")
   .attr("class","button")
+  .attr("type","button")
   .attr("id","answer")
   .attr("name","answer")
   .attr("value","Confirm")
@@ -488,11 +503,11 @@ function initializeTaskTwo(){
 
   if(stim.role=="att"){
     d3.select("#question")
-    .html("Click to place missiles on the map on locations where you think you will sink the most ships.");
+    .html("Click to place missiles on the map on locations where you think you will sink the most ships: where the probability of ship is <b>highest</b>.");
   }
   else{
     d3.select("#question")
-    .html("Click to place ships on the map on locations where you think they will be safest from missiles.");
+    .html("Click to place ships on the map on locations where you think your ships are safest: where the probabilty of a strike is <b>lowest</b>.");
   }
 
   var tokenSize = 200/tokens;
@@ -508,31 +523,39 @@ function initializeTaskTwo(){
 
   }
 
+  var vLabel = stim.role=="att" ? "Probability of Ship" : "Probability of Missile Strike";
+  var uLabel = "Uncertainty of Prediction";
+
+  var taskMap = stim.role=="att" ? pMap : cMap;
+  var taskJMap = stim.role=="att" ? vP : vC;
+
   switch(stim.type){
     case "vsum":
-    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.arcScale);
-    makeArcmap(legendSvg, 20, 60, 80,vMap.arc,vMap.arcScale);
-    makeArcLegend(legendSvg, 20, 60, 160, vMap.arc, [0,100], [0,100], "Value", "Uncertainty");
+    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),taskMap.arcScale);
+    makeArcmap(legendSvg, 20, 50, 160,taskMap.arc,taskMap.arcScale);
+    makeArcLegend(legendSvg, 20, 50, 160, taskMap.arc, [0,100], [0,100], vLabel, uLabel);
     break;
 
     case "juxta":
     var tempMap = makeTaskOneMap(stim.size);
-    makeHeatmap(mapSvg,0,0,200,tempMap,vV);
-    makeHeatmap(mapSvg,200,0,200,tempMap,u);
+    makeHeatmap(mapSvg,0,0,200,tempMap,taskJMap);
+    makeHeatmap(mapSvg,225,0,200,tempMap,u);
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
     break;
 
     case "2D":
     default:
-    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
-    makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
-    makeHeatmapLegend(legendSvg, 20, 60, 160, vMap.square, [0,100], [0,100], "Value", "Uncertainty");
+    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),taskMap.squareScale);
+    makeHeatmap(legendSvg, 20, 50, 160,taskMap.square,taskMap.squareScale);
+    makeHeatmapLegend(legendSvg, 20, 50, 160, taskMap.square, [0,100], [0,100], vLabel, uLabel);
     break;
   }
 
   mapSvg.selectAll("rect")
   .on("click",placeToken);
+
+  d3.select("#answer").attr("disabled","disabled");
 
 }
 
@@ -581,15 +604,26 @@ function removeToken(){
 }
 
 function answerTaskTwo(){
-  var rt = (new Date()).getTime() - startTime;
   var data = [];
   var d = d3.select("#tokenBar").selectAll("image").each(function(d){ data.push({"v":d.v, "u":d.u});});
-  writeAnswerTaskTwo({ "workerId": workerId, "task": "Two", "index": questionNum, "rt": rt, "items": data, "stim":taskTwoStimuli[questionNum-1]});
+  var rt = (new Date()).getTime() - startTime;
+  var stim = taskTwoStimuli[questionNum-1];
+  var answerData = { "workerId": workerId, "task": "Two", "index": questionNum, "rt": rt};
+  for(stimProp in stim){
+    answerData[stimProp] = stim[stimProp];
+  }
+  answerData.meanV = dl.mean(data,"v");
+  answerData.meanU = dl.mean(data,"u");
+  answerData.stdV = dl.stdev(data,"v");
+  answerData.stdU = dl.stdev(data,"u");
+
+  writeAnswerTaskTwo(answerData);
 }
 
 function writeAnswerTaskTwo(response){
   //Called when we answer a question in the second task
   //XML to call out to a php script to store our data in a csv over in ./data/
+  console.log(response);
   var writeRequest = new XMLHttpRequest();
   var writeString = "answer="+JSON.stringify(response);
   writeRequest.open("GET","data/writeJSON.php?"+writeString,true);
@@ -688,6 +722,9 @@ function riskAversion(form){
       .attr("value",i*valences[index]);
 
     }
+
+    question.append("span").html("<br/>");
+
     index++;
   }
 }
@@ -715,6 +752,8 @@ function postTest(){
 
   riskAversion(form);
 
+  var q;
+
   form.append("div")
   .html("We will now ask for demographic information. You will also have the chance to give feedback. <br />");
 
@@ -725,52 +764,64 @@ function postTest(){
   var experiences = ["1. No experience","2.","3. Some experience","4.","5. A great deal of experience"];
 
   var visionQ = dlist.append("li").html("Do you have normal vision (or vision which has been corrected to normal)? <br />");
+ var q = visionQ.append("label");
 
-  visionQ.append("input")
+  q.append("input")
   .attr("type","radio")
   .attr("name","vision")
   .attr("value","Yes");
-  visionQ.append("span").html("Yes <br />");
-  visionQ.append("input")
+  q.append("span").html("Yes <br />");
+
+  q = visionQ.append("label");
+
+  q.append("input")
   .attr("type","radio")
   .attr("name","vision")
   .attr("value","No");
-  visionQ.append("span").html("No <br />");
+  q.append("span").html("No <br />");
 
   var genderQ = dlist.append("li").html("What is your gender <br />");
 
+
   for(var gender of genders){
-    genderQ.append("input")
+    q = genderQ.append("label");
+
+    q.append("input")
     .attr("type","radio")
     .attr("name","gender")
     .attr("value",gender);
 
-    genderQ.append("span").html(gender +"<br />");
+    q.append("span").html(gender +"<br />");
   }
 
   var eduQ = dlist.append("li").html("What is your highest level of education? <br />");
 
   for(var education of educations){
-    eduQ.append("input")
+    q = eduQ.append("label");
+
+    q.append("input")
     .attr("type","radio")
     .attr("name","education")
     .attr("value",education);
 
-    eduQ.append("span").html(education + "<br />");
+    q.append("span").html(education + "<br />");
   }
 
   var expQ = dlist.append("li").html("How do you rate your experience interpreting graphs and charts (1-5)? <br />");
 
   for(var i = 0;i<experiences.length;i++){
-    expQ.append("input")
+    q = expQ.append("label");
+
+    q.append("input")
     .attr("type","radio")
     .attr("name","experience")
     .attr("value",i);
 
-    expQ.append("span").html(experiences[i]+"<br />");
+    q.append("span").html(experiences[i]+"<br />");
   }
 
   var ageQ = dlist.append("li").html("What is your age? <br />");
+
   ageQ.append("input")
   .attr("type","number")
   .attr("name","age")
@@ -790,6 +841,7 @@ function postTest(){
   .attr("id","turkBtn")
   .attr("type","submit")
   .attr("class","button")
+  .attr("type","button")
   .attr("name","submit")
   .attr("value","Submit");
 
@@ -805,4 +857,4 @@ function ineligible(){
 
 }
 
-consent();
+tutorial();
