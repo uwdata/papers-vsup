@@ -28,6 +28,30 @@ function makeHeatmap(svg, x, y, size, data, z, name){
     .attr("fill", function(d){ return z(d.v);});
 }
 
+function makeHexmap(svg, x, y, size, data, z, maxSize, name){
+  var w = size/data[0].length;
+  var h = size/data.length;
+
+  var heatmap = svg.append("g")
+             .attr("transform","translate("+(x+maxSize)+","+(y+maxSize)+")");
+
+  if(name){
+    heatmap.attr("id",name);
+  }
+
+  heatmap.selectAll("g")
+  .data(data)
+  .enter()
+  .append("g")
+  .selectAll("path")
+    .data(function(d,i){ return d.map(function(val){ return {r:i, v:val};});})
+    .enter()
+    .append("path")
+    .datum(function(d,i){ d.c = i; return d; })
+    .attr("d", function(d){ return makeHexagon(z(d.v).s,d.c*w,d.r*h);})
+    .attr("fill", function(d){ return z(d.v).c;});
+}
+
 function makeArcmap(svg, x, y, size, data, z, name){
   //creates an svg "wedge" map
   var w = size/data[0].length;
@@ -71,7 +95,6 @@ function makeArcHexmap(svg, x, y, size, data, z, name){
 
   var r = size/data[0].length;
   var h = size/data.length;
-  r/=2;
 
   //other display options:
   //var xPos = d3.scaleLinear().domain([0,data[0].length]).range([r,size-r]);
@@ -97,7 +120,7 @@ function makeArcHexmap(svg, x, y, size, data, z, name){
     .enter()
     .append("path")
     .datum(function(d,i){ d.c = i; return d; })
-    .attr("d", function(d){ return makeArcHexagon(d,r*z(d.v).s,data.length,data[d.r].length,size);})
+    .attr("d", function(d){ return makeArcHexagon(d,z(d.v).s,data.length,data[d.r].length,size);})
   //  .attr("d", function(d){ return makeHexagon(r,xPos(d.c + ((data[0].length - data[d.r].length)/2)),yPos(d.r));})
     .attr("fill", function(d){ return z(d.v).c;});
 }
@@ -408,14 +431,14 @@ function colorSizeDiff(scaleData, threshold, startSize, uSize){
   return passesSizeThreshold(colors,p,startSize);
 }
 
-function makeMaps(map, threshold){
+function makeMaps(map, threshold, maxSize){
   //Create all relevant maps
   var DEFAULT_THRESHOLD = 5;
   var THRESHOLD = threshold ? threshold : DEFAULT_THRESHOLD;
   var scaleData, arcScaleData, arcSizeScaleData, closest, n;
 
   var uSL = makeuSL(map);
-  var uSize = makeuSize(map);
+  var uSize = makeuSize(map, maxSize);
 
   n = 2;
   while (true) {
@@ -652,11 +675,11 @@ function makeuSL(map) {
   }
 }
 
-function makeuSize(map) {
+function makeuSize(map, maxSize) {
   return function(d) {
     //size and color
     var c = (d3.hsl(map(d.v)));
-    var sizeVal = d3.scaleLinear().domain([0,1]).range([1,0]);
+    var sizeVal = d3.scaleLinear().domain([0,1]).range([maxSize,0]);
     return {"c": c, "s" : sizeVal(d.u)};
   }
 }
