@@ -110,6 +110,10 @@ iframe{
   stroke-width: 3px;
 }
 
-#map rect{
+svg {
+  font-family: sans-serif;
+}
 
+#mturk_form ol li {
+  margin-bottom: 1em;
 }
