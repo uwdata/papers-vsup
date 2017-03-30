@@ -42,6 +42,15 @@
 %% it is recomended to use ``\autoref{sec:bla}'' instead of ``Fig.~\ref{sec:bla}''
 \graphicspath{{figures/}{pictures/}{images/}{./}} % where to search for the images
 
+\newcommand{\figref}[1]{\hyperref[#1]{Figure~\ref*{#1}}}
+
+\newcommand{\ie}{{i.e.}\xspace}
+\newcommand{\eg}{{e.g.,}\xspace}
+\newcommand{\cf}{{c.f.}\xspace}
+\newcommand{\ea}{{et~al.}\xspace}
+\newcommand{\aka}{{a.k.a.}\xspace}
+\newcommand{\etc}{{etc.}\xspace}
+
 \usepackage{microtype}                 % use micro-typography (slightly more compact, better to read)
 \PassOptionsToPackage{warn}{textcomp}  % to address font issues with \textrightarrow
 \usepackage{textcomp}                  % use better special symbols
@@ -167,7 +176,7 @@ Uncertainty is an inescapable component of collecting, presenting, and using dat
 
 Simultaneous presentation of uncertainty and value necessitates the construction of a bivariate map\,---\,a relation, in terms of visual variables, between 2-tuples $(\text{value}, \text{uncertainty})$ and mark properties. The design of bivariate maps is difficult and, due to the interference and interplay between different visual variables, often leads to maps with few discriminable categories.
 
-In this paper, we contribute \textbf{Value-Suppressing Uncertainty Maps} (VSUMs) for integrating data and uncertainty information in thematic maps. VSUMs intentionally alias together data values with high uncertainty, affording greater discriminability as uncertainty decreases. Rather than a traditional two-dimensional bivariate map, with differing outputs for each combination of value and uncertainty, VSUMs can be thought of as arcs: as uncertainty increases, values are mapped to smaller and smaller sets of outputs, culminating in a singularity where all inputs are mapped to an identical, highly uncertain mark regardless of their data value. Figure~\ref{fig:example} shows examples of both a VSUM and a more traditional bivariate map.
+In this paper, we contribute \textbf{Value-Suppressing Uncertainty Maps} (VSUMs) for integrating data and uncertainty information in thematic maps. VSUMs intentionally alias together data values with high uncertainty, affording greater discriminability as uncertainty decreases. Rather than a traditional two-dimensional bivariate map, with differing outputs for each combination of value and uncertainty, VSUMs can be thought of as arcs: as uncertainty increases, values are mapped to smaller and smaller sets of outputs, culminating in a singularity where all inputs are mapped to an identical, highly uncertain mark regardless of their data value. \figref{fig:example} shows examples of both a VSUM and a more traditional bivariate map.
 
 We describe the motivations behind the use of VSUMs, examples of their utility for decision-making under uncertainty, and assess VSUMs in a crowdsourced experiment. Our experimental results indicate that VSUMs promote better integration between uncertainty and data: X.
 
@@ -204,7 +213,7 @@ A further hurdle is that not all visual variables are well-suited for conveying 
 
 For visualizations such as choropleth maps, heatmaps, or treemaps, visual channels such as position and length are reserved for data variables other than value (such as geographic location or relative size). In these situations, data value is often encoded using color. Colors in such univariate quantitative color maps should be sufficiently far apart as to be perceptually distinguishable~\cite{ware1988color}, and vary in lightness as well as hue in order to afford an implicit ordering of value~\cite{borland2007rainbow,rogowitz2001blair}. Different choices of color maps can highlight different features of the data, and should be chosen with care based on the data types and important features to be visualized~\cite{rogowitz1996not}.
 
-Given these considerations, and the perceptual integrality of color channels, the construction of \emph{bivariate} color maps is difficult. Viewers need to be able to independently assess the variables of interest, but the resulting bivariate map should also be expressive and easy to interpret. Bivariate maps with these constraints are often limited to relatively few categories (say, a 3x3 matrix as in Figure \ref{fig:example}) \cite{robertson1986generation,trumbo1981theory}. In general, the quality of bivariate color maps is a multivariate measure involving consideration of not just the component color channels, but also the interpolation scheme and the color of the surround~\cite{bernard2015survey}. However, even simple bivariate maps can be difficult for a general audience to interpret \cite{wainer1980empirical}.
+Given these considerations, and the perceptual integrality of color channels, the construction of \emph{bivariate} color maps is difficult. Viewers need to be able to independently assess the variables of interest, but the resulting bivariate map should also be expressive and easy to interpret. Bivariate maps with these constraints are often limited to relatively few categories (say, a 3x3 matrix as in \figref{fig:example}) \cite{robertson1986generation,trumbo1981theory}. In general, the quality of bivariate color maps is a multivariate measure involving consideration of not just the component color channels, but also the interpolation scheme and the color of the surround~\cite{bernard2015survey}. However, even simple bivariate maps can be difficult for a general audience to interpret \cite{wainer1980empirical}.
 
 Dunn~\cite{dunn1989dynamic} attempts to circumvent these issues by dynamically allocating bins to the bivariate map. As the number of distinct, separable colors is limited, the dynamic approach allocates bins to regions of the highest utility. For instance, placing the dividing line between bins in areas aligned with a trend line allows the color to encode information about the sign of the residual with respect to each variable. This insight, that the bins in a bivariate map are a limited resource and so should be ``spent'' wisely, drives the creation of VSUMs, which allocate more bins in a bivariate map to regions with less uncertainty.
 
@@ -232,7 +241,7 @@ The general VSUM algorithm is as follows:
 	\item \textbf{Select a visual variable to encode value}. In most cases in this paper, this variable is position along some established color scale.
 	\item \textbf{Select a visual variable to encode uncertainty}. We prefer variables that have a somewhat high semiotic connection with uncertainty (such as lightness and size), but still have a reasonable number of perceptually discriminable layers (as opposed to other, more intuitive channels such as blur or sketchiness).
 	\item \textbf{Select a discriminability threshold}. Choose some minimum distance, in a perceptual space, between marks. For many visual variables (such as length or hue), the perceptual discriminability between marks has been assessed in prior literature, and so the only step is to choose a value in terms of the just noticeable distance (JND). For less common visual variables, a perceptual model may be built empirically (as in Demiralp et al.~\cite{demiralp2014learning}).
-	\item \textbf{Choose how quickly categories \emph{degrade}}. That is, if there are $n$ bins at some uncertainty level $m$, how many bins should there be when uncertainty increases to level $m+1$? In Figure \ref{fig:example}, this function is $\left \lfloor {\frac{n}{2}}\right \rfloor$, meaning that the number of value bins decreases by half for each level of uncertainty bins. If there is too much degradation, then there are fewer levels of uncertainty. If there is no degradation, the resulting map is just a traditional bivariate map.
+	\item \textbf{Choose how quickly categories \emph{degrade}}. That is, if there are $n$ bins at some uncertainty level $m$, how many bins should there be when uncertainty increases to level $m+1$? In \figref{fig:example}, this function is $\left \lfloor {\frac{n}{2}}\right \rfloor$, meaning that the number of value bins decreases by half for each level of uncertainty bins. If there is too much degradation, then there are fewer levels of uncertainty. If there is no degradation, the resulting map is just a traditional bivariate map.
 	\item \textbf{Choose the largest number of initial categories $n$ such that the discriminability threshold is met.} For each pair of marks in the map, perform a pairwise comparison of discriminability. If no marks are perceptually ambiguous by the standards of your threshold, the map is complete. Otherwise, decrement $n$.
 \end{enumerate}
 
@@ -250,13 +259,17 @@ Often, the graphical conventions of a chart reserve variables such as position a
 
 Another reason for limiting our discussion of bivariate mappings to color and size channels is that the perceptual distinguishability of these channels has been well-studied by prior work. CIELAB and other color spaces are designed to approximate perceptual uniformity\,---\,that is, distance in the color space should universally correspond with perceptual distance. Recent work~\cite{stone2014engineering,szafir2014adapting} has investigated the discriminability of colors in such spaces not only under laboratory conditions, but also among the disparate display conditions and color vision proficiency of crowdworkers. Similarly, formative work by Cleveland \& McGill~\cite{cleveland1984graphical} assesses the discriminability of marks of different height, and this too has been extended both to a larger population of crowdworkers, and to the area channel specifically~\cite{heer2010crowdsourcing,talbot2014four}.
 
-We use values from these works as benchmarks for selecting thresholds of discriminability. The ``just noticeable difference'' (JND) of these channels provides a useful minimum; in practice, we would wish to create maps with marks that are far more reliably distinguishable than the 50\% or 75\% discriminability rate of a JND. Figure~\ref{fig:performance} shows how these benchmarks can be used to select reasonable thresholds. Other factors, such as nameability and aesthetic preference, can be added in as additional weights impacting the desirability of certain color palettes, as in Gramazio et al.~\cite{gramazio2017colorgorical}.
+We use values from these works as benchmarks for selecting thresholds of discriminability. The ``just noticeable difference'' (JND) of these channels provides a useful minimum; in practice, we would wish to create maps with marks that are far more reliably distinguishable than the 50\% or 75\% discriminability rate of a JND. \figref{fig:performance} shows how these benchmarks can be used to select reasonable thresholds. Other factors, such as nameability and aesthetic preference, can be added in as additional weights impacting the desirability of certain color palettes, as in Gramazio et al.~\cite{gramazio2017colorgorical}.
 
 How quickly the number of bins decreases is another parameter of VSUMs. If this degradation is too large, then we may only have a few discriminable levels of uncertainty. If this degradation is too small, then we can be overwhelmed with colors. For instance, if we only decrement by one bin per level of uncertainty, there would be \emph{1,485} different colors in a VSUM with a tolerance threshold of $1$ unit in CIELAB space. In the examples in this paper,  we halve the number of bins at each increasing level of uncertainty. When the initial bins at the highly certain region is a power of $2$ (as in Fig. \ref{fig:example}), this imparts a tree structure to the resulting VSUM. As uncertainty increases, bins in the previous level map to one and only one ``parent'' in the next uncertainty level, resulting in fewer crossings of color boundaries among rows.
 
 \subsection{Examples}
 
-TODO.
+\airlineFig
+\viralFig
+
+\figref{fig:airlineVsum}
+\figref{fig:airline2d}
 
 \section{Evaluation}
 

@@ -625,9 +625,9 @@ function makeFlightExample(svg, colorScale, map, data, type) {
     var legendY = 60;
     var legendSize = 160;
     makeArcmap(heatmap, legendX, legendY, legendSize,map,colorScale);
-    makeArcLegend(heatmap, legendX, legendY, legendSize, map, vScale.ticks(10), uScale.domain(), "Departure Delay (minutes)", "Standard Mean Error");
+    makeArcLegend(heatmap, legendX, legendY, legendSize, map, vScale.ticks(5), uScale.domain(), "Departure Delay (minutes)", "Standard Mean Error");
   } else {
-    var legendY = 80;
+    var legendY = 70;
     var legendSize = 140;
     makeHeatmap(heatmap, legendX, legendY, legendSize,map,colorScale);
     makeHeatmapLegend(heatmap, legendX, legendY, legendSize, map, vScale.domain(), uScale.domain(), "Departure Delay (minutes)", "Standard Mean Error");
@@ -681,21 +681,21 @@ function makeViralExample(svg, colorScale, map, data, type) {
   heatmap.append("text")
     .style("text-anchor", "middle")
     .style("font-size", 13)
-    .attr("transform", "translate(" + (w + 80) + ", " + (h / 2) + ")rotate(90)")
+    .attr("transform", "translate(" + (w + 65) + ", " + (h / 2) + ")rotate(90)")
     .text("Individual");
 
   // legend
-  var legendX = w + 140;
+  var legendX = w + 120;
   if (type === "arc") {
     var legendY = 60;
     var legendSize = 160;
     makeArcmap(heatmap, legendX, legendY, legendSize,map,colorScale);
-    makeArcLegend(heatmap, legendX, legendY, legendSize, map, vScale.ticks(10), uScale.domain(), "Mutations", "Bad Reads");
+    makeArcLegend(heatmap, legendX, legendY, legendSize, map, vScale.ticks(6), uScale.domain(), "% Mutations", "% Bad Reads");
   } else {
-    var legendY = 80;
+    var legendY = 70;
     var legendSize = 140;
     makeHeatmap(heatmap, legendX, legendY, legendSize,map,colorScale);
-    makeHeatmapLegend(heatmap, legendX, legendY, legendSize, map, vScale.domain(), uScale.domain(), "Mutations", "Bad Reads");
+    makeHeatmapLegend(heatmap, legendX, legendY, legendSize, map, vScale.domain(), uScale.domain(), "% Mutations", "% Bad Reads");
   }
 }
 

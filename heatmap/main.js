@@ -68,7 +68,7 @@ function main(){
   });
 
   // genome data example heatmap
-  d3.csv("viraldata.csv", function(data) {
+  d3.csv("viral_binned.csv", function(data) {
     data = data.map(function(d) {
       return {
         Individual: d.Individual,
@@ -76,8 +76,6 @@ function main(){
         Mutation: +d.Mutation,
         BadReads: +d.BadReads
       }
-    }).filter(function(d) {
-      return d.Position < 500 && d.Position < 700
     });
 
     makeViralExample(body.append("svg"), arcScale, maps.arc, data, "arc");
