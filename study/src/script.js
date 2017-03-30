@@ -442,7 +442,9 @@ function revealTaskOne(){
     case "2D":
     default:
     if(stim.ramp=="Size"){
-
+      //TODO Plug into 2D size maps
+      makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
+      makeHeatmap(legendSvg, 20, 50, 160,vMap.square,vMap.squareScale);
     }
     else{
       makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
@@ -644,8 +646,10 @@ function initializeTaskTwo(){
 
     case "2D":
     default:
-    if(stim.range=="Size"){
-
+    if(stim.ramp=="Size"){
+      //TODO plug this into 2d size scales
+      makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),taskMap.squareScale);
+      makeHeatmap(legendSvg, 20, 50, 160,taskMap.square,taskMap.squareScale);
     }
     else{
       makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),taskMap.squareScale);
