@@ -331,7 +331,7 @@ function taskOne(){
 
   main.append("svg")
   .attr("id","legend")
-  .attr("style","width: 150px; height: 200px;");
+  .attr("style","width: 400px; height: 200px;");
 
 }
 
@@ -362,8 +362,8 @@ function revealTaskOne(){
   switch(stim.type){
     case "vsum":
     makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.arcScale);
-    makeArcmap(legendSvg, 20, 60, 80,vMap.arc,vMap.arcScale);
-    makeArcLegend(legendSvg, 20, 60, 80, vMap.arc, [0,100], [0,100], "Value", "Uncertainty");
+    makeArcmap(legendSvg, 20, 60, 160,vMap.arc,vMap.arcScale);
+    makeArcLegend(legendSvg, 20, 60, 160, vMap.arc, [0,100], [0,100], "Value", "Uncertainty");
     break;
 
     case "juxta":
@@ -377,8 +377,8 @@ function revealTaskOne(){
     case "2D":
     default:
     makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
-    makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
-    makeHeatmapLegend(legendSvg, 20, 60, 80, vMap.square, [0,100], [0,100], "Value", "Uncertainty");
+    makeHeatmap(legendSvg, 20, 60, 160,vMap.square,vMap.squareScale);
+    makeHeatmapLegend(legendSvg, 20, 60, 160, vMap.square, [0,100], [0,100], "Value", "Uncertainty");
     break;
   }
 
@@ -452,7 +452,7 @@ function taskTwo(){
 
   main.append("svg")
   .attr("id","legend")
-  .attr("style","width: 150px; height: 200px;");
+  .attr("style","width: 400px; height: 200px;");
 
   main.append("input")
   .attr("class","button")
@@ -512,7 +512,7 @@ function initializeTaskTwo(){
     case "vsum":
     makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.arcScale);
     makeArcmap(legendSvg, 20, 60, 80,vMap.arc,vMap.arcScale);
-    makeArcLegend(legendSvg, 20, 60, 80, vMap.arc, [0,100], [0,100], "Value", "Uncertainty");
+    makeArcLegend(legendSvg, 20, 60, 160, vMap.arc, [0,100], [0,100], "Value", "Uncertainty");
     break;
 
     case "juxta":
@@ -527,7 +527,7 @@ function initializeTaskTwo(){
     default:
     makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
     makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
-    makeHeatmapLegend(legendSvg, 20, 60, 80, vMap.square, [0,100], [0,100], "Value", "Uncertainty");
+    makeHeatmapLegend(legendSvg, 20, 60, 160, vMap.square, [0,100], [0,100], "Value", "Uncertainty");
     break;
   }
 
