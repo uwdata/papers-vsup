@@ -514,6 +514,70 @@ function doneAnswerTaskOne(){
 
 }
 
+function makeTaskTwoMap(size){
+  //want to ensure that:
+  // there are some "obvious" squares
+  // with high and low values, and no uncertainty
+  // some "risky" areas with high and low values, and high uncertainty
+  // some "safer" areas with high and low values, and medium uncertainty
+  // "garbage" squares with middle value and irrelevant uncertainty
+
+
+ // our coarset map is 3x3, so we have to be 'fair' to that condition
+  var mid = dl.random.uniform(0.33,0.66);
+  var high = dl.random.uniform(0.68,1.0);
+  var low = dl.random.uniform(0.0,0.33);
+  var lowmid = dl.random.uniform(0.0,0.66);
+  var midhigh = dl.random.uniform(0.5,1.0);
+
+  var values = [];
+
+  //obvious
+  values.push({"v": 1, "u": 0.0});
+  values.push({"v": 0, "u": 0.0});
+
+
+  //risky
+  values.push({"v": 1, "u": 1.0});
+  values.push({"v": 0, "u": 1.0});
+
+  values.push({"v": 1.0, "u": high()});
+  values.push({"v": 0.0, "u": high()});
+
+  //safer
+  values.push({"v": mid(), "u": mid()});
+  values.push({"v": mid(), "u": mid()});
+
+
+  //garbage
+  for(var i = values.length;i<(size*size);i++){
+    if(Math.random()<0.25){
+      if(Math.random()<0.5){
+        values.push({"v": high(), "u": midhigh()});
+      }
+      else{
+        values.push({"v": low(), "u": midhigh()});
+      }
+    }
+    else{
+      values.push({"v": mid(), "u": lowmid()});
+    }
+  }
+
+  dl.permute(values);
+
+  var matrix = [];
+
+  for(var i = 0;i<size;i++){
+    matrix.push(Array(size));
+    for(var j = 0;j<size;j++){
+      matrix[i][j] = values[i*size + j];
+    }
+  }
+
+  return matrix;
+}
+
 function taskTwo(){
   questionNum = 1;
   taskTwoStimuli = makeTaskTwoStimuli();
@@ -609,13 +673,13 @@ function initializeTaskTwo(){
   switch(stim.type){
     case "vsum":
     if(stim.ramp=="Size"){
-      var tempMap = makeTaskOneMap(stim.size);
+      var tempMap = makeTaskTwoMap(stim.size);
       makeHexmap(mapSvg,100,0,200,tempMap,taskMap.arcSizeScale,maxSize);
       makeHeatmap(mapSvg,100,0,200,tempMap,empty);
       makeArcHexmap(legendSvg, 20, 50, 160,taskMap.arc,taskMap.arcSizeScale,maxSize);
     }
     else{
-      makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),taskMap.arcScale);
+      makeHeatmap(mapSvg,100,0,200,makeTaskTwoMap(stim.size),taskMap.arcScale);
       makeArcmap(legendSvg, 20, 50, 160,taskMap.arc,taskMap.arcScale);
     }
     makeArcLegend(legendSvg, 20, 50, 160, taskMap.arc, [0,100], [0,100], vLabel, uLabel);
@@ -623,7 +687,7 @@ function initializeTaskTwo(){
     break;
 
     case "juxta":
-    var tempMap = makeTaskOneMap(stim.size);
+    var tempMap = makeTaskTwoMap(stim.size);
     if(stim.ramp=="Size"){
       makeHeatmap(mapSvg,0,0,200,tempMap,taskJMap);
       mapSvg.append("rect")
@@ -663,11 +727,11 @@ function initializeTaskTwo(){
     default:
     if(stim.ramp=="Size"){
       //TODO plug this into 2d size scales
-      makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),taskMap.squareScale);
+      makeHeatmap(mapSvg,100,0,200,makeTaskTwoMap(stim.size),taskMap.squareScale);
       makeHeatmap(legendSvg, 20, 50, 160,taskMap.square,taskMap.squareScale);
     }
     else{
-      makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),taskMap.squareScale);
+      makeHeatmap(mapSvg,100,0,200,makeTaskTwoMap(stim.size),taskMap.squareScale);
       makeHeatmap(legendSvg, 20, 50, 160,taskMap.square,taskMap.squareScale);
     }
     makeHeatmapLegend(legendSvg, 20, 50, 160, taskMap.square, [0,100], [0,100], vLabel, uLabel);
@@ -993,4 +1057,4 @@ function ineligible(){
 
 }
 
-taskOne();
+consent();
