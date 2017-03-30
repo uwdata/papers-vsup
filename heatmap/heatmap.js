@@ -710,6 +710,32 @@ function makeHeatmapLegend(svg, x, y, size, map, vDom, uDom, vTitle, uTitle) {
     .text(uTitle);
 }
 
+function makeSimpleLegend(svg, x, y, height, size, data, map, title) {
+  var legend = svg.append("g").attr("transform", "translate(" + x + "," + y + ")");
+
+  var w = size / data.length;
+
+  legend.selectAll("rect").data(data).enter()
+    .append("rect")
+    .attr("x", function(d,i) {return i * w})
+    .attr("y", 0)
+    .attr("height", height)
+    .attr("width", w)
+    .attr("fill", map);
+
+  var xAxis = d3.scalePoint().range([0, size]).domain(data);
+
+  legend.append("g")
+    .attr("transform", "translate(0, " + height + ")")
+    .call(d3.axisBottom(xAxis).tickFormat(d3.format(".1f")));
+
+  legend.append("text")
+    .style("text-anchor", "middle")
+    .style("font-size", 13)
+    .attr("transform", "translate(" + (size / 2) + ", " + (height + 30) + ")")
+    .text(title);
+}
+
 //Uncertainty maps
 
 function makeuSL(map) {

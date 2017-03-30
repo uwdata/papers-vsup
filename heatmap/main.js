@@ -30,6 +30,8 @@ function main(){
   makeHeatmap(svg, 0,0,250,maps.square, squareScale, "legendSquare");
   makeArcmap(svg, 300,0,250,maps.arc,arcScale,"legendArc");
   makeArcHexmap(svg, 600,0,250,maps.arcSize,arcSizeScale,"legendSizeArc");
+  makeSimpleLegend(svg, 900,0,40, 250,maps.linearValue, map, "Value");
+  makeSimpleLegend(svg, 900,100,40, 250,maps.linearUncertainty, d3.interpolateGreys, "Uncertainty");
 
   var gradient = gradientData(8,8);
   makeHeatmap(svg, 0,300,250,gradient, squareScale);
