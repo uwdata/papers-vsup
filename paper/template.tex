@@ -265,11 +265,18 @@ How quickly the number of bins decreases is another parameter of VSUMs. If this 
 
 \subsection{Examples}
 
+Every pair of colors quantized color maps should be easily distinguishable from any other color in the color map. VSUMs have a lower resolution for uncertain values and thus can have higher resolution for values with high certainty. We created 2D uncertainty maps and VSUMs and used them to visualize flight delay data and mutations in viral genomes to show that VSUMs have higher discriminability where it matters.
+
+The airline delay visualization shows average delays for different times of the day and days of the week. In this example we used data about flight delays of US carriers from the Bureau of Transportation Statistics~\cite{bts} for January 2017. In addition to the average delay for each pair of time of the day and day of the week, we computed the standard error of the mean as the standard deviation divided by the squareroot of the number of samples.
+
 \airlineFig
+
+\figref{fig:airline2d} shows the heatmap visualization where the delay and uncertainty are encoded with a 2D uncertainty map. We used a minimum discriminability  threshold of $18$ units in CIELAB space. We can see that the lowest delays are early in the day throughout the week. With the same threshold we can create a VSUM with much higher resolution for values with high certainty (\figref{fig:airlineVsum}). The VSUM also has more resolution for the uncertainty (4 different levels instead of 3 in the 2D heatmap). If the analysts is interested in delay patterns, VSUMs give them higher resolution. Since VSUMs blend uncertain values together, 2D maps are better if analysts are interested in high expected delays independent of the uncertainty. However, if analysts want to investigate uncertainty or values in isolation, separate channels (\eg juxtaposed heatmaps) are better as they prevent interaction effects. 
+
 \viralFig
 
-\figref{fig:airlineVsum}
-\figref{fig:airline2d}
+In \figref{fig:viral2d} and \figref{fig:viralVsum}, we visualized the mutation rate of virus genomes. Biologists know that certain regions of the genome are ``coding regions'' that influence the the formation of proteins. The data you see here, however, has errors because the process of reading the genome is not perfect. Similarly to the flight delay example, the resolution for certain values with 2D uncertainty maps is much lower (\figref{fig:viral2d}). VSUMs enable biologists to see more fine grained differences as shown in \figref{fig:viralVsum}.
+
 
 \section{Evaluation}
 
