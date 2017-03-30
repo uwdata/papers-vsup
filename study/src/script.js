@@ -64,7 +64,10 @@ function scaleGenerator(map){
 
 
   return {"square":maps.square, "arc":maps.arc, "arcSize":maps.arcSize,
-  "cs":uSize, "cl":uSL, "squareScale": squareScale, "arcScale": arcScale, "arcSizeScale":arcSizeScale, "juxtaposedUncertaintyScale":juxtaposedUncertaintyScale, "juxtaposedValueScale":juxtaposedValueScale, "juxtaposedSizeScale":juxtaposedSizeScale};
+  "cs":uSize, "cl":uSL, "squareScale": squareScale, "arcScale": arcScale,
+   "arcSizeScale":arcSizeScale, "juxtaposedUncertaintyScale":juxtaposedUncertaintyScale,
+    "juxtaposedValueScale":juxtaposedValueScale, "juxtaposedSizeScale":juxtaposedSizeScale,
+  "linearValue":maps.linearValue, "linearUncertainty":maps.linearUncertainty};
 }
 
 var vMap = scaleGenerator(d3.interpolateViridis);
@@ -422,6 +425,9 @@ function revealTaskOne(){
         .attr("height","200px");
       makeHexmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedSizeScale,maxSize);
       makeHeatmap(mapSvg,225,0,200,tempMap,empty);
+
+      makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, d3.interpolateViridis,vLabel);
+      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,d3.interpolateGreys,uLabel);
     }
     else{
       makeHeatmap(mapSvg,0,0,200,tempMap,vMap.juxtaposedValueScale);
@@ -434,6 +440,9 @@ function revealTaskOne(){
         .attr("width","200px")
         .attr("height","200px");
       makeHeatmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedUncertaintyScale);
+
+      makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, d3.interpolateViridis,vLabel);
+      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,d3.interpolateGreys,uLabel);
     }
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
@@ -596,7 +605,7 @@ function initializeTaskTwo(){
 
   var taskMap = stim.role=="att" ? pMap : cMap;
   var taskJMap = stim.role=="att" ? pMap.juxtaposedValueScale : cMap.juxtaposedValueScale;
-
+  var taskLMap =  stim.role=="att" ? d3.interpolatePlasma : d3.interpolateCool;
   switch(stim.type){
     case "vsum":
     if(stim.ramp=="Size"){
@@ -627,6 +636,9 @@ function initializeTaskTwo(){
         .attr("height","200px");
       makeHexmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedSizeScale,maxSize);
       makeHeatmap(mapSvg,225,0,200,tempMap,empty);
+
+      makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, taskLMap,vLabel);
+      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,d3.interpolateGreys,uLabel);
     }
     else{
       makeHeatmap(mapSvg,0,0,200,tempMap,taskJMap);
@@ -639,6 +651,9 @@ function initializeTaskTwo(){
         .attr("width","200px")
         .attr("height","200px");
       makeHeatmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedUncertaintyScale);
+
+      makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, taskLMap,vLabel);
+      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,d3.interpolateGreys,uLabel);
     }
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
