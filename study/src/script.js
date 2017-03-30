@@ -37,12 +37,14 @@ var taskTwoStimuli = [];
 var taskTwoGrid = [];
 var taskTwoTokens = 0;
 
+var maxSize = 200/16;;
+
 //var map = d3.interpolateViridis;
 
 function scaleGenerator(map){
-  var maps = makeMaps(map, 15);
+  var maps = makeMaps(map, 15,maxSize);
   var uSL = makeuSL(map);
-  var uSize = makeuSize(map);
+  var uSize = makeuSize(map,maxSize);
 
   var squareScale = makeScaleFunction(maps.square, uSL);
   var arcScale = makeScaleFunction(maps.arc, uSL);
@@ -60,6 +62,10 @@ var vV = function(d){
   return d3.interpolateViridis(d.v);
 }
 
+var empty = function(d){
+  return "transparent";
+}
+
 var vP = function(d){
   return d3.interpolatePlasma(d.v);
 }
@@ -70,6 +76,10 @@ var vC = function(d){
 
 var u = function(d){
   return d3.interpolateGreys(1-d.u);
+}
+
+var uS = function(d){
+  return {"c":"black", "s":Math.max(0.1*maxSize,d.u*maxSize)};
 }
 
 function gup(name){
@@ -209,7 +219,7 @@ function makeTaskOneStimuli(){
   var stimuli = [];
 
   var types = ["juxta","2D","vsum"];
-  var ramps = ["viridisLightness","viridisSize"];
+  var ramps = ["Lightness","Size"];
   var sizes = ["4","8"];
   var questions = [
     "Click on the map location with the <b>highest</b> uncertainty",
@@ -239,7 +249,7 @@ function makeTaskTwoStimuli(){
   var stimuli = [];
 
   var types = ["juxta","2D","vsum"];
-  var ramps = ["lightness","size"];
+  var ramps = ["Lightness","Size"];
   var sizes = ["4","8"];
   var roles = ["att","def"];
 
@@ -333,6 +343,8 @@ function taskOne(){
   .attr("id","map")
   .attr("style","width: 450px; height: 200px;");
 
+  main.append("div").html("<br />");
+
   main.append("svg")
   .attr("id","legend")
   .attr("style","width: 250px; height: 250px;");
@@ -362,33 +374,71 @@ function revealTaskOne(){
   var mapSvg = d3.select("#map");
   var legendSvg = d3.select("#legend");
   var stim = taskOneStimuli[questionNum-1];
-  //"viridisLightness","viridisSize","plasmaLightness","plasmaSize"
 
   var vLabel = "Value";
   var uLabel = "Uncertainty";
 
   switch(stim.type){
     case "vsum":
-    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.arcScale);
-    makeArcmap(legendSvg, 20, 50, 160,vMap.arc,vMap.arcScale);
+    if(stim.ramp=="Size"){
+      var tempMap = makeTaskOneMap(stim.size);
+      makeHexmap(mapSvg,100,0,200,tempMap,vMap.arcSizeScale,maxSize);
+      makeHeatmap(mapSvg,100,0,200,tempMap,empty);
+      makeArcHexmap(legendSvg, 20, 50, 160,vMap.arc,vMap.arcSizeScale,maxSize);
+    }
+    else{
+      makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.arcScale);
+      makeArcmap(legendSvg, 20, 50, 160,vMap.arc,vMap.arcScale);
+    }
+
     makeArcLegend(legendSvg, 20, 50, 160, vMap.arc, [0,100], [0,100], vLabel, uLabel);
     break;
 
     case "juxta":
     var tempMap = makeTaskOneMap(stim.size);
-    makeHeatmap(mapSvg,0,0,200,tempMap,vV);
-    makeHeatmap(mapSvg,225,0,200,tempMap,u);
+
+    if(stim.ramp=="Size"){
+      makeHeatmap(mapSvg,0,0,200,tempMap,vV);
+      mapSvg.append("rect")
+        .attr("fill","transparent")
+        .attr("stroke","black")
+        .attr("stroke-width","3px")
+        .attr("x","225px")
+        .attr("y","0px")
+        .attr("width","200px")
+        .attr("height","200px");
+      makeHexmap(mapSvg,225,0,200,tempMap,uS,maxSize);
+      makeHeatmap(mapSvg,225,0,200,tempMap,empty);
+    }
+    else{
+      makeHeatmap(mapSvg,0,0,200,tempMap,vV);
+      mapSvg.append("rect")
+        .attr("fill","transparent")
+        .attr("stroke","black")
+        .attr("stroke-width","3px")
+        .attr("x","225px")
+        .attr("y","0px")
+        .attr("width","200px")
+        .attr("height","200px");
+      makeHeatmap(mapSvg,225,0,200,tempMap,u);
+    }
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
     break;
 
     case "2D":
     default:
-    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
-    makeHeatmap(legendSvg, 20, 50, 160,vMap.square,vMap.squareScale);
+    if(stim.ramp=="Size"){
+
+    }
+    else{
+      makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
+      makeHeatmap(legendSvg, 20, 50, 160,vMap.square,vMap.squareScale);
+    }
     makeHeatmapLegend(legendSvg, 20, 50, 160, vMap.square, [0,100], [0,100], vLabel, uLabel);
     break;
   }
+
 
   mapSvg.selectAll("rect")
   .on("click",answerTaskOne);
@@ -464,6 +514,9 @@ function taskTwo(){
   .attr("id","map")
   .attr("style","width: 450px; height: 200px;");
 
+  main.append("div")
+  .html("<br />");
+
   main.append("svg")
   .attr("id","legend")
   .attr("style","width: 250px; height: 250px;");
@@ -503,7 +556,7 @@ function initializeTaskTwo(){
 
   if(stim.role=="att"){
     d3.select("#question")
-    .html("Click to place missiles on the map on locations where you think you will sink the most ships: where the probability of ship is <b>highest</b>.");
+    .html("Click to place missiles on the map on locations where you think you will sink the most ships: where the probability of a ship is <b>highest</b>.");
   }
   else{
     d3.select("#question")
@@ -531,76 +584,127 @@ function initializeTaskTwo(){
 
   switch(stim.type){
     case "vsum":
-    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),taskMap.arcScale);
-    makeArcmap(legendSvg, 20, 50, 160,taskMap.arc,taskMap.arcScale);
+    if(stim.ramp=="Size"){
+      var tempMap = makeTaskOneMap(stim.size);
+      makeHexmap(mapSvg,100,0,200,tempMap,taskMap.arcSizeScale,maxSize);
+      makeHeatmap(mapSvg,100,0,200,tempMap,empty);
+      makeArcHexmap(legendSvg, 20, 50, 160,taskMap.arc,taskMap.arcSizeScale,maxSize);
+    }
+    else{
+      makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),taskMap.arcScale);
+      makeArcmap(legendSvg, 20, 50, 160,taskMap.arc,taskMap.arcScale);
+    }
     makeArcLegend(legendSvg, 20, 50, 160, taskMap.arc, [0,100], [0,100], vLabel, uLabel);
+
     break;
 
     case "juxta":
     var tempMap = makeTaskOneMap(stim.size);
-    makeHeatmap(mapSvg,0,0,200,tempMap,taskJMap);
-    makeHeatmap(mapSvg,225,0,200,tempMap,u);
+    if(stim.ramp=="Size"){
+      makeHeatmap(mapSvg,0,0,200,tempMap,taskJMap);
+      mapSvg.append("rect")
+        .attr("fill","transparent")
+        .attr("stroke","black")
+        .attr("stroke-width","3px")
+        .attr("x","225px")
+        .attr("y","0px")
+        .attr("width","200px")
+        .attr("height","200px");
+      makeHexmap(mapSvg,225,0,200,tempMap,uS,maxSize);
+      makeHeatmap(mapSvg,225,0,200,tempMap,empty);
+    }
+    else{
+      makeHeatmap(mapSvg,0,0,200,tempMap,taskJMap);
+      mapSvg.append("rect")
+        .attr("fill","transparent")
+        .attr("stroke","black")
+        .attr("stroke-width","3px")
+        .attr("x","225px")
+        .attr("y","0px")
+        .attr("width","200px")
+        .attr("height","200px");
+      makeHeatmap(mapSvg,225,0,200,tempMap,u);
+    }
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
     break;
 
     case "2D":
     default:
-    makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),taskMap.squareScale);
-    makeHeatmap(legendSvg, 20, 50, 160,taskMap.square,taskMap.squareScale);
+    if(stim.range=="Size"){
+
+    }
+    else{
+      makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),taskMap.squareScale);
+      makeHeatmap(legendSvg, 20, 50, 160,taskMap.square,taskMap.squareScale);
+    }
     makeHeatmapLegend(legendSvg, 20, 50, 160, taskMap.square, [0,100], [0,100], vLabel, uLabel);
     break;
   }
 
   mapSvg.selectAll("rect")
-  .on("click",placeToken);
+  .on("click",toggleToken);
 
   d3.select("#answer").attr("disabled","disabled");
 
 }
 
-function placeToken(){
-  if(taskTwoTokens>0){
-    var d = d3.select(this).datum();
-    taskTwoGrid[d.r][d.c] = true;
-    //gimme the first unplaced token
-    var token = d3.select("#tokenBar").selectAll("image").filter(function(t){ return !t.placed;});
-    token = d3.select(token.node());
-    token.attr("y","-50px");
-    token.datum().placed = true;
-    token.datum().r = d.r;
-    token.datum().c = d.c;
-    token.datum().v = d.v.v;
-    token.datum().u = d.v.u;
-
-    d3.select("#map").append("svg:image")
-    .attr("x",d.c*token.attr("width"))
-    .attr("y",d.r*token.attr("height"))
-    .attr("width",token.attr("width"))
-    .attr("height",token.attr("height"))
-    .attr("transform",d3.select("#map").select("g").attr("transform"))
-    .attr("xlink:href",token.attr("xlink:href"))
-    .datum({"r": d.r, "c": d.c})
-    .on("click",removeToken);
-
-    taskTwoTokens--;
-    if(taskTwoTokens==0){
-      d3.select("#answer").attr("disabled",null);
-    }
+function toggleToken(){
+  var d = d3.select(this).datum();
+  if(taskTwoTokens>0 && !taskTwoGrid[d.r][d.c]){
+    placeToken(d);
+  }
+  else if(taskTwoGrid[d.r][d.c]){
+    removeToken(d);
   }
 }
 
-function removeToken(){
-    var d = d3.select(this).datum();
-    taskTwoGrid[d.r][d.c] = false;
-    //gimme the token that was placed here
-    var token = d3.select("#tokenBar").selectAll("image").filter(function(t){ return d.r==t.r && d.c==t.c;});
-    token.attr("y","0px");
-    token.datum().placed = false;
-    token.datum().u = -1;
-    token.datum().v = -1;
-    taskTwoTokens++;
-    d3.select(this).remove();
+function placeToken(d){
+  taskTwoGrid[d.r][d.c] = true;
+  //gimme the first unplaced token
+  var token = d3.select("#tokenBar").selectAll("image").filter(function(t){ return !t.placed;});
+  token = d3.select(token.node());
+  token.attr("y","-50px");
+  token.datum().placed = true;
+  token.datum().r = d.r;
+  token.datum().c = d.c;
+  token.datum().v = d.v.v;
+  token.datum().u = d.v.u;
+
+  var stim = taskTwoStimuli[questionNum-1];
+  var offset = 0;
+
+  if(stim.ramp=="Size" && stim.type!="juxta"){
+    offset = -1*maxSize;
+  }
+
+  d3.select("#map").append("svg:image")
+  .attr("x", (d.c*token.attr("width")) + offset)
+  .attr("y",(d.r*token.attr("height")) + offset)
+  .attr("width",token.attr("width"))
+  .attr("height",token.attr("height"))
+  .attr("transform",d3.select("#map").select("g").attr("transform"))
+  .attr("xlink:href",token.attr("xlink:href"))
+  .datum({"r": d.r, "c": d.c})
+  .on("click",toggleToken);
+
+  taskTwoTokens--;
+  if(taskTwoTokens==0){
+    d3.select("#answer").attr("disabled",null);
+  }
+}
+
+function removeToken(d){
+  taskTwoGrid[d.r][d.c] = false;
+  //gimme the token that was placed here
+  var token = d3.select("#tokenBar").selectAll("image").filter(function(t){ return d.r==t.r && d.c==t.c;});
+  token.attr("y","0px");
+  token.datum().placed = false;
+  token.datum().u = -1;
+  token.datum().v = -1;
+  taskTwoTokens++;
+  d3.select("#answer").attr("disabled","disabled");
+  d3.select("#map").selectAll("image").filter(function(t){ return d.r==t.r && d.c==t.c;}).remove();
 }
 
 function answerTaskTwo(){
@@ -764,7 +868,7 @@ function postTest(){
   var experiences = ["1. No experience","2.","3. Some experience","4.","5. A great deal of experience"];
 
   var visionQ = dlist.append("li").html("Do you have normal vision (or vision which has been corrected to normal)? <br />");
- var q = visionQ.append("label");
+  var q = visionQ.append("label");
 
   q.append("input")
   .attr("type","radio")
@@ -857,4 +961,4 @@ function ineligible(){
 
 }
 
-tutorial();
+taskTwo();

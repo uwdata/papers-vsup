@@ -105,6 +105,11 @@ iframe{
   stroke-width: 3px;
 }
 
+#map path:hover{
+  stroke: black;
+  stroke-width: 3px;
+}
+
 #map rect{
 
 }
