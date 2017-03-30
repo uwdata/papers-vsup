@@ -549,12 +549,13 @@ function makeArcLegend(svg, x, y, size, map, vTicks, uDom, vTitle, uTitle) {
 
   var uScale = d3.scalePoint().domain(uDom).range([0, size]);
   var uAxis = d3.axisRight(uScale);
+  var px = size/180;
   legend.append("g")
-    .attr("transform", "translate(" + (size + 5) + "," + 24 + ")rotate(30)")
+    .attr("transform", "translate(" + (size + 6 * px) + "," + (28 * px) + ")rotate(30)")
     .call(uAxis);
 
   legend.append("text")
-    .attr("transform", "translate(" + (size + 10) + "," + (28 + size / 2) + ")rotate(-60)")
+    .attr("transform", "translate(" + (size + 10 * px) + "," + (28 * px + size / 2) + ")rotate(-60)")
     .style("text-anchor", "middle")
     .style("font-size", 13)
     .text(uTitle);
@@ -563,7 +564,7 @@ function makeArcLegend(svg, x, y, size, map, vTicks, uDom, vTitle, uTitle) {
     .domain([vTicks[0], vTicks[vTicks.length - 1]])
     .range([-30, 30]);
 
-  var offset = 3;
+  var offset = 3 * px;
 
   var arc = d3.arc()
     .innerRadius(size + offset)
