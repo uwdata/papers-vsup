@@ -25,7 +25,7 @@ function main(){
     return map(d3.scaleQuantize().domain([0,1]).range(maps.linearValue)(d.v));
   }
   var juxtaposedUncertaintyScale = function(d) {
-    return d3.interpolateGreys(d3.scaleQuantize().domain([0,1]).range(maps.linearUncertainty)(d.u));
+    return reverseGrey(d3.scaleQuantize().domain([0,1]).range(maps.linearUncertainty)(d.u));
   }
 
   makeHeatmap(svg, 0,0,250,maps.square, squareScale, "legendSquare");
@@ -33,7 +33,7 @@ function main(){
   makeHexmap(svg, 600,0,250,maps.squareSize, sizeScale, MAX_SIZE);
   makeArcHexmap(svg, 900,0,250,maps.arcSize,arcSizeScale,"legendSizeArc");
   makeSimpleLegend(svg, 1200,0,40, 250,maps.linearValue, map, "Value");
-  makeSimpleLegend(svg, 1200,120,40, 250,maps.linearUncertainty, d3.interpolateGreys, "Uncertainty");
+  makeSimpleLegend(svg, 1200,120,40, 250,maps.linearUncertainty, reverseGrey, "Uncertainty");
   makeHexLegend(svg, 1200,240,MAX_SIZE, 250,maps.linearUncertainty,d3.scalePoint().domain(maps.linearUncertainty).range([MAX_SIZE, 5]), "Uncertainty");
 
   var gradient = gradientData(8,8);

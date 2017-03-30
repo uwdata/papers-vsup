@@ -1,5 +1,8 @@
 //Chart creation functions
 
+// for floating point errors
+var epsylon = 0.0000001;
+
 function makeHeatmap(svg, x, y, size, data, z, name){
   //creates an svg heatmap with a 2d matrix of data, and a mapping function z
   var w = size/data[0].length;
@@ -698,7 +701,7 @@ function makeViralExample(svg, colorScale, map, data, type) {
 
 function makeArcLegend(svg, x, y, size, map, vTicks, uDom, vTitle, uTitle) {
   var uStep = (uDom[1] - uDom[0]) / map.length;
-  var uDom = d3.range(uDom[0], uDom[1] + uStep, uStep);
+  var uDom = d3.range(uDom[0], uDom[1] + uStep - epsylon, uStep);
 
   var legend = svg.append("g").attr("transform", "translate(" + x + "," + y + ")");
 
@@ -767,10 +770,10 @@ function makeHeatmapLegend(svg, x, y, size, map, vDom, uDom, vTitle, uTitle) {
   var legend = svg.append("g").attr("transform", "translate(" + x + "," + y + ")");
 
   var uStep = (uDom[1] - uDom[0]) / map.length;
-  var uDom = d3.range(uDom[0], uDom[1] + uStep, uStep);
+  var uDom = d3.range(uDom[0], uDom[1] + uStep - epsylon, uStep);
 
   var vStep = (vDom[1] - vDom[0]) / map[0].length;
-  var vDom = d3.range(vDom[0], vDom[1] + vStep, vStep);
+  var vDom = d3.range(vDom[0], vDom[1] + vStep - epsylon, vStep);
 
   var xAxis = d3.scalePoint().range([0, size]).domain(vDom);
 
@@ -810,8 +813,8 @@ function makeSimpleLegend(svg, x, y, height, size, data, map, title) {
     .attr("width", w)
     .attr("fill", map);
 
-  var step = (data[data.length-1] - data[0]) / (data.length + 1);
-  var dom = d3.range(data[0], data[data.length-1] + step, step);
+  var step = (data[data.length-1] - data[0]) / data.length;
+  var dom = d3.range(data[0], data[data.length-1] + step - epsylon, step);
 
   var xAxis = d3.scalePoint().range([0, size]).domain(dom);
 
@@ -836,11 +839,11 @@ function makeHexLegend(svg, x, y, height, size, data, map, title) {
     .enter()
       .append("path")
       .datum(function(d,i){ d.c = i; return d; })
-      .attr("d", function(d,i){ console.log(d, map(d)); return makeHexagon(map(d), i * w + w/2,-height/2);})
+      .attr("d", function(d,i){ return makeHexagon(map(d), i * w + w/2,-height/2);})
       .attr("fill", "black");
 
-  var step = (data[data.length-1] - data[0]) / (data.length + 1);
-  var dom = d3.range(data[0], data[data.length-1] + step, step);
+  var step = (data[data.length-1] - data[0]) / data.length;
+  var dom = d3.range(data[0], data[data.length-1] + step - epsylon, step);
 
   var xAxis = d3.scalePoint().range([0, size]).domain(dom);
 
