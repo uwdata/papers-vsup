@@ -235,7 +235,7 @@ function makeTaskOneStimuli(){
   var stimuli = [];
 
   var types = ["juxta","2D","vsum"];
-  var ramps = ["Lightness","Size"];
+  var ramps = ["Lightness"];
   var sizes = ["4","8"];
   var questions = [
     "Click on the map location with the <b>highest</b> uncertainty",
@@ -265,7 +265,7 @@ function makeTaskTwoStimuli(){
   var stimuli = [];
 
   var types = ["juxta","2D","vsum"];
-  var ramps = ["Lightness","Size"];
+  var ramps = ["Lightness"];
   var sizes = ["4","8"];
   var roles = ["att","def"];
 
@@ -427,7 +427,7 @@ function revealTaskOne(){
       makeHeatmap(mapSvg,225,0,200,tempMap,empty);
 
       makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, d3.interpolateViridis,vLabel);
-      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,d3.interpolateGreys,uLabel);
+      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
     }
     else{
       makeHeatmap(mapSvg,0,0,200,tempMap,vMap.juxtaposedValueScale);
@@ -442,7 +442,7 @@ function revealTaskOne(){
       makeHeatmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedUncertaintyScale);
 
       makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, d3.interpolateViridis,vLabel);
-      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,d3.interpolateGreys,uLabel);
+      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
     }
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
@@ -638,7 +638,7 @@ function initializeTaskTwo(){
       makeHeatmap(mapSvg,225,0,200,tempMap,empty);
 
       makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, taskLMap,vLabel);
-      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,d3.interpolateGreys,uLabel);
+      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
     }
     else{
       makeHeatmap(mapSvg,0,0,200,tempMap,taskJMap);
@@ -653,7 +653,7 @@ function initializeTaskTwo(){
       makeHeatmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedUncertaintyScale);
 
       makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, taskLMap,vLabel);
-      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,d3.interpolateGreys,uLabel);
+      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
     }
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
@@ -993,4 +993,4 @@ function ineligible(){
 
 }
 
-taskTwo();
+taskOne();

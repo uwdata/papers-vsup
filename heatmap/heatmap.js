@@ -463,8 +463,8 @@ function makeMaps(map, threshold, maxSize){
 
   n = 2;
   while (true) {
-    var data = d3.range(0, 1 + 1/n, 1/n).reverse();
-    var c = colorDiff([data], d3.interpolateGreys);  // we always use this scale for juxtaposed
+    var data = d3.range(0, 1 + 1/n, 1/n);
+    var c = colorDiff([data], reverseGrey);  // we always use this scale for juxtaposed
     if (c.minD >= THRESHOLD) {
       linearUncertaintyData = data;
       closest = c;
@@ -840,4 +840,8 @@ function makeuSize(map, maxSize) {
     var sizeVal = d3.scaleLinear().domain([0,1]).range([maxSize,0]);
     return {"c": c, "s" : sizeVal(d.u)};
   }
+}
+
+function reverseGrey(val){
+  return d3.interpolateGreys(1-val);
 }
