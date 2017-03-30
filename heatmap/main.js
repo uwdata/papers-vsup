@@ -19,6 +19,7 @@ function main(){
 
   var squareScale = makeScaleFunction(maps.square, uSL);
   var arcScale = makeScaleFunction(maps.arc, uSL);
+  var sizeScale = makeScaleFunction(maps.squareSize, uSize);
   var arcSizeScale = makeScaleFunction(maps.arcSize, uSize);
   var juxtaposedValueScale = function(d) {
     return map(d3.scaleQuantize().domain([0,1]).range(maps.linearValue)(d.v));
@@ -29,23 +30,26 @@ function main(){
 
   makeHeatmap(svg, 0,0,250,maps.square, squareScale, "legendSquare");
   makeArcmap(svg, 300,0,250,maps.arc,arcScale,"legendArc");
-  makeArcHexmap(svg, 600,0,250,maps.arcSize,arcSizeScale,"legendSizeArc");
-  makeSimpleLegend(svg, 900,0,40, 250,maps.linearValue, map, "Value");
-  makeSimpleLegend(svg, 900,100,40, 250,maps.linearUncertainty, d3.interpolateGreys, "Uncertainty");
+  makeHexmap(svg, 600,0,250,maps.squareSize, sizeScale, MAX_SIZE);
+  makeArcHexmap(svg, 900,0,250,maps.arcSize,arcSizeScale,"legendSizeArc");
+  makeSimpleLegend(svg, 1200,0,40, 250,maps.linearValue, map, "Value");
+  makeSimpleLegend(svg, 1200,100,40, 250,maps.linearUncertainty, d3.interpolateGreys, "Uncertainty");
 
   var gradient = gradientData(8,8);
   makeHeatmap(svg, 0,300,250,gradient, squareScale);
   makeHeatmap(svg, 300,300,250,gradient, arcScale);
-  makeHexmap(svg, 600,300,250,gradient, arcSizeScale, MAX_SIZE);
-  makeHeatmap(svg, 900,300,250,gradient, juxtaposedValueScale);
-  makeHeatmap(svg, 1200,300,250,gradient, juxtaposedUncertaintyScale);
+  makeHexmap(svg, 600,300,250,gradient, sizeScale, MAX_SIZE);
+  makeHexmap(svg, 900,300,250,gradient, arcSizeScale, MAX_SIZE);
+  makeHeatmap(svg, 1200,300,250,gradient, juxtaposedValueScale);
+  makeHeatmap(svg, 1500,300,250,gradient, juxtaposedUncertaintyScale);
   
   var random = randomData(5,5);
   makeHeatmap(svg, 0,600,250,random, squareScale);
   makeHeatmap(svg, 300,600,250,random, arcScale);
-  makeHexmap(svg, 600,600,250,random, arcSizeScale, MAX_SIZE);
-  makeHeatmap(svg, 900,600,250,random, juxtaposedValueScale);
-  makeHeatmap(svg, 1200,600,250,random, juxtaposedUncertaintyScale);
+  makeHexmap(svg, 600,600,250,random, sizeScale, MAX_SIZE);
+  makeHexmap(svg, 900,600,250,random, arcSizeScale, MAX_SIZE);
+  makeHeatmap(svg, 1200,600,250,random, juxtaposedValueScale);
+  makeHeatmap(svg, 1500,600,250,random, juxtaposedUncertaintyScale);
 
   // flight data example heatmap
   d3.csv("data.csv", function(data) {
