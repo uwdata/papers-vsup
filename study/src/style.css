@@ -1,3 +1,11 @@
+body {
+  margin: 0;
+}
+
+iframe {
+  border: none;
+}
+
 .stimulus {
   position: absolute;
   left: 25%;

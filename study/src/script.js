@@ -98,12 +98,11 @@ function consent(){
   main.append("iframe")
   .attr("src","consent.html");
 
-  var readyBtn = main.append("input")
+  var readyBtn = main.append("button")
   .attr("class","button")
   .attr("id","answer")
   .attr("name","answer")
-  .attr("value","I Consent")
-  .attr("type", "button")
+  .text("I Consent")
   .on("click",finishConsent);
 
   if(assignmentId=="ASSIGNMENT_ID_NOT_AVAILABLE"){
@@ -153,11 +152,11 @@ function ishihara(){
   }
 
   main.append("p")
-  .append("input")
+  .append("button")
   .attr("class","button")
   .attr("id","answer")
   .attr("name","answer")
-  .attr("value","Ready")
+  .text("Ready")
   .on("click",finishIshihara);
 
 }
@@ -189,11 +188,11 @@ function tutorial(){
   main.append("iframe")
   .attr("src","tutorial.html");
 
-  main.append("input")
+  main.append("button")
   .attr("class","button")
   .attr("id","answer")
   .attr("name","answer")
-  .attr("value","Ready")
+  .text("Ready")
   .on("click",finishTutorial);
 }
 
@@ -318,11 +317,11 @@ function taskOne(){
 
   main.append("p")
   .attr("id","question")
-  .append("input")
+  .append("button")
   .attr("class","button")
   .attr("id","answer")
   .attr("name","answer")
-  .attr("value","Ready")
+  .text("Ready")
   .attr("style","position: relative; top: 225px;")
   .on("click",revealTaskOne);
 
@@ -343,11 +342,11 @@ function initializeTaskOne(){
   d3.select("#prompt")
   .html("Click the \"Ready\" button to begin.");
 
-  d3.select("#question").append("input")
+  d3.select("#question").append("button")
   .attr("class","button")
   .attr("id","answer")
   .attr("name","answer")
-  .attr("value","Ready")
+  .text("Ready")
   .attr("style","position: relative; top: 225px;")
   .on("click",revealTaskOne);
 
