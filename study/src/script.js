@@ -55,7 +55,7 @@ function scaleGenerator(map){
   }
 
   var juxtaposedUncertaintyScale = function(d) {
-    return d3.interpolateGreys(d3.scaleQuantize().domain([0,1]).range(maps.linearUncertainty)(d.u));
+    return reverseGrey(d3.scaleQuantize().domain([0,1]).range(maps.linearUncertainty)(d.u));
   }
 
   var juxtaposedSizeScale = function(d){
@@ -91,7 +91,7 @@ var vC = function(d){
 }
 
 var u = function(d){
-  return d3.interpolateGreys(1-d.u);
+  return d3.reverseGrey(d.u);
 }
 
 var uS = function(d){
@@ -366,9 +366,6 @@ function taskOne(){
   .html("Question <span id=\"questionNum\">"+questionNum+"</span>/<span id=\"maxQuestions\">"+taskOneStimuli.length+"</span>");
 
   main.append("p")
-  .html("You will be asked to find a location on a map that fits a certain criteria. Multiple locations might fit the criteria, in which case choose the any valid location.");
-
-  main.append("p")
   .attr("id","prompt")
   .html("Click the \"Ready\" button to begin.");
 
@@ -385,13 +382,12 @@ function taskOne(){
 
   main.append("svg")
   .attr("id","map")
-  .attr("style","width: 450px; height: 200px;");
+  .attr("style","width: 700px; height: 250px;");
 
   main.append("div").html("<br />");
 
-  main.append("svg")
-  .attr("id","legend")
-  .attr("style","width: 250px; height: 250px;");
+  main.append("p")
+  .html("You will be asked to find a location on a map that fits a certain criteria. Multiple locations might fit the criteria, in which case choose the any valid location.");
 
 }
 
@@ -416,7 +412,6 @@ function initializeTaskOne(){
 function revealTaskOne(){
   main.select("#answer").remove();
   var mapSvg = d3.select("#map");
-  var legendSvg = d3.select("#legend");
   var stim = taskOneStimuli[questionNum-1];
 
   var vLabel = "Value";
@@ -428,14 +423,14 @@ function revealTaskOne(){
       var tempMap = makeTaskOneMap(stim.size);
       makeHexmap(mapSvg,100,0,200,tempMap,vMap.arcSizeScale,maxSize);
       makeHeatmap(mapSvg,100,0,200,tempMap,empty);
-      makeArcHexmap(legendSvg, 20, 50, 160,vMap.arc,vMap.arcSizeScale,maxSize);
+      makeArcHexmap(mapSvg, 420, 50, 160,vMap.arc,vMap.arcSizeScale,maxSize);
     }
     else{
       makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.arcScale);
-      makeArcmap(legendSvg, 20, 50, 160,vMap.arc,vMap.arcScale);
+      makeArcmap(mapSvg, 420, 50, 160,vMap.arc,vMap.arcScale);
     }
 
-    makeArcLegend(legendSvg, 20, 50, 160, vMap.arc, [0,100], [0,100], vLabel, uLabel);
+    makeArcLegend(mapSvg, 420, 50, 160, vMap.arc, [0,100], [0,100], vLabel, uLabel);
     break;
 
     case "juxta":
@@ -454,8 +449,8 @@ function revealTaskOne(){
       makeHexmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedSizeScale,maxSize);
       makeHeatmap(mapSvg,225,0,200,tempMap,empty);
 
-      makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, d3.interpolateViridis,vLabel);
-      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
+      makeSimpleLegend(mapSvg, 440,20,20, 160,vMap.linearValue, d3.interpolateViridis,vLabel);
+      makeSimpleLegend(mapSvg, 440,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
     }
     else{
       makeHeatmap(mapSvg,0,0,200,tempMap,vMap.juxtaposedValueScale);
@@ -469,8 +464,8 @@ function revealTaskOne(){
         .attr("height","200px");
       makeHeatmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedUncertaintyScale);
 
-      makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, d3.interpolateViridis,vLabel);
-      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
+      makeSimpleLegend(mapSvg, 440,20,20, 160,vMap.linearValue, d3.interpolateViridis,vLabel);
+      makeSimpleLegend(mapSvg, 440,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
     }
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
@@ -481,13 +476,13 @@ function revealTaskOne(){
     if(stim.ramp=="Size"){
       //TODO Plug into 2D size maps
       makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
-      makeHeatmap(legendSvg, 20, 50, 160,vMap.square,vMap.squareScale);
+      makeHeatmap(mapSvg, 420, 50, 160,vMap.square,vMap.squareScale);
     }
     else{
       makeHeatmap(mapSvg,100,0,200,makeTaskOneMap(stim.size),vMap.squareScale);
-      makeHeatmap(legendSvg, 20, 50, 160,vMap.square,vMap.squareScale);
+      makeHeatmap(mapSvg, 420, 50, 160,vMap.square,vMap.squareScale);
     }
-    makeHeatmapLegend(legendSvg, 20, 50, 160, vMap.square, [0,100], [0,100], vLabel, uLabel);
+    makeHeatmapLegend(mapSvg, 420, 50, 160, vMap.square, [0,100], [0,100], vLabel, uLabel);
     break;
   }
 
@@ -512,8 +507,6 @@ function answerTaskOne(){
 
   var vError;
   var uError;
-  console.log(stim.qShort);
-  console.log(d.v);
   switch(stim.qShort){
     case "1uav":
     vError = 0;
@@ -526,7 +519,7 @@ function answerTaskOne(){
     break;
 
     case "0u0v":
-    vError = 1.0-d.v.v;
+    vError = d.v.v;
     uError = d.v.u;
     break;
 
@@ -649,9 +642,6 @@ function taskTwo(){
   .html("Question <span id=\"questionNum\">"+questionNum+"</span>/<span id=\"maxQuestions\">"+taskTwoStimuli.length+"</span>");
 
   main.append("p")
-  .attr("id","question");
-
-  main.append("p")
   .attr("id","prompt")
   .html("Once you have placed all targets, click the \"Confirm\" button to confirm your choices.");
 
@@ -661,14 +651,10 @@ function taskTwo(){
 
   main.append("svg")
   .attr("id","map")
-  .attr("style","width: 450px; height: 200px;");
+  .attr("style","width: 700px; height: 250px;");
 
-  main.append("div")
-  .html("<br />");
-
-  main.append("svg")
-  .attr("id","legend")
-  .attr("style","width: 250px; height: 250px;");
+  main.append("p")
+  .attr("id","question");
 
   main.append("input")
   .attr("class","button")
@@ -694,7 +680,6 @@ function initializeTaskTwo(){
 
   var tokens = stim.size;
   var mapSvg = d3.select("#map");
-  var legendSvg = d3.select("#legend");
 
   taskTwoTokens = stim.size;
 
@@ -702,16 +687,14 @@ function initializeTaskTwo(){
   for(var i = 0;i<size;i++){
     taskTwoGrid.push(dl.repeat(false,size));
   }
-
   if(stim.role=="att"){
     d3.select("#question")
-    .html("Click to place missiles on the map on locations where you think you will sink the most ships: where the probability of a hit is <b>greatest</b>.");
+    .html("Click to place missiles on the map on locations where you think you will sink the most ships: where the probability of a hit is <b>greatest</b>. <br />Bright <span class=\"sYellow\">YELLOW</span> squares with low uncertainty are the best targets.");
   }
   else{
     d3.select("#question")
-    .html("Click to place ships on the map on locations where you think your ships are safest: where the probabilty of a strike is <b>least</b>.");
+    .html("Click to place ships on the map on locations where you think your ships are safest: where the probabilty of a strike is <b>least</b>. <br />Bright <span class=\"sPurple\">PURPLE</span> squares with low uncertainty are the safest locations for ships.");
   }
-
   var tokenSize = 200/tokens;
 
   var tokenImg = stim.role=="att" ? "boom.png" : "ship.png";
@@ -737,13 +720,13 @@ function initializeTaskTwo(){
       var tempMap = makeTaskTwoMap(stim.size);
       makeHexmap(mapSvg,100,0,200,tempMap,taskMap.arcSizeScale,maxSize);
       makeHeatmap(mapSvg,100,0,200,tempMap,empty);
-      makeArcHexmap(legendSvg, 20, 50, 160,taskMap.arc,taskMap.arcSizeScale,maxSize);
+      makeArcHexmap(mapSvg, 420, 50, 160,taskMap.arc,taskMap.arcSizeScale,maxSize);
     }
     else{
       makeHeatmap(mapSvg,100,0,200,makeTaskTwoMap(stim.size),taskMap.arcScale);
-      makeArcmap(legendSvg, 20, 50, 160,taskMap.arc,taskMap.arcScale);
+      makeArcmap(mapSvg, 420, 50, 160,taskMap.arc,taskMap.arcScale);
     }
-    makeArcLegend(legendSvg, 20, 50, 160, taskMap.arc, [0,100], [0,100], vLabel, uLabel);
+    makeArcLegend(mapSvg, 420, 50, 160, taskMap.arc, [0,100], [0,100], vLabel, uLabel);
 
     break;
 
@@ -762,8 +745,8 @@ function initializeTaskTwo(){
       makeHexmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedSizeScale,maxSize);
       makeHeatmap(mapSvg,225,0,200,tempMap,empty);
 
-      makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, taskLMap,vLabel);
-      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
+      makeSimpleLegend(mapSvg, 440,20,20, 160,vMap.linearValue, taskLMap,vLabel);
+      makeSimpleLegend(mapSvg, 440,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
     }
     else{
       makeHeatmap(mapSvg,0,0,200,tempMap,taskJMap);
@@ -777,8 +760,8 @@ function initializeTaskTwo(){
         .attr("height","200px");
       makeHeatmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedUncertaintyScale);
 
-      makeSimpleLegend(legendSvg, 20,20,20, 160,vMap.linearValue, taskLMap,vLabel);
-      makeSimpleLegend(legendSvg, 20,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
+      makeSimpleLegend(mapSvg, 440,20,20, 160,vMap.linearValue, taskLMap,vLabel);
+      makeSimpleLegend(mapSvg, 440,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
     }
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
@@ -789,13 +772,13 @@ function initializeTaskTwo(){
     if(stim.ramp=="Size"){
       //TODO plug this into 2d size scales
       makeHeatmap(mapSvg,100,0,200,makeTaskTwoMap(stim.size),taskMap.squareScale);
-      makeHeatmap(legendSvg, 20, 50, 160,taskMap.square,taskMap.squareScale);
+      makeHeatmap(mapSvg, 420, 50, 160,taskMap.square,taskMap.squareScale);
     }
     else{
       makeHeatmap(mapSvg,100,0,200,makeTaskTwoMap(stim.size),taskMap.squareScale);
-      makeHeatmap(legendSvg, 20, 50, 160,taskMap.square,taskMap.squareScale);
+      makeHeatmap(mapSvg, 420, 50, 160,taskMap.square,taskMap.squareScale);
     }
-    makeHeatmapLegend(legendSvg, 20, 50, 160, taskMap.square, [0,100], [0,100], vLabel, uLabel);
+    makeHeatmapLegend(mapSvg, 420, 50, 160, taskMap.square, [0,100], [0,100], vLabel, uLabel);
     break;
   }
 
@@ -1135,4 +1118,4 @@ function ineligible(){
 
 }
 
-consent();
+taskOne();

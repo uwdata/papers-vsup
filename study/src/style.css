@@ -117,3 +117,11 @@ svg {
 #mturk_form ol li {
   margin-bottom: 1em;
 }
+
+.sYellow{
+  color: yellow; text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+}
+
+.sPurple{
+  color: purple;text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+}
