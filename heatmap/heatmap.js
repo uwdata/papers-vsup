@@ -412,9 +412,9 @@ function makeScaleFunction(scaleData, mappingFunction){
   }
 }
 
-function colorDiff(scaleData, uSL){
+function colorDiff(scaleData, cMap){
   var colors = scaleData.reduce(function(arr, curr) {
-    return arr.concat(curr.map(uSL));
+    return arr.concat(curr.map(cMap));
   }, []);
   return minDist(colors);
 }
@@ -526,7 +526,7 @@ function makeMaps(map, threshold, maxSize){
   while (true) {
     var startsize = toVisualAngle(45);
     var data = makeScaleData(n);
-    var c = colorDiff(data,uSL);
+    var c = minDist(data[0].map(uSL));
     if(c.minD >=THRESHOLD && colorSizeDiff(data,THRESHOLD,startsize,uSize)){
       squareSizeScaleData = data;
       closest = c;
@@ -546,7 +546,7 @@ function makeMaps(map, threshold, maxSize){
   while (true) {
     var startsize = toVisualAngle(45);
     var data = makeArcScaleData(n);
-    var c = colorDiff(data,uSL);
+    var c = minDist(data[0].map(uSL));
     if(c.minD>=THRESHOLD && colorSizeDiff(data,THRESHOLD,startsize,uSize)){
       arcSizeScaleData = data;
       closest = c;
