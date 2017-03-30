@@ -33,7 +33,7 @@ function makeHexmap(svg, x, y, size, data, z, maxSize, name){
   var h = size/data.length;
 
   var heatmap = svg.append("g")
-             .attr("transform","translate("+(x+maxSize)+","+(y+maxSize)+")");
+             .attr("transform","translate("+(x+w/2)+","+(y+h/2)+")");
 
   if(name){
     heatmap.attr("id",name);
