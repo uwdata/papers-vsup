@@ -463,7 +463,7 @@ function makeMaps(map, threshold, maxSize){
 
   n = 2;
   while (true) {
-    var data = d3.range(0, 1 + 1/n, 1/n);
+    var data = d3.range(0, 1 + 1/n, 1/n).reverse();
     var c = colorDiff([data], d3.interpolateGreys);  // we always use this scale for juxtaposed
     if (c.minD >= THRESHOLD) {
       linearUncertaintyData = data;
