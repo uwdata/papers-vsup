@@ -50,8 +50,21 @@ function scaleGenerator(map){
   var arcScale = makeScaleFunction(maps.arc, uSL);
   var arcSizeScale = makeScaleFunction(maps.arcSize, uSize);
 
+  var juxtaposedValueScale = function(d) {
+    return map(d3.scaleQuantize().domain([0,1]).range(maps.linearValue)(d.v));
+  }
+
+  var juxtaposedUncertaintyScale = function(d) {
+    return d3.interpolateGreys(d3.scaleQuantize().domain([0,1]).range(maps.linearUncertainty)(d.u));
+  }
+
+  var juxtaposedSizeScale = function(d){
+    return {"c":"black", "s":Math.max(0.1*maxSize,d3.scaleQuantize().domain([0,1]).range(maps.linearUncertainty)(d.u)*maxSize)};
+  }
+
+
   return {"square":maps.square, "arc":maps.arc, "arcSize":maps.arcSize,
-  "cs":uSize, "cl":uSL, "squareScale": squareScale, "arcScale": arcScale, "arcSizeScale":arcSizeScale};
+  "cs":uSize, "cl":uSL, "squareScale": squareScale, "arcScale": arcScale, "arcSizeScale":arcSizeScale, "juxtaposedUncertaintyScale":juxtaposedUncertaintyScale, "juxtaposedValueScale":juxtaposedValueScale, "juxtaposedSizeScale":juxtaposedSizeScale};
 }
 
 var vMap = scaleGenerator(d3.interpolateViridis);
@@ -398,7 +411,7 @@ function revealTaskOne(){
     var tempMap = makeTaskOneMap(stim.size);
 
     if(stim.ramp=="Size"){
-      makeHeatmap(mapSvg,0,0,200,tempMap,vV);
+      makeHeatmap(mapSvg,0,0,200,tempMap,vMap.juxtaposedValueScale);
       mapSvg.append("rect")
         .attr("fill","transparent")
         .attr("stroke","black")
@@ -407,11 +420,11 @@ function revealTaskOne(){
         .attr("y","0px")
         .attr("width","200px")
         .attr("height","200px");
-      makeHexmap(mapSvg,225,0,200,tempMap,uS,maxSize);
+      makeHexmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedSizeScale,maxSize);
       makeHeatmap(mapSvg,225,0,200,tempMap,empty);
     }
     else{
-      makeHeatmap(mapSvg,0,0,200,tempMap,vV);
+      makeHeatmap(mapSvg,0,0,200,tempMap,vMap.juxtaposedValueScale);
       mapSvg.append("rect")
         .attr("fill","transparent")
         .attr("stroke","black")
@@ -420,7 +433,7 @@ function revealTaskOne(){
         .attr("y","0px")
         .attr("width","200px")
         .attr("height","200px");
-      makeHeatmap(mapSvg,225,0,200,tempMap,u);
+      makeHeatmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedUncertaintyScale);
     }
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
@@ -580,7 +593,7 @@ function initializeTaskTwo(){
   var uLabel = "Uncertainty of Prediction";
 
   var taskMap = stim.role=="att" ? pMap : cMap;
-  var taskJMap = stim.role=="att" ? vP : vC;
+  var taskJMap = stim.role=="att" ? pMap.juxtaposedValueScale : cMap.juxtaposedValueScale;
 
   switch(stim.type){
     case "vsum":
@@ -610,7 +623,7 @@ function initializeTaskTwo(){
         .attr("y","0px")
         .attr("width","200px")
         .attr("height","200px");
-      makeHexmap(mapSvg,225,0,200,tempMap,uS,maxSize);
+      makeHexmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedSizeScale,maxSize);
       makeHeatmap(mapSvg,225,0,200,tempMap,empty);
     }
     else{
@@ -623,7 +636,7 @@ function initializeTaskTwo(){
         .attr("y","0px")
         .attr("width","200px")
         .attr("height","200px");
-      makeHeatmap(mapSvg,225,0,200,tempMap,u);
+      makeHeatmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedUncertaintyScale);
     }
     //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
     //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
