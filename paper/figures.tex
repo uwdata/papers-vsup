@@ -17,7 +17,7 @@
 }
 
 \newcommand{\exampleFig}{
-\begin{figure}
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=0.9\columnwidth]{example.pdf}
 	\caption{A standard bivariate map and a VSUM. Both use the same visual channels to encode value (position along the Viridis color map) and uncertainty (lightness and saturation), and have an equal standard of perceptual discriminability (at least 18 units of distance in CIELAB color space between colors). However, highly uncertain values result in colors that are very close together in the bivariate case, meaning the full bivariate map is only 9 bins under these constraints\,---\,a 4x4 map would result in colors that are perceptually too close together. By contrast, the VSUM intentionally reduces bins when uncertainty is high, eventually aliasing all highly uncertain values to the same color. This decision affords more distinct colors in other regions of the map, and so an increase in overall bins to 15. The resulting map suppresses the value of uncertain data, but increases the discriminability of data with low uncertainty.}
@@ -26,7 +26,7 @@
 }
 
 \newcommand{\conditionFig}{
-	\begin{figure*}
+	\begin{figure*}[t]
 		\centering
 		\includegraphics[width=0.8\textwidth]{conditions.pdf}
 		\caption{The three graph types in our evaluation. Bivariate color ramps ensure that there are orthogonal mappings for each combination of value and uncertainty, but, since color channels are not separable, can afford only a few discrete colors before color categories become unacceptably close, perceptually. Juxtaposed maps, by keeping these channels separate, afford a larger range of colors, but require a visual search task to recover both value and uncertainty in a region. VSUMs have many of the advantages of bivariate maps, but assign more color categories to certain data, at the expense of ambiguity when uncertainty is high.}
@@ -54,7 +54,7 @@
 }
 
 \newcommand{\performanceFig}{
-	\begin{figure}
+	\begin{figure}[t]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{performance.pdf}
 		\caption{
@@ -70,33 +70,35 @@
 }
 
 \newcommand{\airlineFig}{
-\begin{figure}
-	\centering
-	\includegraphics[width=\columnwidth]{airline-vsum.png}
-	\caption{Flight delay data visualized with VSUM.}
-	\label{fig:airlineVsum}
-\end{figure}
-
-\begin{figure}
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=\columnwidth]{airline-2d.png}
-	\caption{Flight delay data visualized with 2D uncertainty map.}
+	\vspace{-20px}
+	\caption{Average departure delay for different times of the day and days of the week visualized with a 2D uncertainty map.}
 	\label{fig:airline2d}
+
+	\vspace{10px}
+
+	\centering
+	\includegraphics[width=\columnwidth]{airline-vsum.png}
+	\vspace{-20px}
+	\caption{Flight delay data encoded with a VSUM.}
+	\label{fig:airlineVsum}
 \end{figure}
 }
 
 \newcommand{\viralFig}{
-\begin{figure}
-	\centering
-	\includegraphics[width=\columnwidth]{viral-vsum.png}
-	\caption{Virus genome data for reads between position $1309$ and $10124$ visualized with VSUM.}
-	\label{fig:viralVsum}
-\end{figure}
-
-\begin{figure}
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=\columnwidth]{viral-2d.png}
-	\caption{Virus genome data visualized with 2D uncertainty map.}
+	\vspace{-20px}
+	\caption{Virus genome data for reads between position $1309$ and $10124$ visualized with a 2D uncertainty map.}
 	\label{fig:viral2d}
+
+	\centering
+	\includegraphics[width=\columnwidth]{viral-vsum.png}
+	\vspace{-20px}
+	\caption{Virus genome mutations and read error encoded with a VSUM.}
+	\label{fig:viralVsum}
 \end{figure}
 }
