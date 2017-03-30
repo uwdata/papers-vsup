@@ -13,7 +13,12 @@
     $path = 'cleandata.csv';
   }
   else{
-    $path = 'data.csv';
+    if($_GET['task']=="Two"){
+      $path = 'dataTwo.csv';
+    }
+    else{
+      $path = 'dataOne.csv';
+    }
   }
   $file = fopen($path,'a');
   $keys = array_keys($answer);

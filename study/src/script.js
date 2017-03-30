@@ -231,6 +231,28 @@ function finishTutorial(){
   taskOne();
 }
 
+function tutorialTwo(){
+  //Set up tutorial. When we're done, start the second task
+  main.selectAll("*").remove();
+
+  main.append("iframe")
+  .attr("src","tutorialTwo.html");
+
+  main.append("button")
+  .attr("class","button")
+  .attr("type","button")
+  .attr("id","answer")
+  .attr("name","answer")
+  .text("Ready")
+  .on("click",finishTutorialTwo);
+}
+
+function finishTutorialTwo(){
+  main.selectAll("#answer").remove();
+  main.selectAll("iframe").remove();
+  taskTwo();
+}
+
 function makeTaskOneStimuli(){
   var stimuli = [];
 
@@ -238,9 +260,15 @@ function makeTaskOneStimuli(){
   var ramps = ["Lightness"];
   var sizes = ["4","8"];
   var questions = [
-    "Click on the map location with the <b>highest</b> uncertainty",
-    "Click on the map location with the <b>lowest</b> uncertainty AND <b>highest</b> value",
-    "Click on the map location with the <b>lowest</b> uncertainty AND <b>lowest</b> value"
+    "Click on the map location with the <b>greatest</b> uncertainty",
+    "Click on the map location with the <b>least</b> uncertainty AND <b>greatest</b> value",
+    "Click on the map location with the <b>least</b> uncertainty AND <b>least</b> value"
+  ];
+
+  var qShort = [
+    "1u",
+    "0u1v",
+    "0u0v"
   ];
 
   var perLevel = 1;
@@ -250,7 +278,7 @@ function makeTaskOneStimuli(){
       for(question of questions){
         for(ramp of ramps){
           for(var i = 0;i<perLevel;i++){
-            stimuli.push( {"type":type, "ramp": ramp, "size": size, "question":question});
+            stimuli.push( {"type":type, "ramp": ramp, "size": size, "question":question, "qShort": qShort[questions.indexOf(question)]});
           }
         }
       }
@@ -480,6 +508,8 @@ function answerTaskOne(){
   for(stimProp in stim){
     answerData[stimProp] = stim[stimProp];
   }
+
+  delete answerData.question;
   writeAnswerTaskOne(answerData);
 }
 
@@ -506,7 +536,7 @@ function doneAnswerTaskOne(){
   d3.select("#questionNum").html(questionNum);
 
   if(done){
-    taskTwo();
+    tutorialTwo();
   }
   else{
     initializeTaskOne();
@@ -644,11 +674,11 @@ function initializeTaskTwo(){
 
   if(stim.role=="att"){
     d3.select("#question")
-    .html("Click to place missiles on the map on locations where you think you will sink the most ships: where the probability of a ship is <b>highest</b>.");
+    .html("Click to place missiles on the map on locations where you think you will sink the most ships: where the probability of a ship is <b>greatest</b>.");
   }
   else{
     d3.select("#question")
-    .html("Click to place ships on the map on locations where you think your ships are safest: where the probabilty of a strike is <b>lowest</b>.");
+    .html("Click to place ships on the map on locations where you think your ships are safest: where the probabilty of a strike is <b>least</b>.");
   }
 
   var tokenSize = 200/tokens;
@@ -664,7 +694,7 @@ function initializeTaskTwo(){
 
   }
 
-  var vLabel = stim.role=="att" ? "Probability of Ship" : "Probability of Missile Strike";
+  var vLabel = stim.role=="att" ? "Hit Chance" : "Danger";
   var uLabel = "Uncertainty of Prediction";
 
   var taskMap = stim.role=="att" ? pMap : cMap;
@@ -812,6 +842,9 @@ function answerTaskTwo(){
   for(stimProp in stim){
     answerData[stimProp] = stim[stimProp];
   }
+
+  answerData.Vs = data.map(function(obj){ return obj.v;});
+  answerData.Us = data.map(function(obj){ return obj.u;});
   answerData.meanV = dl.mean(data,"v");
   answerData.meanU = dl.mean(data,"u");
   answerData.stdV = dl.stdev(data,"v");
@@ -950,8 +983,6 @@ function postTest(){
     form.attr("action","https://www.mturk.com/mturk/externalSubmit");
   }
 
-  riskAversion(form);
-
   var q;
 
   form.append("div")
@@ -1036,12 +1067,13 @@ function postTest(){
   .attr("rows","4")
   .attr("cols","50");
 
+  riskAversion(form);
 
   form.append("input")
   .attr("id","turkBtn")
   .attr("type","submit")
   .attr("class","button")
-  .attr("type","button")
+  .attr("type","submit")
   .attr("name","submit")
   .attr("value","Submit");
 

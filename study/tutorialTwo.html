@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="./src/style.css" />
+    <title>Graphical Perception of Information Visulization</title>
+  </head>
+  <body class="fcontainer">
+         <p>
+           In this second task, you are either <i>attacking</i> or <i>defending</i> in a game like Battleship.
+           In this game, each opponent places their ships on locations on the board, without letting the opponent see where they are placed.
+           The player then selects locations to fire missiles. If a player fires missiles in the same square as an opponent's ship, that ship is sunk.
+           Spies have indicated the likely locations of ships and missiles, but there are varying levels of uncertainty in these predictions.
+           This means that predictions with high uncertainty may not be trustworthy.
+         </p>
+
+         <p>
+           As an attacker, you will be shown a prediction of the likely locations of ships, along with the uncertainty in this prediction.
+           Click locations to target them, or to remove targets. Once you have selected all of your targets, click the "Confirm" button.
+           Your objective is to hit as many ships as possible. Bright <span style="color: yellow; text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;">YELLOW</span> squares are locations where strikes are predicted to hit, and confidence is high.
+         </p>
+
+         <div class="figure">
+           <div>
+             <img src="img/task2a.png" />
+             <span>An example of the <i>attacker</i> task.
+               The location circled here in yellow is forecasted as being highly likely to contain ships, and the confidence in that forecast is high.
+               The location circled in green is also forecasted as highly likely to contain ships, but the prediction confidence is much lower.
+               The location circled in blue is somewhat likely to contain ships, but the confidence in this prediction is high.
+               Either the orange or pink location would be a reasonable choice of target.
+             </span>
+           </div>
+         </div>
+
+         <p>
+           As a defender, you will be shown a prediction of the likely locations of missile strikes, along with the uncertainty in these predictions.
+           Click locations to place your ships, or to remove ships you previously placed. Once you have placed all of your ships, click the "Ready" button.
+           Your objective is to have as few of your ships hit as possible. Bright <span style="color: purple;text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;">PURPLE</span> squares are safe, certain locations for ships.
+         </p>
+
+      <div class="figure">
+        <div>
+          <img src="img/task2b.png" />
+          <span>An example of the <i>defender</i> task. Here, ships should be placed in the safest locations.
+            Circled red location is unlikely to be targeted, and confidence in this prediction is high.
+            The circled orange location is unlikely to be targeted, but confidence in this prediction is low.
+            The circled pink location is more dangerous than the orange location, but with a much higher confidence in prediction.
+            As with the attacking task, either the orange or pink locations would be reasonable places to put ships.
+          </span>
+        </div>
+      </div>
+
+      <p>
+        Click the "Ready" button when you are ready to being the second task.
+        If at any time you have questions or concerns, consult the <a href="consent.html" target="_blank">consent form</a>.
+      </p>
+  </body>
+</html>
