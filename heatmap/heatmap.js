@@ -461,14 +461,10 @@ function makeMaps(map, threshold, maxSize){
     console.log("The two closest linear value colors:(" + closest.c1 +"," + closest.c2 +") are "+closest.minD+" apart in CIELAB.");
   }
 
-  var bw = d3.scaleLinear()
-    .domain([0,1])
-    .range(["white", "black"]);
-
   n = 2;
   while (true) {
     var data = d3.range(0, 1 + 1/n, 1/n);
-    var c = colorDiff([data], bw);
+    var c = colorDiff([data], d3.interpolateGreys);  // we always use this scale for juxtaposed
     if (c.minD >= THRESHOLD) {
       linearUncertaintyData = data;
       closest = c;
