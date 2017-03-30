@@ -526,9 +526,10 @@ function makeMaps(map, threshold, maxSize){
   while (true) {
     var startsize = toVisualAngle(45);
     var data = makeScaleData(n);
-    if(colorSizeDiff(data,THRESHOLD,startsize,uSize)){
+    var c = colorDiff(data,uSL);
+    if(c.minD >=THRESHOLD && colorSizeDiff(data,THRESHOLD,startsize,uSize)){
       squareSizeScaleData = data;
-      closest = colorDiff(data, uSL);
+      closest = c;
     } else {
       break;
     }
@@ -545,9 +546,10 @@ function makeMaps(map, threshold, maxSize){
   while (true) {
     var startsize = toVisualAngle(45);
     var data = makeArcScaleData(n);
-    if(colorSizeDiff(data,THRESHOLD,startsize,uSize)){
+    var c = colorDiff(data,uSL);
+    if(c.minD>=THRESHOLD && colorSizeDiff(data,THRESHOLD,startsize,uSize)){
       arcSizeScaleData = data;
-      closest = colorDiff(data, uSL);
+      closest = c;
     } else {
       break;
     }
