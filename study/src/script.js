@@ -134,7 +134,7 @@ function consent(){
 
   if(assignmentId=="ASSIGNMENT_ID_NOT_AVAILABLE"){
     readyBtn.attr("disabled","disabled");
-    readyBtn.attr("value","PREVIEW");
+    readyBtn.txt("PREVIEW");
   }
 
 }
@@ -266,7 +266,7 @@ function makeTaskOneStimuli(){
   ];
 
   var qShort = [
-    "1u",
+    "1uav",
     "0u1v",
     "0u0v"
   ];
@@ -504,10 +504,41 @@ function answerTaskOne(){
   var rt = (new Date()).getTime() - startTime;
   var d = d3.select(this).datum();
   var stim = taskOneStimuli[questionNum-1];
+
   var answerData = { "workerId": workerId, "task": "One", "index": questionNum, "rt": rt, "v": d.v.v, "u": d.v.u};
   for(stimProp in stim){
     answerData[stimProp] = stim[stimProp];
   }
+
+  var vError;
+  var uError;
+  console.log(stim.qShort);
+  console.log(d.v);
+  switch(stim.qShort){
+    case "1uav":
+    vError = 0;
+    uError = 1.0-d.v.u;
+    break;
+
+    case "0u1v":
+    vError = 1.0-d.v.v;
+    uError = d.v.u;
+    break;
+
+    case "0u0v":
+    vError = 1.0-d.v.v;
+    uError = d.v.u;
+    break;
+
+    default:
+    vError = 0;
+    uError = 0;
+    break;
+  }
+
+  answerData.vError = vError;
+  answerData.uError = uError;
+  answerData.error = vError+uError;
 
   delete answerData.question;
   writeAnswerTaskOne(answerData);
@@ -674,7 +705,7 @@ function initializeTaskTwo(){
 
   if(stim.role=="att"){
     d3.select("#question")
-    .html("Click to place missiles on the map on locations where you think you will sink the most ships: where the probability of a ship is <b>greatest</b>.");
+    .html("Click to place missiles on the map on locations where you think you will sink the most ships: where the probability of a hit is <b>greatest</b>.");
   }
   else{
     d3.select("#question")
@@ -869,8 +900,8 @@ function doneAnswerTaskTwo(){
   //What to do when we get our XML request back.
 
   //TODO error handling here
-
   //Should check to see if we've run out of questions to answer
+
   questionNum++;
   done = questionNum>taskTwoStimuli.length;
   d3.select("#questionNum").html(questionNum);
@@ -982,6 +1013,21 @@ function postTest(){
   else{
     form.attr("action","https://www.mturk.com/mturk/externalSubmit");
   }
+
+  form.append("input")
+  .attr("type","hidden")
+  .attr("name","experiment")
+  .attr("value",experiment);
+
+  form.append("input")
+  .attr("type","hidden")
+  .attr("name","assignmentId")
+  .attr("value",assignmentId);
+
+  form.append("input")
+  .attr("type","hidden")
+  .attr("name","workerId")
+  .attr("value",workerId);
 
   var q;
 
