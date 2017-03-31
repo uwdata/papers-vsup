@@ -273,12 +273,11 @@ The airline delay visualization shows average delays for different times of the 
 
 \airlineFig
 
-\figref{fig:airline2d} shows the heatmap visualization where the delay and uncertainty are encoded with a 2D uncertainty map. We used a minimum discriminability  threshold of $18$ units in CIELAB space. We can see that the lowest delays are early in the day throughout the week. With the same threshold we can create a VSUM with much higher resolution for values with high certainty (\figref{fig:airlineVsum}). The VSUM also has more resolution for the uncertainty (4 different levels instead of 3 in the 2D heatmap). If the analysts is interested in delay patterns, VSUMs give them higher resolution. Since VSUMs blend uncertain values together, 2D maps are better if analysts are interested in high expected delays independent of the uncertainty. However, if analysts want to investigate uncertainty or values in isolation, separate channels (\eg juxtaposed heatmaps) are better as they prevent interaction effects. 
+\figref{fig:airline2d} shows the heatmap visualization where the delay and uncertainty are encoded with a 2D uncertainty map. We used a minimum discriminability  threshold of $18$ units in CIELAB space. We can see that the lowest delays are early in the day throughout the week. With the same threshold we can create a VSUM with much higher resolution for values with high certainty (\figref{fig:airlineVsum}). The VSUM also has more resolution for the uncertainty (4 different levels instead of 3 in the 2D heatmap). If the analysts is interested in delay patterns, VSUMs give them higher resolution.
 
 \viralFig
 
-In \figref{fig:viral2d} and \figref{fig:viralVsum}, we visualized the mutation rate of virus genomes. Biologists know that certain regions of the genome are ``coding regions'' that influence the the formation of proteins. The data you see here, however, has errors because the process of reading the genome is not perfect. Similarly to the flight delay example, the resolution for certain values with 2D uncertainty maps is much lower (\figref{fig:viral2d}). VSUMs enable biologists to see more fine grained differences as shown in \figref{fig:viralVsum}.
-
+In \figref{fig:viral2d} and \figref{fig:viralVsum}, we visualized the variability in viral genomes across 25 populations of the simian immunodeficiency virus (SIV)~\cite{o2012conditional}. Next generation sequencing (NGS) allows biologists to collect and analyze large amounts of genomics data. However, these techniques often create data quality issues, as they must align large numbers of potentially ambiguous ``reads'' of base pairs. In the dataset here, it is important not only to identify hotspots in the viral genome (locations with high rates of mutation or variability), but to not be distracted by false positives. Extending the ``confidence fog'' metaphor used in viral genome browers like LayerCake~\cite{correll2015layercake}, VSUMs enable biologists to explore interesting patterns while not being distracted by noise, as shown in \figref{fig:viralVsum}.
 
 \section{Evaluation}
 
@@ -362,7 +361,7 @@ We performed a one-way ANOVA of chart type on average value of guesses. We found
 
 As with the identification task, a one-way ANOVA also indicated that chart type had a significant effect on response time ($F(2,861)=13$, $p<0.001$). A Tukey's HSD confirmed that, as with the previous task, response time was significantly longer with juxtaposed maps (trimmed mean response time of $23$ seconds) compared to the other chart types (both with trimmed mean response time of $18$ seconds). Despite the documented effect of framing in prior work, a one-way ANOVA of task frame on expected value found no significant main effect ($F(1,862)=0.01$, $p=0.9$), and the trimmed means were quite similar (expected value of $0.76$ per guess for attackers, verus $0.75$ per guess for defenders).
 
-Our results indicates that VSUMs promote avoidance of uncertain values, while not noticeably negatively impacting the expected value. Juxtaposed maps, by contrast, make the retrieval of uncertainty information significantly more difficult, and so it is possible that participants ignore or downweight it when making predictions. By making the consideration of uncertainty values integral to the design of the chart, VSUMs promote caution and consideration of uncertainty when making decisions.
+Our results indicate that VSUMs promote avoidance of uncertain values, while not noticeably negatively impacting the expected value. Juxtaposed maps, by contrast, make the retrieval of uncertainty information significantly more difficult, and so it is possible that participants ignore or downweight it when making predictions. By making the consideration of uncertainty values integral to the design of the chart, VSUMs promote caution and consideration of uncertainty when making decisions.
 
 
 \section{Discussion}
@@ -370,9 +369,12 @@ Our results indicates that VSUMs promote avoidance of uncertain values, while no
 
 \subsection{Limitations and Future Work}
 % When should you use these things?
+In general, VSUMs excel in scenarios where we wish to make firm guarantees about the discriminability of different marks in a chart, but must also represent, in as much detail as possible, two, potentially orthogonal variables of interest. VSUMs have improved data resolution over na\"ive bivariate maps by assuming that uncertain values ought to have less visual impact that highly certain values. VSUMs therefore act both as a kind of filtering device as well as a bivariate representation. This assumption holds in scenarios like the virology dataset (\figref{fig:viralVsum}), where the expectation is that highly uncertain data is ``junk'' or should otherwise be downweighted in analysis. If the analyst has a different interpretation of uncertainty, or wishes to quickly and orthogonally analyses the distributions of uncertainty and value, other strategies, such as juxtaposed maps, may be more appropriate. VSUMs are designed for the \emph{integration} of value and uncertainty. Designers should take care in considering how when and how this integration is desirable.
+
 
 \subsection{Conclusion}
 
+Often times, uncertainty, data quality, or confidence are considered separate information from the data itself, relegated to tooltips or visually distant supplemental charts. This 
 
 %% if specified like this the section will be committed in review mode
 \acknowledgments{
