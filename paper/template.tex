@@ -197,13 +197,11 @@ Reviewing the state of the art in uncertainty visualization in the field, Greith
 
 There are a number of techniques for communicating values and uncertainty in one-dimensional statistical graphics~\cite{olston2002visualizing, wickham201140, neyman1937outline}. Techniques such as error bars, confidence bands, and violin plots~\cite{hintze1998violin} use a separate position channel to encode uncertainty. The techniques in this paper also apply to 2D visualizations such as heatmaps. To our knowledge, there are no established standards of visualizing uncertainty in heatmaps.
 
-To support our goal of making uncertainty information well-integrated with data, we focus on the techniques of \emph{juxtaposition} (where uncertainty is presented alongside the data), \emph{superposition} (where additional glyphs are overlaid on top of the data), and \emph{explicit encoding} (where an additional visual channel is used to encode the uncertainty). Gleicher \ea~\cite{gleicher2011visual} explore these three strategies from the perspective of affording \emph{comparisons}; here, we examine them from the perspective of incorporating measures of uncertainty.
-
-\subsection{Strategies for Encoding Uncertainty}
-
 \strategyFig
 
-As shown in \figref{fig:strategies}, there are three methods for encoding uncertainty.
+To support our goal of making uncertainty information well-integrated with data, we focus on the techniques of \emph{juxtaposition} (where uncertainty is presented alongside the data), \emph{superposition} (where additional glyphs are overlaid on top of the data), and \emph{explicit encoding} (where an additional visual channel is used to encode the uncertainty). Gleicher \ea~\cite{gleicher2011visual} explore these three strategies from the perspective of affording \emph{comparisons}; here, we examine them from the perspective of incorporating measures of uncertainty. \figref{fig:strategies} shows simple examples of each of these three techniques for presenting both uncertainty and value.
+
+\subsection{Strategies for Encoding Uncertainty}
 
 \emph{Juxtaposition} creates two explicit visualizations: an ``uncertainty map'' and a ``data map.'' MacEachren~\cite{maceachren1992visualizing} portrays uncertainty visualization as the design problem of how to \emph{unify} these two maps, and so this explicit separation can be counterproductive to the goal of information fusion. Juxtaposition also creates an additional search task for viewers, who must register hotspots in one map with corresponding features of the other map. Rather than complete this task, viewers may choose to ignore the uncertainty information altogether. This ignoreability is a key deficiency for information fusion tasks. Nevertheless, especially in cases where the quantification of uncertainty is a separate analysis process from the measuring of data values, juxtaposition is a common design tactic for conveying uncertainty~\cite{moritz2017trust}.
 
