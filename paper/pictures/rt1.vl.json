@@ -29,7 +29,10 @@
         "y": {
           "field": "type",
           "type": "ordinal",
-          "title": "Chart Type",
+          "axis": {
+            "title": "Chart Type",
+            "titlePadding": 10
+          },
           "scale": {"domain": ["VSUM", "2D", "Juxtaposed"]}
         },
         "x": {
@@ -49,7 +52,8 @@
           "scale": {"domain": ["Juxtaposed","2D","VSUM"]}
         },
         "x": {"field": "mean","type": "quantitative"},
-        "opacity": {"value": 1}
+        "opacity": {"value": 1},
+        "size": {"value": 50}
       }
     }
   ]
