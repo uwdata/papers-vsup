@@ -310,7 +310,10 @@ For the prediction task, we gave participants the rules of a game similar to Bat
 
 We included both a \textbf{gain} framing (given predictions of where your opponent's ships are, where should you launch your missiles?), and a \textbf{loss} framing (given predictions of where your opponent's missiles will fall, where should you place your ships?) in order to account for systematic differences in human judgments under uncertainty. Tversky \& Kahneman~\cite{tversky1985framing} illustrate that framings in terms of gains or losses produce reliably different outcomes. In general, the function of the value of gains is concave, but is convex for losses~\cite{kahneman1979prospect}. That is, avoiding a large loss is often more valuable than striving for a similarly large gain. To avoid potential (in this case, incorrect) transfer learning, the attacking and defending used different value color maps (Plasma and Cool) than the identification tasks, and from each other.  Figure \ref{fig:taskTwoConditions} shows these differing color maps and framings.
 
-The ideal strategy from a value-maximizing standpoint would be to place tokens on areas with the highest expected value, ignoring the uncertainty information. However, as with Roulette and other similar games of chance, the variability in expected value is relevant when considering where to place bets~\cite{mlodinow2009drunkard}. Over the short term, a player may seek out high expected value but risky locations, or, if risk averse, accept lower expected value but lower variability locations. We therefore measured the distribution of both \emph{value} and \emph{uncertainty} of the tokens placed by the participants. Each map contained a minimum number of ``risky'' locations: cells with high expected value, but also high uncertainty. There were also an equal number of ``safer'' locations, with slightly less expected value, but also less uncertainty. The remaining locations of the map varied pseudo-randomly in the middle ranges.
+Each map contained a minimum number of extreme locations with each combination of very high and very low value and uncertainty. High expected value, high uncertainty locations were ``risky.'' As a balance to the risky locations, there were also an equal number of ``safer'' locations, with slightly less expected value, but also less uncertainty. The remaining locations of the map varied pseudo-randomly in the middle ranges.
+
+The ideal strategy from a value-maximizing standpoint would be to place tokens on areas with the highest expected value, ignoring the uncertainty information. However, as with Roulette and other similar games of chance, the variability in expected value is relevant when considering where to place bets~\cite{mlodinow2009drunkard}. Over the short term, a player may seek out high expected value but risky locations, or, if risk averse, accept lower expected value but lower variability locations. We therefore measured the distribution of both \emph{value} and \emph{uncertainty} of the tokens placed by the participants. 
+
 
 %Show:
 % 1) Juxtaposition makes people ignore/underweight uncertainty (even when they don't screw up the search task)
@@ -335,7 +338,7 @@ We had several hypotheses, stemming from our believe that VSUMs promote better \
 
 \subsection{Results}
 
-Rather than standard means, Cleveland \& McGill~\cite{cleveland1984graphical} use 25\% trimmed means to report effect sizes in graphical perception tasks. Trimmed means remove the first and last quartiles and then compute the mean from the remaining points. This filtering is important for graphical perception tasks (especially crowdsourced tasks) where error distributions may be long-tailed~\cite{heer2010crowdsourcing}. Trimmed means violate the sampling assumptions required for many null-hypothesis significance tests. Thus, while we report effect sizes in terms of trimmed means, we perform statistical tests on the standard means.
+Rather than standard means, Cleveland \& McGill~\cite{cleveland1984graphical} use 25\% trimmed means to report effect sizes in graphical perception tasks. Trimmed means remove the first and last quartiles and then compute the mean from the remaining points. This filtering is important for graphical perception tasks (especially crowdsourced tasks) where error distributions may be long-tailed~\cite{heer2010crowdsourcing}. Trimmed means violate the sampling assumptions required for many null-hypothesis significance tests. Thus, while we report effect sizes in terms of trimmed means, we perform inferential statistical tests on the standard means.
 
 \subsubsection{Participants}
 
@@ -343,12 +346,24 @@ We limited our population to Turkers from the United States, with a prior task a
 
 \subsubsection{Identification Task}
 
+For the identification task, we were interested primarily in primary measures of performance, accuracy and response time. Our hypothesis was that VSUMs would have increased performance values compared to the other charts.
 
-We performed a one-way ANOVA investigating the effect of chart type (juxtaposed, full bivariate, or VSUM) on accuracy. We found only a marginal effect $F(2,859) = 2.4$, $p=0.09$, although VSUMs had the highest accuracy. Fig. X illustrates this result.
+We performed a one-way ANOVA investigating the effect of chart type (juxtaposed, full bivariate, or VSUM) on accuracy. We found only a marginal effect ($F(2,859) = 2.4$, $p=0.09$), although VSUMs had the highest accuracy. Fig. X illustrates this result.
 
-We also performed a one-way ANOVA on the effect of chart type on response time. In this case, we did find a significant main effect $(F,2,859) = 5.0$, $p<0.001$. A Tukey's test of Honest Significant Difference (HSD) found that participants were significantly slower at performing the task on juxtaposed maps, as opposed to the other map types.
+We also performed a one-way ANOVA on the effect of chart type on response time. In this case, we did find a significant main effect ($(F,2,859) = 5.0$, $p<0.001$). A Tukey's test of Honest Significant Difference (HSD) found that participants were significantly slower at performing the task on juxtaposed maps, as opposed to the other map types. Fig. X illustrates this result.
 
-These results partially support our first hypothesis.
+These results only partially support our hypothesis. There was no significant difference in terms of accuracy between different maps, partially due to the simplicity of the identification task: participants only had to find a single target in a heatmap, with extreme values in both data and uncertainty axes. However, our results do provide evidence that juxtaposed maps, by introducing an additional search task to the problem of assessing the value and uncertainty of a location, require significantly more time to interpret.
+
+\subsubsection{Prediction Task}
+
+For the prediction task, where there is no dominating strategy, our primary measure was the distribution of guesses, in terms of both their average value, and their average uncertainty. A risky player would choose guesses with high value, regardless of the uncertainty of those points. A more conservative guesser might eschew high-risk, high-reward locations, resulting in a lower average value of guesses, but also lower uncertainty. Our hypothesis is that VSUMs, by communicating uncertainty information at the expense of value information, would promote more conservatives guesses than the other chart types.
+
+We performed a one-way ANOVA of chart type on average value of guesses. We found no significant effect ($F(2,861)=0.27$, $p=0.8$), indicating that participants were generating similar expected values from their guesses across conditions. However, an ANOVA of chart type on average \emph{uncertainty} of guesses did find a significant main effect ($F(2,861)=61$, $p<0.001$). A post-hoc Tukey's HSD confirmed that participants had guesses with significantly less uncertainty with VSUMs than with both other chart types. Additionally, participants' guesses had significantly more uncertainty with juxtaposed charts than the other two. 
+
+As with the identification task, a one-way ANOVA also indicated that chart type had a significant effect on response time ($F(2,861)=13$, $p<0.001$). A Tukey's HSD confirmed that, as with the previous task, response time was significantly longer with juxtaposed maps (trimmed mean response time of $23$ seconds) compared to the other chart types (both with trimmed mean response time of $18$ seconds). Despite the documented effect of framing in prior work, a one-way ANOVA of task frame on expected value found no significant main effect ($F(1,862)=0.01$, $p=0.9$), and the trimmed means were quite similar (expected value of $0.76$ per guess for attackers, verus $0.75$ per guess for defenders).
+
+Our results indicates that VSUMs promote avoidance of uncertain values, while not noticeably negatively impacting the expected value. Juxtaposed maps, by contrast, make the retrieval of uncertainty information significantly more difficult, and so it is possible that participants ignore or downweight it when making predictions. By making the consideration of uncertainty values integral to the design of the chart, VSUMs promote caution and consideration of uncertainty when making decisions.
+
 
 \section{Discussion}
 
