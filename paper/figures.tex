@@ -37,7 +37,23 @@
 \newcommand{\conditionFig}{
 	\begin{figure*}[t]
 		\centering
-		\includegraphics[width=0.8\textwidth]{conditions.pdf}
+		\begin{subfigure}{0.3\textwidth}
+			\centering
+			\includegraphics[width=.45\textwidth]{conditions1.pdf}
+			\caption{Traditional Bivariate Map}
+		\end{subfigure}
+		~
+		\begin{subfigure}{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{conditions2.pdf}
+			\caption{Juxtaposed Univariate Maps}
+		\end{subfigure}
+		~
+		\begin{subfigure}{0.3\textwidth}
+			\centering
+			\includegraphics[width=0.45\textwidth]{conditions3.pdf}
+			\caption{Value Suppressing Uncertainty Map}
+		\end{subfigure}
 		\caption{The three graph types in our evaluation. Bivariate color ramps ensure that there are orthogonal mappings for each combination of value and uncertainty, but, since color channels are not separable, can afford only a few discrete colors before color categories become unacceptably close, perceptually. Juxtaposed maps, by keeping these channels separate, afford a larger range of colors, but require a visual search task to recover both value and uncertainty in a region. VSUMs have many of the advantages of bivariate maps, but assign more color categories to certain data, at the expense of ambiguity when uncertainty is high.}
 		\label{fig:conditions}
 	\end{figure*}
