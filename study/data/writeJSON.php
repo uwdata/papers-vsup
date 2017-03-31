@@ -10,18 +10,17 @@
   $answer = json_decode($_GET['answer'],true);
   $cleaned = $_GET['clean'];
 
+  if($answer['task']=="Two"){
+    $path = 'dataTwo.csv';
+  }
   else{
-    if($_GET['task']=="Two"){
-      $path = 'dataTwo.csv';
-    }
-    else{
-      $path = 'dataOne.csv';
-    }
+    $path = 'dataOne.csv';
   }
 
   if($cleaned=='true'){
     $path = 'clean'.$path;
   }
+
 
   $file = fopen($path,'a');
   $keys = array_keys($answer);
@@ -45,5 +44,6 @@
   echo $line."\n";
   fwrite($file,$line);
   fclose($file);
+
   echo "Done";
 ?>
