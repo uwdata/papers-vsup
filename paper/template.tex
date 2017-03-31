@@ -240,7 +240,7 @@ If both of these assumptions hold, then it follows that the designer of a bivari
 
 \flowFig
 
-The general VSUM algorithm demonstrated in \figref{fig:flow} is as follows:
+The general VSUM algorithm is as follows:
 
 \begin{enumerate}
 	\item \textbf{Select a visual variable to encode value}. In most cases in this paper, this variable is position along some established color scale.
@@ -250,7 +250,7 @@ The general VSUM algorithm demonstrated in \figref{fig:flow} is as follows:
 	\item \textbf{Choose the largest number of initial categories $n$ such that the discriminability threshold is met.} For each pair of marks in the map, perform a pairwise comparison of discriminability. If no marks are perceptually ambiguous by the standards of your threshold, the map is complete. Otherwise, decrement $n$.
 \end{enumerate}
 
-Figure \ref{fig:flow} shows this process in detail, and how it can be used to generate a bivariate map for presenting uncertainty. JavaScript code for generating VSUMs given arbitrary d3 quantitative scale functions is available at \url{URL REMOVED FOR REVIEW}.
+\figref{fig:flow} shows this process in detail, and how it can be used to generate a bivariate map for presenting uncertainty. JavaScript code for generating VSUMs given arbitrary d3 quantitative scale functions is available at \url{URL REMOVED FOR REVIEW}.
 
 Correll \ea~\cite{correll2015layercake,correll2011visualizing} use a pre-cursor of VSUMs in their LayerCake genomics visualization tool, where marks representing genomic data with increasing uncertainty are mapped to a smaller and smaller set of increasingly grey colors, creating the effect of uncertain values retreating into ``fog'' while highly certain values remain prominent. Other bivariate visualizations implicitly alias together uncertain values. For instance, if uncertainty is encoded by transparency, a maximally uncertain glyph may be entirely transparent, and so impossible to distinguish from any other maximally uncertain glyph. Other channels with a semiotic connection to uncertainty, such as saturation, value, blur, or size, also have deleterious effects on the disambiguation of colors and shapes. In both of these cases, the property of aliasing is \emph{ad hoc}, and places no guarantees on the discriminability of colors. The binning and degradation approach of VSUMs makes the choice to alias values explicit to both the designer and the viewer, and results in a bivariate mapping with known perceptual properties.
 

@@ -20,7 +20,7 @@
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=0.9\columnwidth]{example.pdf}
-	\caption{A standard bivariate map and a VSUM. Both use the same visual channels to encode value (position along the Viridis color map) and uncertainty (lightness and saturation), and have an equal standard of perceptual discriminability (at least 18 units of distance in CIELAB color space between colors). However, highly uncertain values result in colors that are very close together in the bivariate case, meaning the full bivariate map is only 9 bins under these constraints\,---\,a 4x4 map would result in colors that are perceptually too close together. By contrast, the VSUM intentionally reduces bins when uncertainty is high, eventually aliasing all highly uncertain values to the same color. This decision affords more distinct colors in other regions of the map, and so an increase in overall bins to 15. The resulting map suppresses the value of uncertain data, but increases the discriminability of data with low uncertainty.}
+	\caption{A standard bivariate map and a VSUM. Both use the same visual channels to encode value (position along the Viridis~\cite{viridis} color map) and uncertainty (lightness and saturation), and have an equal standard of perceptual discriminability (at least 18 units of distance in CIELAB color space between colors). However, highly uncertain values result in colors that are very close together in the bivariate case, meaning the full bivariate map is only 9 bins under these constraints\,---\,a 4x4 map would result in colors that are perceptually too close together. By contrast, the VSUM intentionally reduces bins when uncertainty is high, eventually aliasing all highly uncertain values to the same color. This decision affords more distinct colors in other regions of the map, and so an increase in overall bins to 15. The resulting map suppresses the value of uncertain data, but increases the discriminability of data with low uncertainty.}
 	\label{fig:example}
 \end{figure}
 }
@@ -58,7 +58,7 @@
 		\centering
 		\includegraphics[width=0.9\columnwidth]{performance.pdf}
 		\caption{
-			The number of discrete color categories in traditional bivariate color maps versus VSUMs, assuming value is encoded by the Viridis color map~\protect\cite{garnier2015viridis}, and uncertainty is encoded by saturation/value (whiter values are more uncertain). Since these whiter uncertain colors are closer together in CIELAB space, and VSUMs intentionally require fewer color bins in those regions, VSUMs always have more color categories than the corresponding 2D bivariate map. The red lines denote:
+			The number of discrete color categories in traditional bivariate color maps versus VSUMs, assuming value is encoded by the Viridis color map~\protect\cite{viridis}, and uncertainty is encoded by saturation/value (whiter values are more uncertain). Since these whiter uncertain colors are closer together in CIELAB space, and VSUMs intentionally require fewer color bins in those regions, VSUMs always have more color categories than the corresponding 2D bivariate map. The red lines denote:
 		  \textbf{1)} Theoretical 50\% JND from CIELAB specification.
 			\textbf{2)} 50\% JND from controlled lab study of Mahy et al.~\protect\cite{mahy1994evaluation}.
 			\textbf{3)} 50\% JND from Szafir et al.\protect\cite{szafir2014adapting}.
@@ -73,7 +73,9 @@
 	\begin{figure}[t]
 		\centering
 		\includegraphics[width=0.95\columnwidth]{flow.pdf}
-		\caption{The process for creating a VSUM. VSUMs guarantee that no two marks in the resulting bivariate mapping are perceptually closer than some pre-specified threshold. This guarantee removes some of the issues of non-separability and ambiguity that are otherwise a concern when designing bivariate maps.}
+		\caption{The process for creating a VSUM. VSUMs guarantee that no two marks in the resulting bivariate mapping are perceptually closer than some pre-specified threshold. This guarantee removes some of the issues of non-separability and ambiguity that are otherwise a concern when designing bivariate maps.
+		
+		In this example two colors from the map for $n=9$ are too close in CIELAB space. Thus, we create a VSUM with $n=8$ bins that encodes value with Viridis and uncertainty with increasingly white colors.}
 		\label{fig:flow}
 	\end{figure}
 }
@@ -82,7 +84,7 @@
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=\columnwidth]{airline-2d.png}
-	\vspace{-20px}
+	\vspace{-15px}
 	\caption{Average departure delay for different times of the day and days of the week visualized with a 2D uncertainty map.}
 	\label{fig:airline2d}
 
@@ -90,7 +92,7 @@
 
 	\centering
 	\includegraphics[width=\columnwidth]{airline-vsum.png}
-	\vspace{-20px}
+	\vspace{-15px}
 	\caption{Flight delay data encoded with a VSUM.}
 	\label{fig:airlineVsum}
 \end{figure}
@@ -100,13 +102,15 @@
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=\columnwidth]{viral-2d.pdf}
-	\vspace{-20px}
+	\vspace{-15px}
 	\caption{Variability for 25 different viral populations of the SIV virus, encoded with a traditional 2D bivariate map. Error in aligning short reads can lead to poor quality data, and so the amount of these errors is encoded as the uncertainty. }
 	\label{fig:viral2d}
 
+	\vspace{10px}
+
 	\centering
 	\includegraphics[width=\columnwidth]{viral-vsum.pdf}
-	\vspace{-20px}
+	\vspace{-15px}
 	\caption{Variability for 25 different viral populations of SIV, encoded with a VSUM. The magnitude of mutation rate, as well as the generally poorer quality of data towards the end of the sequence, is more readily visible than with the traditional bivariate color map. }
 	\label{fig:viralVsum}
 \end{figure}
