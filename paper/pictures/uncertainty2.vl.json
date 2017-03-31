@@ -37,10 +37,10 @@
           "type": "quantitative",
           "title": "Uncertainty",
           "axis": {
-            "format": ".1f"
+            "format": ".2f"
           },
           "scale": {
-            "zero": false
+            "zero": true
           }
         },
         "x2": {"field": "ci2","type": "quantitative"}
