@@ -1,7 +1,7 @@
 var dataOne;
 var dataTwo;
 
-process();
+analysis();
 
 function process(){
   //Steps:
@@ -23,12 +23,11 @@ function process(){
 
   for(var i = 0;i<demoTable.length;i++){
     row = demoTable[i];
-    turkId = row.workerId;
-    valids = dataOneTable.filter(function(x){ return x.id == turkId;});
-    valids = cleanRows(valids,i);
+    turkId = row.WorkerId;
+    valids = dataOneTable.filter(function(x){ return x.workerId == turkId;});
     cleanedOne = cleanedOne.concat(valids);
 
-    valids = dataTwoTable.filter(function(x){ return x.id == turkId;});
+    valids = dataTwoTable.filter(function(x){ return x.workerId == turkId;});
     valids = cleanRows(valids,i);
     cleanedOne = cleanedTwo.concat(valids);
   }
@@ -110,10 +109,8 @@ dl.bootstrap.midmeanci = function(values, a, b, c, d) {
 };
 
 function analysis(){
-  exp1 = dl.csv("./exp2clean.csv");
-  exp2 = dl.csv("./exp3clean.csv");
-  exp3 = dl.csv("./exp4clean.csv");
-
+  dataOne = dl.csv("taskOne.csv");
+  dataTwo = dl.csv("taskTwo.csv");
 }
 
 function bsci(data,facet,measure){
