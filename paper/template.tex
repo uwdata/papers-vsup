@@ -293,16 +293,16 @@ We performed a crowdsourced experiment on Amazon's Mechanical Turk in order to e
 
 We discuss the two experimental tasks in more detail in the following sections.
 
-For each task, participants saw one of three types of thematic maps. Either two \textbf{juxtaposed} maps side-by-side, with separate encodings for value and uncertainty, a traditional \textbf{bivariate} map, where value and uncertainty are orthogonally encoded, or a \textbf{VSUM}. Figure \ref{fig:conditions} shows examples of these factor levels. Other factors included the size of the map (either a 4x4 or 8x8 grid), and (for the prediction task), the question framing (attack or defense). These secondary factors were evenly blocked across stimuli. Fatigue effects were significant in piloting, and so we limited the number of replicates: participants saw 18 stimuli (6 for each map type) for the identification task, and 12 (4 for each map type) for the prediction task. 
+For each task, participants saw one of three types of thematic maps. Either two \textbf{juxtaposed} maps side-by-side, with separate encodings for value and uncertainty, a traditional \textbf{bivariate} map, where value and uncertainty are orthogonally encoded, or a \textbf{VSUM}. Figure \ref{fig:conditions} shows examples of these factor levels. Other factors included the size of the map (either a 4x4 or 8x8 grid), and (for the prediction task), the question framing (attack or defense). All factors were presented within subjects. Secondary factors were evenly blocked across stimuli. Fatigue effects were significant in piloting, and so we limited the number of replicates: participants saw 18 stimuli (6 for each map type) for the identification task, and 12 (4 for each map type) for the prediction task. 
 
 In all cases, we generated color maps based on the requirement that no two colors in the resulting color scheme were closer than 18 units of Eulcidean distance in CIELAB space. This threshold results in a $9$ color bivariate map, $15$ color VSUM for all color scales used in this study. Given the size of the marks used in our study, this threshold distance is sufficient for colors to be correctly distinguished in over 95\% of trials~\cite{stone2014engineering}. Other choices of threshold, and differing univariate scales, would result in different maps (see Fig.~\ref{fig:performance}). 
 
 
-\subsubsection{Identification Task}
+\subsection{Identification Task}
 
 For the identification task, we gave participants bivariate representations of uncertainty, and asked them in a written prompt to identify a location meeting a given criteria, e.g., ``Click on the location with the greatest uncertainty.'' There were three potential criteria, mapping to the three vertices of a VSUM: 1) high value, low uncertainty, 2) low value, low uncertainty, and 3) high uncertainty. Each map contained four locations, one of each combination of maximum and minimum value and uncertainty. The correct answer was always one of these locations. Other locations in the grid were created pseudo-randomly, with less extreme ranges of uncertainty and probability. We measured performance both in terms of accuracy (did the participant select the correct point) as well as response time.
 
-\subsubsection{Prediction Task}
+\subsection{Prediction Task}
 
 \taskTwoFig
 
@@ -325,7 +325,7 @@ The ideal strategy from a value-maximizing standpoint would be to place tokens o
 % 3) vsm
 % 4) continuous d/u map?
 
-\subsubsection{Hypotheses}
+\subsection{Hypotheses}
 
 We had several hypotheses, stemming from our believe that VSUMs promote better \emph{integration} between uncertainty and value information, and also encourage \emph{caution} by highlighting the ambiguity or untrustworthiness introduced by uncertain data. In particular:
 \begin{enumerate}
@@ -335,9 +335,19 @@ We had several hypotheses, stemming from our believe that VSUMs promote better \
 
 \subsection{Results}
 
+Rather than standard means, Cleveland \& McGill~\cite{cleveland1984graphical} use 25\% trimmed means to report effect sizes in graphical perception tasks. Trimmed means remove the first and last quartiles and then compute the mean from the remaining points. This filtering is important for graphical perception tasks (especially crowdsourced tasks) where error distributions may be long-tailed~\cite{heer2010crowdsourcing}. Trimmed means violate the sampling assumptions required for many null-hypothesis significance tests. Thus, while we report effect sizes in terms of trimmed means, we perform statistical tests on the standard means.
+
 \subsubsection{Participants}
 
 We limited our population to Turkers from the United States, with a prior task approval rate of at least 90\%. As the experimental tasks required multi-hue color perception, we presented participants with a set of Ishihara plates as a pretest, and excluded participants who either misidentified the values in the plates, or who self-reported as having a color vision deficiency (CVD) in the post-test. Based on piloting, we paid participants \$2 dollars an hour, for a target rate of \$8/hour. After completion of the main tasks, we solicited demographic information. We recruited a total of 24 participants for this experiment: 4 female, 19 male, and 1 who declined to state ($M_{\text{age}}$= 32, $SD_{\text{age}}$ = 7.5). All reported having either college degrees, or some college experience. Average self-reported experience with interpreting graphs and charts was low (1.9 on a 5 point Likert scale, with 1 indicating ``No experience''), and no participant reported experience greater than 3 out of 5.
+
+\subsubsection{Identification Task}
+
+
+
+We performed a one-way ANOVA investigating the effect of chart type (juxtaposed, full bivariate, or VSUM) on accuracy. We found only a marginal effect $F(2,859) = 2.4$, $p=0.09$, although more trails with VSUMs were ($66\%$ of trials) compared to the other conditions ()
+
+These results partially support our first hypothesis. While there 
 
 \section{Discussion}
 
