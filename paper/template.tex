@@ -178,7 +178,7 @@ Simultaneous presentation of uncertainty and value necessitates the construction
 
 In this paper, we contribute \textbf{Value-Suppressing Uncertainty Maps} (VSUMs) for integrating data and uncertainty information in thematic maps. VSUMs intentionally alias together data values with high uncertainty, affording greater discriminability as uncertainty decreases. Rather than a traditional two-dimensional bivariate map, with differing outputs for each combination of value and uncertainty, VSUMs can be thought of as arcs: as uncertainty increases, values are mapped to smaller and smaller sets of outputs, culminating in a singularity where all inputs are mapped to an identical, highly uncertain mark regardless of their data value. \figref{fig:example} shows examples of both a VSUM and a more traditional bivariate map.
 
-We describe the motivations behind the use of VSUMs, examples of their utility for decision-making under uncertainty, and assess VSUMs in a crowdsourced experiment. Our experimental results indicate that VSUMs promote better integration between uncertainty and data: X.
+We describe the motivations behind the use of VSUMs, examples of their utility for decision-making under uncertainty, and assess VSUMs in a crowdsourced experiment. Our experimental results indicate that VSUMs promote better integration between uncertainty and data, promoting rapid but cautious decision-making.
 
 \exampleFig
 \section{Related Work}
@@ -247,7 +247,7 @@ The general VSUM algorithm demonstrated in \figref{fig:flow} is as follows:
 	\item \textbf{Choose the largest number of initial categories $n$ such that the discriminability threshold is met.} For each pair of marks in the map, perform a pairwise comparison of discriminability. If no marks are perceptually ambiguous by the standards of your threshold, the map is complete. Otherwise, decrement $n$.
 \end{enumerate}
 
-Figure X shows this process in detail, and how it can be used to generate a bivariate map for presenting uncertainty. JavaScript code for generating VSUMs given arbitrary d3 quantitative scale functions is available at \url{URL REMOVED FOR REVIEW}.
+Figure \ref{fig:flow} shows this process in detail, and how it can be used to generate a bivariate map for presenting uncertainty. JavaScript code for generating VSUMs given arbitrary d3 quantitative scale functions is available at \url{URL REMOVED FOR REVIEW}.
 
 Correll \ea~\cite{correll2015layercake,correll2011visualizing} use a pre-cursor of VSUMs in their LayerCake genomics visualization tool, where marks representing genomic data with increasing uncertainty are mapped to a smaller and smaller set of increasingly grey colors, creating the effect of uncertain values retreating into ``fog'' while highly certain values remain prominent. Other bivariate visualizations implicitly alias together uncertain values. For instance, if uncertainty is encoded by transparency, a maximally uncertain glyph may be entirely transparent, and so impossible to distinguish from any other maximally uncertain glyph. Other channels with a semiotic connection to uncertainty, such as saturation, value, blur, or size, also have deleterious effects on the disambiguation of colors and shapes. In both of these cases, the property of aliasing is \emph{ad hoc}, and places no guarantees on the discriminability of colors. The binning and degradation approach of VSUMs makes the choice to alias values explicit to both the designer and the viewer, and results in a bivariate mapping with known perceptual properties.
 
@@ -290,7 +290,7 @@ We performed a crowdsourced experiment on Amazon's Mechanical Turk in order to e
 	\item [T2] a \textbf{prediction} task, similar to Battleship, where we gave participants charts with both \emph{forecast} and \emph{forecast uncertainty} information, and asked the participants to place tokens on the board in order to optimize expected value. E.g., ``place your $4$ ships on safe locations on the board.''
 \end{enumerate}
 
-We discuss the two experimental tasks in more detail in the following sections.
+We discuss the two experimental tasks in more detail in the following sections. Experimental materials, including data tables, are available at \url{URL REMOVED FOR REVIEW}.
 
 For each task, participants saw one of three types of thematic maps. Either two \textbf{juxtaposed} maps side-by-side, with separate encodings for value and uncertainty, a traditional \textbf{bivariate} map, where value and uncertainty are orthogonally encoded, or a \textbf{VSUM}. Figure \ref{fig:conditions} shows examples of these factor levels. Other factors included the size of the map (either a 4x4 or 8x8 grid), and (for the prediction task), the question framing (attack or defense). All factors were presented within subjects. Secondary factors were evenly blocked across stimuli. Fatigue effects were significant in piloting, and so we limited the number of replicates: participants saw 18 stimuli (6 for each map type) for the identification task, and 12 (4 for each map type) for the prediction task. 
 
@@ -339,33 +339,29 @@ We had several hypotheses, stemming from our believe that VSUMs promote better \
 
 Rather than standard means, Cleveland \& McGill~\cite{cleveland1984graphical} use 25\% trimmed means to report effect sizes in graphical perception tasks. Trimmed means remove the first and last quartiles and then compute the mean from the remaining points. This filtering is important for graphical perception tasks (especially crowdsourced tasks) where error distributions may be long-tailed~\cite{heer2010crowdsourcing}. Trimmed means violate the sampling assumptions required for many null-hypothesis significance tests. Thus, while we report effect sizes in terms of trimmed means, we perform inferential statistical tests on the standard means.
 
-\responseTimeFig
-\accuracyFig
-\uncertaintyFig
-
-\figref{fig:rt1}
-\figref{fig:accuracy1}
-\figref{fig:uncertainty2}
-
 \subsubsection{Participants}
 
 We limited our population to Turkers from the United States, with a prior task approval rate of at least 90\%. As the experimental tasks required multi-hue color perception, we presented participants with a set of Ishihara plates as a pretest, and excluded participants who either misidentified the values in the plates, or who self-reported as having a color vision deficiency (CVD) in the post-test. Based on piloting, we paid participants \$2 dollars an hour, for a target rate of \$8/hour. After completion of the main tasks, we solicited demographic information. We recruited a total of 24 participants for this experiment: 4 female, 19 male, and 1 who declined to state ($M_{\text{age}}$= 32, $SD_{\text{age}}$ = 7.5). All reported having either college degrees, or some college experience. Average self-reported experience with interpreting graphs and charts was low (1.9 on a 5 point Likert scale, with 1 indicating ``No experience''), and no participant reported experience greater than 3 out of 5.
 
 \subsubsection{Identification Task}
+\accuracyFig
+\responseTimeFig
 
 For the identification task, we were interested primarily in primary measures of performance, accuracy and response time. Our hypothesis was that VSUMs would have increased performance values compared to the other charts.
 
-We performed a one-way ANOVA investigating the effect of chart type (juxtaposed, full bivariate, or VSUM) on accuracy. We found only a marginal effect ($F(2,859) = 2.4$, $p=0.09$), although VSUMs had the highest accuracy. Fig. X illustrates this result.
+We performed a one-way ANOVA investigating the effect of chart type (juxtaposed, full bivariate, or VSUM) on accuracy. We found only a marginal effect ($F(2,859) = 2.4$, $p=0.09$), although VSUMs had the highest accuracy. \figref{fig:accuracy1} illustrates this result.
 
-We also performed a one-way ANOVA on the effect of chart type on response time. In this case, we did find a significant main effect ($(F,2,859) = 5.0$, $p<0.001$). A Tukey's test of Honest Significant Difference (HSD) found that participants were significantly slower at performing the task on juxtaposed maps, as opposed to the other map types. Fig. X illustrates this result.
+We also performed a one-way ANOVA on the effect of chart type on response time. In this case, we did find a significant main effect ($(F,2,859) = 5.0$, $p<0.001$). A Tukey's test of Honest Significant Difference (HSD) found that participants were significantly slower at performing the task on juxtaposed maps, as opposed to the other map types. \figref{fig:rt1} illustrates this result.
 
 These results only partially support our hypothesis. There was no significant difference in terms of accuracy between different maps, partially due to the simplicity of the identification task: participants only had to find a single target in a heatmap, with extreme values in both data and uncertainty axes. However, our results do provide evidence that juxtaposed maps, by introducing an additional search task to the problem of assessing the value and uncertainty of a location, require significantly more time to interpret.
 
 \subsubsection{Prediction Task}
 
+\uncertaintyFig
+
 For the prediction task, where there is no dominating strategy, our primary measure was the distribution of guesses, in terms of both their average value, and their average uncertainty. A risky player would choose guesses with high value, regardless of the uncertainty of those points. A more conservative guesser might eschew high-risk, high-reward locations, resulting in a lower average value of guesses, but also lower uncertainty. Our hypothesis is that VSUMs, by communicating uncertainty information at the expense of value information, would promote more conservatives guesses than the other chart types.
 
-We performed a one-way ANOVA of chart type on average value of guesses. We found no significant effect ($F(2,861)=0.27$, $p=0.8$), indicating that participants were generating similar expected values from their guesses across conditions. However, an ANOVA of chart type on average \emph{uncertainty} of guesses did find a significant main effect ($F(2,861)=61$, $p<0.001$). A post-hoc Tukey's HSD confirmed that participants had guesses with significantly less uncertainty with VSUMs than with both other chart types. Additionally, participants' guesses had significantly more uncertainty with juxtaposed charts than the other two. 
+We performed a one-way ANOVA of chart type on average value of guesses. We found no significant effect ($F(2,861)=0.27$, $p=0.8$), indicating that participants were generating similar expected values from their guesses across conditions. However, an ANOVA of chart type on average \emph{uncertainty} of guesses did find a significant main effect ($F(2,861)=61$, $p<0.001$). A post-hoc Tukey's HSD confirmed that participants had guesses with significantly less uncertainty with VSUMs than with both other chart types. Additionally, participants' guesses had significantly more uncertainty with juxtaposed charts than the other two. \figref{fig:uncertainty2} illustrates this result.
 
 As with the identification task, a one-way ANOVA also indicated that chart type had a significant effect on response time ($F(2,861)=13$, $p<0.001$). A Tukey's HSD confirmed that, as with the previous task, response time was significantly longer with juxtaposed maps (trimmed mean response time of $23$ seconds) compared to the other chart types (both with trimmed mean response time of $18$ seconds). Despite the documented effect of framing in prior work, a one-way ANOVA of task frame on expected value found no significant main effect ($F(1,862)=0.01$, $p=0.9$), and the trimmed means were quite similar (expected value of $0.76$ per guess for attackers, verus $0.75$ per guess for defenders).
 
@@ -374,15 +370,19 @@ Our results indicate that VSUMs promote avoidance of uncertain values, while not
 
 \section{Discussion}
 
+The results from our initial evaluation of VSUMs are promising, showing that even a general audience can make use of uncertainty information in a reasonable way. The way that uncertainty information is presented can have a measurable impact on decision-making. The VSUM strategy of only ``showing'' differences when uncertainty is sufficiently low is somewhat isomorphic to the inferential statistics such as effects tests. VSUMs can therefore be used to promote more caution in judgments, and lead analysts away from spurious signals in data.
+
+Bivariate maps have an inherent limitation in that visual channels are often difficult to attend to separately or orthogonally. Bivariate maps are also complex to interpret. Systems which simultaneously display large amounts of value and uncertainty data to general audiences (such as Pangloss~\cite{moritz2017trust}) avoid them for precisely these reasons, relying instead on juxtaposed maps. Our results indicate that juxtaposition produces additional problems, forcing users that wish to integrate uncertainty and data to locate an item of interest, and then re-locate that same item in a visually distant map, which may have few visual landmarks in common. This additional step before information fusion is reflected in longer response times, and riskier patterns of decision-making. Given the deleterious effects of latency on data analysis~\cite{liu2014effects}, designers ought to consider carefully the tradeoffs between expressiveness of visual encoding, and usability. VSUMs represent a middle ground between these two approaches, and have some of the benefits of both.
 
 \subsection{Limitations and Future Work}
 % When should you use these things?
 In general, VSUMs excel in scenarios where we wish to make firm guarantees about the discriminability of different marks in a chart, but must also represent, in as much detail as possible, two, potentially orthogonal variables of interest. VSUMs have improved data resolution over na\"ive bivariate maps by assuming that uncertain values ought to have less visual impact that highly certain values. VSUMs therefore act both as a kind of filtering device as well as a bivariate representation. This assumption holds in scenarios like the virology dataset (\figref{fig:viralVsum}), where the expectation is that highly uncertain data is ``junk'' or should otherwise be downweighted in analysis. If the analyst has a different interpretation of uncertainty, or wishes to quickly and orthogonally analyses the distributions of uncertainty and value, other strategies, such as juxtaposed maps, may be more appropriate. VSUMs are designed for the \emph{integration} of value and uncertainty. Designers should take care in considering how when and how this integration is desirable.
 
+Our experiments dealt with cases where both uncertainty and value were represented by color. The perceptual non-separability of color channels is well-known~\cite{ware2012information}, and so the concept of a limited ``budget'' of distinguishable marks easier to quantify and illustrate. In principle, a VSUM can be created for any combination of visual variables. All that is required is a perceptual model of the interaction between these two variables. Where these models exist, as with the interaction between size and color~\cite{stone2014engineering}, the creation of VSUMs is straightforward. Where these models do not exist, or where the perceptual interaction is too complex to efficiently model, experimental work remains to be done before VSUMs can be considered a feasible design strategy. We are currently experimenting with the creation of VSUMs using these other channels.
 
 \subsection{Conclusion}
 
-Often times, uncertainty, data quality, or confidence are considered separate information from the data itself, relegated to tooltips or visually distant supplemental charts. This 
+Often times, uncertainty, data quality, or confidence are considered separate information from the data itself, relegated to tooltips or visually distant supplemental charts. We believe, in contrast, that uncertainty information ought to be directly integrated with charts of data itself. This integration introduces additional complexity in the design and presentation of data. Value Suppressing Uncertainty Maps represent one strategy for dealing with this complexity, by assigning marks properties in a way that supports the disambiguation of values in data where uncertainty is low, but suppresses these judgments when uncertainty is high. 
 
 %% if specified like this the section will be committed in review mode
 \acknowledgments{
