@@ -20,7 +20,7 @@
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=0.9\columnwidth]{example.pdf}
-	\caption{A standard bivariate map and a VSUM. Both use the same visual channels to encode value (position along the Viridis~\cite{viridis} color map) and uncertainty (lightness and saturation), and have an equal standard of perceptual discriminability (at least 18 units of distance in CIELAB color space between colors). However, highly uncertain values result in colors that are very close together in the bivariate case, meaning the full bivariate map is only 9 bins under these constraints\,---\,a 4x4 map would result in colors that are perceptually too close together. By contrast, the VSUM intentionally reduces bins when uncertainty is high, eventually aliasing all highly uncertain values to the same color. This decision affords more distinct colors in other regions of the map, and so an increase in overall bins to 15. The resulting map suppresses the value of uncertain data, but increases the discriminability of data with low uncertainty.}
+	\caption{A standard bivariate map and a VSUM. Both use the same visual channels to encode value (position along the Viridis~\cite{viridis} color map) and uncertainty (lightness and saturation), and have an equal standard of perceptual discriminability (at least 18 units of distance in CIELAB color space between colors). However, highly uncertain values result in colors that are very close together in the bivariate case, meaning the full bivariate map is only 9 bins under these constraints\,---\,a 4x4 map would result in colors that are perceptually too close together. By contrast, the VSUM intentionally reduces bins when uncertainty is high, eventually aliasing all highly uncertain values to the same color. This decision affords more distinct colors in other regions of the map, and so an increase in overall bins to 15. The resulting map suppresses the value of highly uncertain data, but increases the discriminability of data with low uncertainty.}
 	\label{fig:example}
 \end{figure}
 }
@@ -48,7 +48,7 @@
 			\caption{Defending}
 			\label{fig:taskTwoDefend}
 		\end{subfigure}
-		\caption{The two framings of the Prediction task. In the ``attack'' framing, the participant is given a map of predictions of the location of enemy ships, along with the uncertainty in those predictions. The participant should place their missile strikes on locations with a high probability of containing a ship, and with high certainty in this probability. The ``defend'' framing is the opposite task: the participant has a list of likely missile locations, and ought to place their ships one locations with low probability of attack, and high certainty in this probability.}
+		\caption{The two framings of the Prediction task. In the ``attack'' framing, the participant is given a map of predictions of the location of enemy ships, along with the uncertainty in those predictions. The participant should place their missile strikes on locations with a high probability of containing a ship, and with high certainty in this probability. The ``defend'' framing is the opposite task: the participant has a list of likely missile locations, and ought to place their ships on locations with low probability of attack, and high certainty in this probability.}
 		\label{fig:taskTwoConditions}
 	\end{figure*}
 }
@@ -74,7 +74,7 @@
 		\centering
 		\includegraphics[width=0.95\columnwidth]{flow.pdf}
 		\caption{The process for creating a VSUM. VSUMs guarantee that no two marks in the resulting bivariate mapping are perceptually closer than some pre-specified threshold. This guarantee removes some of the issues of non-separability and ambiguity that are otherwise a concern when designing bivariate maps. \\	
-		In this example two colors from the map for $n=9$ are too close in CIELAB space. Thus, we create a VSUM with $n=8$ bins that encodes value with Viridis and uncertainty with increasingly white colors.}
+		In this example two colors from the map for $n=9$ are too close in CIELAB space. Thus, we create a VSUM with $n=8$ color bins at the lowest level of uncertainty.}
 		\label{fig:flow}
 	\end{figure}
 }
@@ -84,7 +84,7 @@
 	\centering
 	\includegraphics[width=\columnwidth]{airline-2d.png}
 	\vspace{-15px}
-	\caption{Average departure delay for different times of the day and days of the week visualized with a 2D uncertainty map.}
+	\caption{Average departure delay for different times of the day and days of the week visualized with a 2D uncertainty map. Horizontal position is the hour of scheduled departure, and vertical position is the day of the week.}
 	\label{fig:airline2d}
 
 	\vspace{10px}
@@ -102,7 +102,7 @@
 	\centering
 	\includegraphics[width=\columnwidth]{viral-2d.pdf}
 	\vspace{-15px}
-	\caption{Variability for 25 different viral populations of the SIV virus, encoded with a traditional 2D bivariate map. Error in aligning short reads can lead to poor quality data, and so the amount of these errors is encoded as the uncertainty. }
+	\caption{Variability for 12 different viral populations of the SIV virus, encoded with a traditional 2D bivariate map. Horizontal position denotes location along the SIV genome. Each row is the viral population of a different infected animal. Error in aligning short reads can lead to poor quality data, and so the amount of these errors is encoded as the uncertainty. }
 	\label{fig:viral2d}
 
 	\vspace{10px}
