@@ -1,0 +1,56 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "data": {
+    "values": [
+      {
+        "type": "VSUM",
+        "mean": 106.9395890410959,
+        "ci1": 97.4632859589041,
+        "ci2": 117.8547448630137
+      },
+      {
+        "type": "2D",
+        "mean": 91.95900709219859,
+        "ci1": 85.5932934397163,
+        "ci2": 99.38386258865248
+      },
+      {
+        "type": "Juxtaposed",
+        "mean": 123.97333333333334,
+        "ci1": 114.07133506944443,
+        "ci2": 134.43059201388888
+      }
+    ]
+  },
+  "layer": [
+    {
+      "mark": "rule",
+      "encoding": {
+        "y": {
+          "field": "type",
+          "type": "ordinal",
+          "title": "Chart Type",
+          "scale": {"domain": ["VSUM", "2D", "Juxtaposed"]}
+        },
+        "x": {
+          "field": "ci1",
+          "type": "quantitative",
+          "title": "Response Time (Seconds)"
+        },
+        "x2": {"field": "ci2","type": "quantitative"}
+      }
+    },
+    {
+      "mark": "circle",
+      "encoding": {
+        "y": {
+          "field": "type",
+          "type": "ordinal",
+          "scale": {"domain": ["Juxtaposed","2D","VSUM"]}
+        },
+        "x": {"field": "mean","type": "quantitative"},
+        "opacity": {"value": 1}
+      }
+    }
+  ]
+}
