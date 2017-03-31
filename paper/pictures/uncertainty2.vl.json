@@ -35,12 +35,12 @@
         "x": {
           "field": "ci1",
           "type": "quantitative",
-          "title": "Uncertainty",
+          "title": "Prediction Uncertainty",
           "axis": {
             "format": ".1f"
           },
           "scale": {
-            "zero": false
+            "zero": true
           }
         },
         "x2": {"field": "ci2","type": "quantitative"}
