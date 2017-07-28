@@ -27,8 +27,8 @@ function treeScale(branchingFactor,treeLayers) {
         v = uncertainty!=undefined ? value : value.v,
         i = 0;
 
-    //find right layer of tree, based on uncertainty
-    while(i<tree.length && u < tree[i][0].u){
+    //find the right layer of the tree, based on uncertainty
+    while(i<tree.length-1 && u < 1 - ((i+1)/layers)){
       i++;
     }
 
