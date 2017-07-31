@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Legend test</title>
+        <meta charset="UTF-8">
+
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+        </style>
+
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="simple.js"></script>
+    </head>
+    <body>
+        <svg id="vis"></svg>
+        
+        <script>
+            var color = d3.scaleQuantize()
+                .domain([0, 1])
+                .range(d3.quantize(d3.interpolateViridis, 5));
+
+            var legend = simpleLegend()
+                .title("Simple Legend")
+                .size(250)
+                .height(20)
+                .format(".1f")
+                .scale(color);
+
+            var x = 10, y = 20;
+            d3.select("#vis")
+                .append("g")
+                .attr("transform", "translate(" + x + "," + y + ")")
+                .call(legend)
+        </script>
+    </body>
+</html>
