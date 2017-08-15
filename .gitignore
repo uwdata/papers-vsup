@@ -7,5 +7,6 @@ paper/template.out
 paper/template.log
 paper/template.aux
 paper/pictures/sample-eps-converted-to.pdf
-
 paper/template.synctex.gz
+modules/bin
+*.psd

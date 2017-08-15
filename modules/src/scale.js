@@ -1,20 +1,6 @@
 /*
-Items we need for a VSUM:
-
-1) A value mapping (likely a color map)
-2) An uncertainty mapping (could be saturation or lightness or size or...)
-3) A threshold of distance in CIELAB (or jnd?)
-4) How big our marks will be (if we're using size)
-5) A branching factor
-
-What we want a VSUM to look like:
-
-1) A function where you pass it a (value,uncertainty) pair, and you get a color
-(or color/size) out.
-
-Other notes: let's make things play as nicely with d3 as possible,
-so let's model off of d3.scaleQuantize as much as possible.
-
+A tree-like bivariate quantization scheme.
+As uncertainty increases, the number of quantization bins decreases.
 */
 
 function treeScale(branchingFactor,treeLayers) {
