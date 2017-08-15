@@ -1,0 +1,713 @@
+------------------------ Submission 320, Review 2 ------------------------
+
+Title: Value-Suppressing Uncertainty Maps
+
+Reviewer:           primary
+
+Paper type
+
+  Evaluation
+
+Expertise
+
+  3  (Expert)
+
+Overall Rating
+
+  <b>2.5 - Between Reject and Possible Accept</b><br/> 
+
+Supplemental Materials
+
+  Acceptable
+
+Justification
+
+  This is a serious and exciting piece of work that explores a new type of
+  color scale for conveying uncertain data, but I am not sure the paper is
+  ready for publication. A possibly serious limitation of the approach at
+  the conceptual level is not discussed, and both the study and the
+  discussions miss an important baseline of comparison where uncertainty
+  directly maps to perceptual discriminability while preserving color
+  resolution. There also seems to be a bug in the construction of the VSUM
+  that may distort data values as uncertainty increases.
+
+The Review
+
+  This submission proposes to visualize uncertainty using discrete
+  bivariate color scales (called VSUMs) that allocate more colors to
+  certain values, and less colors to uncertain values. The topic
+  investigated (visualizing uncertainty in a way that doesn't prompt
+  misinterpretations) is an important one. The idea is original, and is
+  motivated by a detailed rationale. The construction of the VSUM is
+  clearly described, and the source code is made publicly available. The
+  user study has a few limitations but is sound overall. The paper is
+  clearly written. Overall this is an interesting and serious piece of
+  work.
+
+  There is however a possible issue with the VSUM approach, which is not
+  adequately discussed. The choice of discretizing  values more strongly
+  when uncertainty is high creates a paradox: it is true that when less
+  possible values are shown, more values will fall within the same bin and
+  will thus be indistinguishable. But at the same time, two values from
+  adjacent bins will look *more* different. It can be seen on the examples
+  that the two-bin discretization can create visual artefacts, such as the
+  isolated green square on the bottom-right of Figure 6, or the isolated
+  yellow square on the right of Figure 8. These artefacts are likely
+  spurious, and therefore misleading about the data because they "pop out".
+  The problem naturally disappears with only one bin (since all values look
+  equal), and also disappears above two bins in these examples, since the
+  discretization is the same or lower than in the baseline. Still, this
+  paradox clearly needs to be discussed. Allocating less colors can
+  actually *exaggerate* the perceived difference between two uncertain
+  values, and thus have opposite effects as the one intended. In addition,
+  the less colors in a color scale, the easier they are to search on the
+  visualization. On Figures 6 and 8, it is much easier to distinguish and
+  visually search one of the two colors from the two-bin (uncertain) row
+  than any of the eight colors from the top (certain) row. This is another
+  way the paradox manifests itself.
+
+  Similar issues arise with (binary) statistical tests, which are mentioned
+  in the discussion as an analogy to the approach (see, e.g.,
+  https://peerj.com/preprints/2921.pdf).
+
+  For this important issue to be properly discussed, clarifications first
+  need to be made about what it means for data to be more or less
+  "discriminable". For example the article states that VSUM "increases the
+  discriminability of data with low uncertainty". This is both true and
+  false, depending on how you interpret discriminability. For highly
+  certain data, VSUM does increase the number of possible data values that
+  can be distinguished from each other (assuming all colors are
+  distinguishable from each other, which is the case by construction
+  according to the article). Or put differently, it increases the encoding
+  resolution. But at the same time, two data values that are assigned
+  adjacent colors on both scales are actually *harder* to distinguish from
+  each other. Even if all colors can be distinguished from each other, two
+  values can appear more similar if their uncertainty is lower. The article
+  should definitely clarify this distinction and perhaps use a different
+  terminology for the two interpretations, e.g., encoding resolution vs.
+  perceptual distance. Concerning perceptual distance, cases where two
+  values are assigned different colors should be distinguished from cases
+  where two values are assigned the same color, and there should be a
+  discussion on how often each case occurs depending on the encoding
+  resolution.
+
+  Likewise, most of the article including the user study compares the VSUM
+  to a low-resolution traditional (i.e., square) bivariate color scale. For
+  example, a 8+4+2+1 color scale is compared with a 3+3+3 color scale. I
+  understand the rationale behind the choice of these numbers (the authors
+  seek the maximum resolution for which all colors are distinguishable),
+  but a comparison with a traditional color scale with equal resolution for
+  maximally certain values (8+8+8+8) is nonetheless missing. The examples
+  from Section 3.3 convinced me that we should give maximum resolution to
+  values which are certain. However, it failed to convince me that we
+  should give lower resolution to uncertain values. On figures 5-8, a
+  8+8+8+8 color scale similar to top-left of Fig 4 would preserve the
+  smoothness of the data with values that are certain, while still making
+  uncertain data harder to distinguish for *perceptual* reasons, since
+  bright color are perceptually closer to each other. This perceptual
+  approach to reducing discriminability (also employed in, e.g., [12])
+  should be clearly described, and clearly contrasted with the binning
+  approach. The distinction is mentioned at the end of section 3.1 but
+  needs to be made earlier on (perhaps in the related work section), and
+  more clearly. This may be easier to do once the confusion between
+  resolution and perceptual distance is resolved. Then, examples need to
+  contrast VSUM not only with low-resolution square color scales, but also
+  with high-resolution ones as mentioned previously. Concerning the user
+  study, it is not possible now to add an extra control condition, but at
+  least it should be mentioned as necessary future work. At this point, I
+  am personally not convinced that a 8+4+2+1 VSUM is preferable to a
+  8+8+8+8 color scale that conveys uncertainty in a more direct, perceptual
+  fashion, and does not yield spurious artefacts.
+
+  The related work section should also mention whether the "traditional"
+  color scale shown in Figures 4--8 has been described or used in previous
+  work. It does discuss bivariate color scales, but does not mention
+  whether they have been previously used to encode uncertainty, as in the
+  article's examples.
+
+  Another somehow disturbing issue in the article has to do with the
+  construction of the VSUM color scales. These color scales being
+  "hierarchical" as stated in the article, it would seem that when n is
+  even, each color from a given row should be the midpoint between the two
+  children colors on the row immediately above. Looking at the figures
+  (e.g., Fig 1 or Fig 3), however, this is not the case. Instead, the two
+  extreme colors on each row are always assigned the two extreme colors on
+  the original color scale, and the final color is assigned the leftmost
+  color on the scale. This seems odd to me, as the hue of a given data
+  value will drift towards the extremes as uncertainty increases. In
+  particular, assigning the leftmost color from the original color scale to
+  all highly uncertain values is certainly misleading about the data. This
+  issue also likely exaggerates the artefacts I mentioned before. I cannot
+  find a good explanation for this choice, other than it being a bug.
+
+  Despite all these issues, the study does provide evidence that VSUM puts
+  less "weight" on uncertain values, as originally hypothesized. It is
+  quite possible that the "avoidance of uncertain values" is caused by the
+  color legend, i.e., fewer color cells (and therefore less space) are
+  devoted to uncertain values on the legend, which may be reason why these
+  values are chosen less often. This possible "nudging" effect of VSUM is a
+  very interesting result, but it should be better discussed, and better
+  contrasted with the (in my opinion) less credible hypothesis that VSUM
+  operates by reducing value discriminability on the visualization itself.
+
+  The user study section should specify the separation between the value of
+  the correct answer and the value of the second-correct answer in the
+  identification task. In the traditional bivariate map, was the correct
+  answer always assigned a different color from all other answers? If not,
+  then the results in Fig 11 are not surprising. 
+
+  I found the prediction task ingenious at first, but the choice of
+  assigning uncertainty to probabilities seems odd. In particular, I am not
+  convinced by the argument that in games of chance, the "variability in
+  expected value is relevant when considering where to place bets". Studies
+  on risk aversion do show that this information is used by people when
+  they make decisions, but these studies reveal that people are subject to
+  cognitive biases, not that this information is relevant to the choice.
+  This should be clarified. From a normative perspective, only the expected
+  value is relevant, including in games of chance. It is fine to measure in
+  a study to what extent end users are risk averse or risk-seeking with
+  different visualizations, but it is not the case that users who choose
+  uncertain values more often are more "wrong". It follows that this task
+  cannot easily be used to establish that one technique yields better
+  decisions than another.
+
+  Other comments
+
+  - The related work would benefit from a better discussion of continuous
+  vs. discrete color scales (not necessarily bivariate), and the benefits
+  of discrete color scales. Not all color scales are discrete.
+  - Was the task a within or between-subject factor?
+  - Please comment on the possible difference between 2D and VSUM on Fig
+  12. A non-significant result does not mean the two means are the same,
+  and the Fig does suggest a possible difference.
+  - The examples in Figure 14 are a great idea but again, I am not
+  convinced that we need to bin low-certainty values as in the left plot.
+  - The paper is using the wrong template.
+
+Summary Rating
+
+  2  (<b>Reject</b><br/> The paper is not ready for publication in InfoVis / TVCG.<br/>The work may have some value but the paper requires major revisions or additional work that are beyond the scope of the conference review cycle to meet the quality standard. Without this I am not going to be able to return a score of '4 - Accept'.)
+
+The Summary Review
+
+  This submission received thorough reviews and generated extensive
+  discussions on PCS.
+
+  All reviewers liked the paper and agree that the topic is highly relevant
+  to infovis, and is well motivated. The VSUM technique is well thought
+  out, is clearly explained, and the paper is overall very well written. To
+  quote R4, "the research [is] strong and the paper [is] generally well
+  done". I am myself quite excited about this work.
+
+  However, the paper has issues at several levels, suggesting it is not
+  ready yet for publication.
+
+  --- Technique justification and design
+
+  According to R2 and R3, the paper provides insufficient motivation for
+  reducing the number of colors as uncertainty increases, as opposed to
+  keeping the same number of colors and relying on perception to achieve a
+  reduction in discriminability (i.e., a 8+8+8+8 approach compared to a
+  8+4+2+1 approach). Likewise, the paper is missing a comparison (through
+  discussions, visual examples, and ideally a user study) between the two
+  approaches.
+
+  According to R2, there also seems to be an anomaly in the current
+  implementation of VSUMs that, if not a bug, needs to be justified. R4
+  further points out that JNDs on space-filling visualizations are larger
+  than in typical JNDs experiments, which makes me wonder whether the
+  procedure explained in the paper really ensures that colors can be
+  distinguished from each other. 
+
+  --- User study
+
+  Reviewers point out major issues with the user study.
+
+  Both R2 and R3 suggest that the low accuracy scores undermine the
+  reliability of the results. R3 offers workarounds to deal with the issue
+  of early termination, such as controlling for time and measuring accuracy
+  or the other way around. R2 recommends providing training on the use of
+  bivariate scales.
+
+  Regarding the choice of conditions, R3 points out that VSUM and the
+  traditional bivariate condition differ in many respects, which introduces
+  experimental confounds and makes it difficult to interpret the results.
+  Likewise, R4 would have liked to see a comparison with a
+  higher-resolution traditional bivariate scale (see above).
+
+  The user study is also missing important information. R1 is missing a
+  description of how the experimental stimuli and tasks were generated (the
+  supplementary file that presumably contains the code is missing). R2 is
+  missing a better description of the experimental design and procedure, of
+  the outlier removal procedure, and a discussion of the effect of grid
+  size. 
+
+  Finally, R4 points out that the sample size is surprisingly small for an
+  MTurk study, and R3 suggests that the ANOVA analysis did not did not
+  collapse observations by subject or used subject as a random variable,
+  which may result in underestimated sampling errors.
+
+  --- Discussions
+
+  R2 needs a better discussion of what the results mean and how they relate
+  to findings from previous work. R4 suggests the paper needs to better
+  discuss cases where data needs to be examined separately from
+  uncertainty. R4 also points to related work that may be worth discussing,
+  especially previous work on discrete vs. continuous color scales.
+
+  --- Conclusions
+
+  The issues are too numerous to be fixed in a short review cycle.
+  Nevertheless, I fully agree with R3 that "the topic is potentially very
+  valuable for the field. I strongly encourage the authors to continue this
+  research". The reported study is a useful initial experiment, but more
+  data needs to be collected. The new experiment may need more conditions
+  to tease out the effects of different factors (but won't need the
+  juxtaposed condition), may need a larger sample size and way of
+  controlling for either speed or accuracy, and may benefit from a modified
+  decision task where the ground truth is more clearly defined (i.e.,
+  defined based on normative decision theory).
+
+Second round comments (public)
+
+  (blank)
+
+Second round supplementary materials check
+
+  (blank)
+
+Second round supplementary materials comments
+
+  (blank)
+
+
+------------------------ Submission 320, Review 1 ------------------------
+
+Title: Value-Suppressing Uncertainty Maps
+
+Reviewer:           external
+
+Paper type
+
+  Technique
+
+Expertise
+
+  2  (Knowledgeable)
+
+Overall Rating
+
+  <b>2.5 - Between Reject and Possible Accept</b><br/> 
+
+Supplemental Materials
+
+  Acceptable with minor revisions (specify revisions in The Review section)
+
+Justification
+
+  This paper presents a new technique for displaying uncertainty through
+  bivariate mappings. The paper is well written, and the figures clearly
+  illustrate the contributions that the authors present. Further, as a
+  technique paper, it is good to see that they plan to open source VSUM as
+  a d3 module.
+
+  However, the evaluation of the technique undermines the strength of the
+  paper’s contributions. First, the stimuli generation procedure is not
+  satisfactorily described, which is a significant issue for a technique so
+  dependent on application of graphical perception. Second, the broader
+  experimental design is also underspecified. Third, there was not enough
+  discussion of the results that relate the evaluation to past theoretical
+  and applied work, as well as the bigger picture research takeaways.
+  Fourth, task accuracy and outlier removal methods were both concerning.
+
+The Review
+
+  Overall I believe that the presented technique is interesting and that
+  there is promise in the paper’s research direction. The strength of
+  this paper shines in the description of VSUM and in the carefully
+  constructed foundation they build the technique upon. However, the
+  technique evaluation has several significant issues that hurt the paper.
+  VSUM looks like it could eventually be a great technique, but the
+  evaluation is not ready for publication.
+
+  PROS:
+  1. Very well thought out and motivated technique with clear importance to
+  the community.
+  2. The paper’s structure and writing quality are both fantastic.
+  3. The figures are well designed and help the comprehensibility of the
+  paper’s contributions.
+  4. Plans to open source.
+
+  REVISIONS REQUIRED:
+
+  == 1. Unclear stimuli generation procedure ==
+  Please include stimuli creation procedure in the main text. The figures
+  that are presented in the paper show that the experimental stimuli were
+  well-constructed; however, it would be useful for replication purposes to
+  have more explicit steps for generating them. Another critical point that
+  needs to be clarified are the criteria/locations. The wording with
+  respect to what locations were, where they were, and their correspondence
+  to the criteria, was perhaps one of the weaker points in the paper in
+  terms of clarity. I see that the Supplemental Readme references
+  “MonteCarloPoints.pde”; however, it was not contained in the
+  submission. Likewise, there was no reference to it in the main text.
+
+
+  == 2. Underspecified experimental/task procedure ==
+  It may be helpful to restructure the methods for both tasks in an
+  APA-inspired format so that they are more easily understood (e.g., as in
+  Heer and Bostock 2010 or Haroz and Whitney 2014).
+
+  S. Haroz and D. Whitney. How Capacity Limits of Attention Influence
+  Information Visualization Effectiveness. IEEE TVCG, vol. 18, no. 12, pp.
+  2402-2410, Dec. 2012.
+
+  J. Heer and M. Bostock. Crowdsourcing graphical perception: using
+  mechanical turk to assess visualization design. CHI 2010.
+
+  ==== 2.1: Task difficulty accounted for in experimental design? ====
+  Given that [52] shows bivariate scales are hard to comprehend, and given
+  the results that most participants were not chart experts, did the
+  authors present training information for the task or practice trials? The
+  pilot findings with respect to task difficulty underscore this concern,
+  and more information on procedure is needed. This is reinforced by the
+  low accuracies (see #4).
+
+  ==== 2.2: Was there evidence of a learning effect (especially for Task
+  2)? ====
+  I was also curious if there was any evidence of a learning effect,
+  particularly for the prediction task. Related, was feedback was given to
+  participants, and, if so, did this exacerbate any effect (e.g., were
+  ships visually blown up and were participants’ attacks shown to hit or
+  miss?). As with #1, I think many of these concerns can be addressed with
+  more explicit experimental procedure.
+
+  ==== 2.3: What was the total trial count / experimental design? ====
+  A related clarity issue is the authors report that participants saw 18
+  stimuli from a 3x2 design in the identification task (Section 4
+  introduction). However, the data in the supplemental material and
+  reported degrees of freedom show 36 stimuli/subject leading to 864 trials
+  across all participants. The stimuli total should be revised to reflect
+  the 36 stimuli (i.e., trial) design: { 3 stimulus type x 2 size x 3
+  question type/criteria } x { 2 repetition }.
+
+  ==== 2.4: Include more information about why set size was tested in the
+  experiment, what the predictions for it were, and how it was analyzed.
+  ====
+  The authors mentioned that they tested both 4x4 and 8x8 set size
+  conditions, but I didn’t see analyses concerning the grid
+  dimensionality in the paper. Since size was a part of the experimental
+  design, it is important it is referenced in the analyses, or sufficient
+  reasoning is given as to why the authors aggregated over size in the
+  submission despite being included in the original design. Did the authors
+  test or account for any effect from size? It is possible that grid
+  dimensionality could have interacted with response times depending on
+  participants’ search strategies (e.g., Gramazio et al 2014).
+
+  C. C. Gramazio, K. B. Schloss and D. H. Laidlaw. The relation between
+  visualization size, grouping, and user performance. IEEE TVCG, vol. 20,
+  no. 12, pp. 1953-1962, Dec. 31 2014.
+
+  == 3. More discussion would be strengthen the paper’s research
+  contributions ==
+  The paper would benefit from a bit more discussion of the generalizable
+  theoretical implications of the technique, which would help place the
+  results within the context of existing research. The limitations and
+  future work do this to an extent, but there needs to be more focus on how
+  the specific experimental results for the technique might transfer or
+  relate to other applied color and uncertainty research within information
+  visualization. For example, it seems like there might be an interesting
+  discussion with the lack of significance for accuracy in the
+  identification task (Section 4.4.2), with important implications for
+  technique application. The lack of significance is fine, but it leaves an
+  unanswered question as to why or what the broader research importance of
+  this is. There are similar opportunities for the prediction task. This
+  point might be partially addressed by modifying the related work, but it
+  will likely also require modifying the discussion.
+
+  == 4. Concerns about low accuracy and the treatment of data with respect
+  to outlier removal ==
+  The low task accuracies significantly undermine the reliability of the
+  results, reduce the overall strength of the case for VSUM, and signify
+  that participants did not either complete the tasks or skipped through
+  them on MTurk. Related to this, outlier removal is not sufficiently
+  motivated. The authors write, “where error distributions may be
+  long-tailed,” but do not report the actual distribution of their
+  results. Additionally, they do no not report the number of discarded
+  trials. Did the authors attempt using z-scores or similar strategies that
+  accommodate outliers, rather than remove them, before moving to the more
+  extreme quantile filtering?
+
+  MISC:
+  1.  I’m not familiar with decision making literature, but is it
+  possible that individual differences in risk taking predispositions could
+  have affected strategies with respect to the second assumption and
+  related results? (Feel free to disregard the last point if this isn’t a
+  limiting issue.)
+
+  2. This isn’t a missing reference per se, but given that the authors
+  briefly touch upon using alpha as a channel in VSUM, they might find the
+  following useful: http://andywoodruff.com/blog/value-by-alpha-maps/
+  Roth RE, AW Woodruff, and ZF Johnson. 2010. Value-by-alpha Maps: An
+  alternative technique to the cartogram. The Cartographic Journal. 47(2).
+
+  3. The numbers might be backwards in Figure 4 with respect to the text?
+
+  4. Typo: (F,2,859) in Section 4.4.2
+
+
+------------------------ Submission 320, Review 3 ------------------------
+
+Title: Value-Suppressing Uncertainty Maps
+
+Reviewer:           secondary
+
+Paper type
+
+  Technique
+
+Expertise
+
+  3  (Expert)
+
+Overall Rating
+
+  <b>1.5 - Between Strong Reject and Reject</b><br/> 
+
+Supplemental Materials
+
+  Acceptable
+
+Justification
+
+  This submission proposes a variation on bivariate color maps, used to
+  convey both a value and uncertainty. The motivation is clear, and the
+  topic is highly relevant to InfoVis. Nevertheless, the experiments are
+  severely flawed in their design and analyses. Consequently, it is
+  impossible to draw a meaningful conclusion from this work. 
+
+The Review
+
+  Despite my low score for this submission, the topic is potentially very
+  valuable for the field. I strongly encourage the authors to continue this
+  research and consider experiments that would break down the individual
+  variables and look at accuracy and speed separately.
+
+
+  Major concerns
+  ==============
+
+  1. The paper seems to imply that limited discriminability of colors
+  necessitates limiting the number of colors in a key or in a
+  visualization. While there is plenty of evidence that this is true for
+  categorical variables, it's not clear if or why this would be true for
+  scalar values. The only justification offered is [Ware 1988] in section
+  2.3. That source never makes such a conclusion and even uses the full
+  range of color values in tested visualizations.
+
+  2. There are multiple differences between bivariate and VSUM conditions:
+  a) The number of steps for value (hue)
+  b) The number of steps for uncertainty (saturation)
+  c) Whether there are fewer value (hue) steps for high uncertainty
+  d) Whether the key is a square or an arc
+  Because manipulations of these differences are all confounded in the
+  experiments, one would not be able to determine which variable causes any
+  potential effect. Furthermore, even a null effect could just be a
+  consequence of one manipulation cancelling out the effect of another
+  manipulation. This "all or nothing" approach unnecessarily limits the
+  potential generalizability of any evaluation.
+
+  3. The accuracy levels are far too low for RT to be a meaningful measure.
+  90% is typically considered the minimum accuracy for RT evaluation, and
+  even then correct and incorrect responses should have their RTs analyzed
+  separately. The speed at which people get the wrong answer is not
+  relevant to the questions asked in this paper. Based on how many workers
+  had accuracy levels below 50%, it's not clear if people were even
+  performing the task.
+  See this R code: 
+  https://gist.github.com/anonymous/4535e76f86f8f1665b8086fea59fcb42
+  output - http://imgur.com/a/spsST
+
+  4. The degrees of freedom imply that the analyses did not collapse by
+  subject. An ANOVA assumes that each observation is independent, which is
+  violated when multiple measures are taken per subject per condition. This
+  can be solved by using an average for each subject*condition combination.
+  A better option would be to include subject id in the analysis.
+
+
+  Minor Concerns
+  ==============
+
+  1. Figure 14 is unnecessary.
+  2. 2.2: The 75% JND occurs when people detect a difference 50% of the
+  time, yielding 50% correct answers and 50% guesses (25% correct).
+  3. Participants performed 36 trials (2 size * 3 type * 6 repetitions) for
+  task one, not 18.
+  4. Task one's data appears to be missing a couple rows.
+  5. 5x5 grids appear in many figures. But the experiments used 4x4 and 8x8
+  grids.
+
+
+  =============
+  EDIT:
+  There was discussion among the reviewers about why these results can’t
+  simply be explained by the speed-accuracy trade-off and accommodated for
+  in a new analysis. The reason is that other behaviors such as “early
+  termination” can interfere. 
+
+  In an ideal speed-accuracy analysis, there should be a strongly negative
+  correlation between RT and accuracy.
+  - Easy trials have low RT and high accuracy.
+  - Hard trials have high RT and low accuracy.
+  Otherwise, a more complex combination of behaviors is likely occurring.
+  After searching for a while, subjects may eventually give up and just
+  guess. Sometimes subjects will even recognize the really tough trials and
+  just quickly guess.
+
+  Here’s a simple scenario to show how that plays out. There are three
+  conditions – easy, medium, and hard. The task has a yes-no response.
+  - For the easy condition, subjects spend 4 seconds on average and have
+  85% accuracy.
+  - For the medium condition, subjects spend 10 seconds on average and have
+  80% accuracy.
+  - For the hard condition, subjects spend 4 seconds on average before
+  making an educated guess, yielding 60% accuracy.
+  If you only look at correct trials, the 4 second guesses make it appear
+  that RT with the hard condition is amazing. And it’s very possible that
+  an underpowered study would show high variance for the correctness
+  because (a) trials in the hard condition are not uniformly difficult, and
+  (b) some subjects are always guessing, but others are making an effort
+  for most trials.
+
+  In such cases, a combination of behaviors are causing a more complex
+  relationship between speed and accuracy, which require very careful
+  experiment controls to explain. These charts (http://imgur.com/a/spsST)
+  show that in all RT quadrants, there are many subjects with very low and
+  very high accuracy. Suggesting something more complicated than a simple
+  strong correlation.
+
+  Experiment approaches for dealing with this:
+  1) Include trials with no target to measure how long it takes for people
+  to give up (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3979292/).
+  Unfortunately, that’s not appropriate for this task.
+  2) Limit presentation time, and only measure accuracy.
+  3) Adjust the experiment paradigm or task difficulty to ensure that
+  accuracy is near ceiling performance (90+%), and only analyze RT.
+
+
+
+------------------------ Submission 320, Review 4 ------------------------
+
+Title: Value-Suppressing Uncertainty Maps
+
+Reviewer:           external
+
+Paper type
+
+  Evaluation
+
+Expertise
+
+  3  (Expert)
+
+Overall Rating
+
+  <b>3 - Possible Accept</b><br/> The paper is not acceptable in its current state, but might be made acceptable with significant revisions within the conference review cycle.<br/>If the specified revisions are addressed fully and effectively I may be able to return a score of '4 - Accept'. 
+
+Supplemental Materials
+
+  Acceptable
+
+Justification
+
+  This paper represents a carefully designed and executed empirical
+  assessment of a somewhat novel method of depicting uncertainty on maps.
+  While the idea of suppressing data in locations of lower certainty is not
+  as new as the authors suggest, their strategy for implementing the idea
+  is novel. The strength of the paper is the combination of this innovation
+  for uncertainty visualization and a solid empirical study that assesses
+  its effectiveness.
+
+The Review
+
+  Overall, this is an interesting research project and the paper is very
+  clearly written.  The uncertainty visualization strategy is logical and
+  grounded in solid prior research and the experimental method is well
+  conceived (particularly the grounding in human judgment research by
+  Tversky and Kahneman).  While results are somewhat mixed, they do
+  demonstrate (subject to some concerns with the analysis) that the methods
+  for depicting data + uncertainty do have an impact, particularly on
+  prediction tasks.   
+
+  While I find the research to be strong and the paper to generally be well
+  done, there are several points that it would be useful for the authors to
+  address in a revision.  Doing so, will result in a stronger paper (in my
+  opinion). 
+
+  1) One important point relates to the method for collecting empirical
+  data. Using Amazon Mechanical Turk (AMT) was a good idea in relation to
+  testing maps for a wide audience. But, I was suppressed by the tiny
+  sample size; typically researchers use AMT to collect larger samples than
+  normal to produce more robust results (and to decrease the potential
+  impact of the many uncontrolled variables in an AMT experiment (there is
+  no way to control display parameters, room lighting, extent to which
+  participants work alone and/or are distracted by other tasks, etc). 
+  Results would be more convincing with a larger sample and that should be
+  easy to generate using AMT.  I encourage the authors to collect another
+  round of data and present the updated results in a revision and/or to
+  calculate the power of the statistical test and report that information
+  so that readers can judge the robustness of the reported results.
+
+  2) The authors contend that the goal in supporting decision making is
+  that uncertainty information should be “well-integrated with the rest
+  of the data.” This contention seems questionable as a fixed criterion
+  (as the authors eventually address in the “limitations and future
+  work” section; in some cases it is likely that the users will want/need
+  to consider the data separately as well as integrated with its
+  uncertainty. This is something that will be a function of context of use.
+  The authors cite the 1998 paper by MacEachren, Brewer, and Pickle, but do
+  not consider the argument in that paper that it is important (in some
+  cases) for users to be able to take uncertainty into account but to also
+  allow them to consider the data independently of uncertainty. This is
+  particularly important in the context of geographic data depicted on maps
+  since spatial autocorrelation often produces clusters that are
+  potentially meaningful even when some of the entities within the cluster
+  have uncertain values. Changing the visual appearance of the data in
+  these cases can cause the analyst to miss seeing important clusters.  As
+  noted, the authors do discuss some of the situations in which their
+  contention may not hold later in the paper (beginning of section 3 and in
+  section 5.1), but neither section considers the issues that arise when
+  the data are depicted on maps (thus, when proximity of marks is
+  inherently important as a feature of the phenomena depicted). 
+
+  3) The authors make a good point about the need to pick symbolization
+  that maintains JNDs. But, they do not consider the fact that, on maps
+  (whether geographic or tree or other spatial layouts), JNDs are larger
+  than on non-map graphics due to simultaneous contrast. This topic is
+  discussed in: Brewer, C.A. 1996: Prediction of Simultaneous Contrast
+  between Map Colors with Hunt's Model of Color Appearance. Color Research
+  and Application 21, 221-235; as well as in: Brewer, C.A. 1997: Evaluation
+  of a Model for Predicting Simultaneous Contrast on Color Maps. The
+  Professional Geographer 49, 280-294.
+
+  Three other points relate to relevant research that it would be useful to
+  consult and to consider the implications of:
+
+  4) Color choices for bivariate maps (that would be useful for the authors
+  to consider) are detailed in: Brewer, C.A. 1994: Color use guidelines for
+  mapping and visualization. In MacEachren, A.M. and Taylor, D.R.F.,
+  editors, Visualization in Modern Cartography, Oxford, UK: Pergamon,
+  123-147.
+
+  5) The topic of “classed” and “unclassed” choropleth maps has
+  been studied repeatedly. The paper sighted by Padilla, et al, is just one
+  of many studies and not all studies come to the same conclusion. One of
+  the earlier papers that provides a good starting point is: Muller, J.-C.
+  1979: Perception of continuously shaded maps. Annals of the Association
+  of American Geographers 69, 240-249.
+
+  6) The authors may find the following review relevant: Kinkeldey, C.,
+  MacEachren, A.M., Riveiro, M. and Schiewe, J. 2015: Evaluating the Effect
+  of Visually Represented Geodata Uncertainty on Decision Making:
+  Systematic Review, Lessons Learned and Recommendations. Cartography &
+  Geographic Information Science online first, 17 Sep 2015.

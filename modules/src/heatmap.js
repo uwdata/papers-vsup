@@ -4,7 +4,7 @@ A lightweight factory for making d3 heatmaps.
 
 var d3 = require("d3");
 
-function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y){
+function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
   var svg = m_svg,
   x = m_x ? m_x : 0,
   y = m_y ? m_y : 0,
@@ -18,7 +18,7 @@ function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y){
 
   var heatmap = {};
 
-  heatmap.make = function(){
+  heatmap.make = function() {
     if(!svg){
       svg = d3.select("body").append("svg");
     }
@@ -37,77 +37,82 @@ function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y){
 
     heatmap.setProperties();
 
-    if(name){
+    if(name) {
       grid.attr("id",name);
     }
-    return data;
   };
 
-  heatmap.data = function(newData){
-    if(!arguments.length){
+  heatmap.data = function(newData) {
+    if(!arguments.length) {
       return data;
     }
-    else{
+    else {
       data = newData;
       h = size/data.length;
       grid.selectAll("g").remove("*");
       heatmap.make();
+      return heatmap;
     }
   };
 
-  heatmap.svg = function(newSvg){
-    if(!arguments.length){
+  heatmap.svg = function(newSvg) {
+    if(!arguments.length) {
       return svg;
     }
-    else{
+    else {
       svg = newSvg;
       grid.selectAll("g").remove("*");
       heatmap.make();
+      return heatmap;
     }
   };
 
-  heatmap.x = function(newX){
-    if(!arguments.length){
+  heatmap.x = function(newX) {
+    if(!arguments.length) {
       return x;
     }
-    else{
+    else {
       x = newX;
       grid.attr("transform","translate("+x+","+y+")");
+      return heatmap;
     }
   };
 
-  heatmap.y = function(newY){
-    if(!arguments.length){
+  heatmap.y = function(newY) {
+    if(!arguments.length) {
       return y;
     }
-    else{
+    else {
       y = newY;
       grid.attr("transform","translate("+x+","+y+")");
+      return heatmap;
     }
   };
 
-  heatmap.size = function(newSize){
-    if(!arguments.length){
+  heatmap.size = function(newSize) {
+    if(!arguments.length) {
       return size;
     }
-    else{
+    else {
       size = newSize;
       h = size/data.length;
       heatmap.setProperties();
+      return heatmap;
     }
   };
 
-  heatmap.scale = function(newScale){
-    if(!arguments.length){
+  heatmap.scale = function(newScale) {
+    if(!arguments.length) {
       return scale;
     }
-    else{
+    else {
       scale = newScale;
       heatmap.setProperties();
+      return heatmap;
     }
   };
 
-  heatmap.setProperties= function(){
+  heatmap.setProperties= function() {
     grid.selectAll("g").selectAll("rect")
       .attr("x", function(d){ return (size/data[d.r].length)*d.c;})
       .attr("y", function(d){ return d.r*h;})
