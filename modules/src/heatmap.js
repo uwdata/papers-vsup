@@ -1,10 +1,9 @@
 /*
 A lightweight factory for making d3 heatmaps.
 */
+import * as d3 from "d3";
 
-var d3 = require("d3");
-
-function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
+export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
   var svg = m_svg,
   x = m_x ? m_x : 0,
   y = m_y ? m_y : 0,
@@ -124,5 +123,3 @@ function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
   heatmap.make();
   return heatmap;
 }
-
-module.exports = simpleHeatmap;

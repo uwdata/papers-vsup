@@ -3,7 +3,7 @@ A tree-like bivariate quantization scheme.
 As uncertainty increases, the number of quantization bins decreases.
 */
 
-function treeScale(branchingFactor,treeLayers) {
+export function treeScale(branchingFactor,treeLayers) {
   var branch = branchingFactor ? branchingFactor : 2,
       layers = treeLayers ? treeLayers : 2,
       tree = makeTree();
@@ -76,5 +76,3 @@ function treeScale(branchingFactor,treeLayers) {
 
   return scale;
 }
-
-module.exports = treeScale;

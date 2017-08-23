@@ -1,9 +1,9 @@
 /*
   A lightweight factory for making legends.
 */
-var d3 = require("d3");
+import * as d3 from "d3";
 
-function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,m_y) {
+export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,m_y) {
   var el = m_svg,
       title = m_title,
       scale = m_scale ? m_scale : null,
@@ -150,5 +150,3 @@ function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,m_y) {
   legend.make();
   return legend;
 };
-
-module.exports = simpleLegend;

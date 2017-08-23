@@ -1,0 +1,14 @@
+{
+    "scripts": {
+        "build": "rollup -c",
+        "watch": "rollup -c -w",
+        "start": "python -m SimpleHTTPServer"
+    },
+    "dependencies": {
+        "d3": "^4.10.0"
+    },
+    "devDependencies": {
+        "rollup": "^0.48.2",
+        "rollup-plugin-node-resolve": "^3.0.0"
+    }
+}

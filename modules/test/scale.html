@@ -11,7 +11,7 @@
         </style>
 
         <script src="https://d3js.org/d3.v4.min.js"></script>
-        <script src="../bin/simple.js"></script>
+        <script src="../dist/bvu.js"></script>
     </head>
     <body>
         <svg id="vis"></svg>
@@ -21,7 +21,7 @@
                 .domain([0, 1])
                 .range(d3.quantize(d3.interpolateViridis, 5));
 
-            var legend = simpleLegend()
+            var legend = bvu.legend.simpleLegend()
                 .title("Simple Legend")
                 .size(250)
                 .height(20)
