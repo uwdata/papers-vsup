@@ -74,5 +74,9 @@ export function treeScale(branchingFactor,treeLayers) {
     }
   }
 
+  scale.range = function() {
+    return [].concat.apply([],tree);
+  }
+
   return scale;
 }

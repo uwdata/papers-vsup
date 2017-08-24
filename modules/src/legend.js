@@ -147,7 +147,7 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
   };
 
-  if(scale){
+  if(scale) {
     legend.make();
   }
   return legend;

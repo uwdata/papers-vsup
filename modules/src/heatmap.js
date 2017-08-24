@@ -120,6 +120,8 @@ export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
       .attr("fill", function(d){ return scale(d.v);});
   };
 
-  heatmap.make();
+  if(data) {
+    heatmap.make();
+  }
   return heatmap;
 }
