@@ -9,7 +9,7 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
       scale = m_scale ? m_scale : null,
       size = m_size ? m_size : 200,
       height = m_height ? m_height : 30,
-      format = m_format ? m_format : ".2f",
+      fmat = m_format ? m_format : ".2f",
       x = m_x ? m_x : 0,
       y = m_y ? m_y : 0,
       mainG,
@@ -51,7 +51,7 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
 
     axis
       .attr("transform", "translate(0, " + height + ")")
-      .call(d3.axisBottom(axisScale).tickFormat(d3.format(format)));
+      .call(d3.axisBottom(axisScale).tickFormat(d3.format(fmat)));
 
     label
       .style("text-anchor", "middle")
@@ -115,10 +115,10 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
 
   legend.format = function(f) {
     if(!arguments.length) {
-      return format;
+      return fmat;
     }
     else {
-      format = f;
+      fmat = f;
       legend.unmake();
       legend.make();
       return legend;
@@ -147,6 +147,8 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
   };
 
-  legend.make();
+  if(scale){
+    legend.make();
+  }
   return legend;
 };

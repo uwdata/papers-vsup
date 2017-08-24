@@ -9,7 +9,7 @@ export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
   y = m_y ? m_y : 0,
   size = m_size ? m_size: 0,
   scale = m_scale ? m_scale : function(){ return "#fff"; },
-  name = m_name ? m_name : "heatmap";
+  name = m_name;
 
   data = data ? data : [1];
   var h = size/data.length,
