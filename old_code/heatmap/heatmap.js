@@ -347,7 +347,7 @@ function distanceMatrix(scaleData){
   var matrix = [colors.length];
 
   for(var i = 0;i<colors.length;i++){
-    matrix[i] = [colors.length];
+    matrix[i] = new Array(colors.length);
     //give the row a label
     matrix[i].name = colors[i];
     for(var j = 0;j<colors.length;j++){

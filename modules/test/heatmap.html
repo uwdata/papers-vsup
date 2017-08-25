@@ -13,7 +13,22 @@
         <script src="../dist/bvu.js"></script>
     </head>
     <body>
-        <script>
-        </script>
+      <svg id="vis"></svg>
+      <script>
+        var svg = d3.select("svg");
+        var data = [[0,0.1,0.2], [0.3,0.4,0.5],[0.6,0.7,0.8] ];
+        var hmap = bvu.heatmap()
+          .svg(svg)
+          .data(data)
+          .scale(d3.interpolateViridis)
+          .size(150);
+
+        var amap = bvu.arcmap()
+          .svg(svg)
+          .data(data)
+          .scale(d3.interpolateCool)
+          .size(150)
+          .x(150);
+      </script>
     </body>
 </html>
