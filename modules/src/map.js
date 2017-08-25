@@ -33,8 +33,6 @@ export function simpleMap(m_mode,m_range,m_scale) {
     return scale.range().map(map);
   }
 
-
-
   map.colorDists = function() {
       var clist = this.colorList(),
           matrix = new Array(clist.length),
@@ -42,12 +40,12 @@ export function simpleMap(m_mode,m_range,m_scale) {
           minPair = new Array(2),
           dist;
 
-      for(var i = 0;i<matrix.length;i++){
+      for(var i = 0;i<matrix.length;i++) {
         matrix[i] = new Array(clist.length);
-        for(var j = 0;j<matrix[i].length;j++){
+        for(var j = 0;j<matrix[i].length;j++) {
           dist = CIEDist(clist[i],clist[j]);
           matrix[i][j] = dist;
-          if(i!=j && ((i==0 && j==1) || (dist<minDist))){
+          if(i!=j && ((i==0 && j==1) || (dist<minDist))) {
             minDist = dist;
             minPair = [clist[i],clist[j]];
           }
@@ -58,6 +56,36 @@ export function simpleMap(m_mode,m_range,m_scale) {
       matrix.minPair = minPair;
       return matrix;
   };
+
+  map.mode = function(newMode) {
+    if(!arguments.length) {
+      return mode;
+    }
+    else {
+      mode = newMode;
+      return map;
+    }
+  }
+
+  map.range = function(newRange) {
+    if(!arguments.length) {
+      return range;
+    }
+    else {
+      range = newRange;
+      return map;
+    }
+  }
+
+  map.quantize = function(newScale) {
+    if(!arguments.length) {
+      return scale;
+    }
+    else {
+      scale = newScale;
+      return map;
+    }
+  }
 
   return map;
 }

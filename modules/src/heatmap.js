@@ -16,11 +16,14 @@ export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
 
   heatmap.make = function() {
     if(data){
-      if(!svg){
+      if(!svg) {
         svg = d3.select("body").append("svg");
       }
-      this.svgGroup = svg.append("g")
-        .attr("transform","translate("+x+","+y+")");
+
+      if(!this.svgGroup) {
+        this.svgGroup = svg.append("g")
+          .attr("transform","translate("+x+","+y+")");
+      }
 
       this.svgGroup.selectAll("g")
         .data(data)
@@ -169,8 +172,11 @@ export function simpleArcmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
       if(!hmap.svg()){
         hmap.svg(d3.select("body").append("svg"));
       }
-      hmap.svgGroup = svg.append("g")
-        .attr("transform","translate("+hmap.x()+","+hmap.y()+")");
+
+      if(!hmap.svgGroup) {
+        hmap.svgGroup = svg.append("g")
+          .attr("transform","translate("+hmap.x()+","+hmap.y()+")");
+      }
 
       hmap.svgGroup.selectAll("g")
         .data(hmap.data())
