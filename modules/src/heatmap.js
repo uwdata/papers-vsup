@@ -106,8 +106,10 @@ export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
     }
     else {
       size = newSize;
-      h = size/data.length;
-      heatmap.setProperties();
+      if(data) {
+        h = size/data.length;
+        heatmap.setProperties();
+      }
       return heatmap;
     }
   };
@@ -118,7 +120,9 @@ export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
     }
     else {
       scale = newScale;
-      heatmap.setProperties();
+      if(data) {
+        heatmap.setProperties();
+      }
       return heatmap;
     }
   };

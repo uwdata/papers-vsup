@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Full test</title>
+        <meta charset="UTF-8">
+
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+        </style>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="../dist/bvu.js"></script>
+    </head>
+    <body>
+      <svg id="vis"></svg>
+      <script>
+        var svg = d3.select("svg").attr("width",600);
+        var scale = bvu.scale().branching(2).layers(4);
+        var map = bvu.map().quantize(scale).range(d3.interpolateViridis);
+        var imap = bvu.map().range(d3.interpolateViridis);
+
+        var legendData = [];
+        var temp = scale.tree();
+        for(var i = 0;i<temp.length;i++){
+          legendData[i] = temp[temp.length-i-1];
+        }
+        var arclegend = bvu.arcmap().svg(svg).size(150).scale(imap).data(legendData);
+        var heatlegend = bvu.heatmap().svg(svg).size(150).scale(imap).data(legendData).x(150);
+
+        var randomData = [];
+        for(var i = 0;i<4;i++){
+          randomData[i] = [];
+          for(var j = 0;j<4;j++){
+            randomData[i][j] = {u: Math.random(), v: Math.random()};
+          }
+        }
+
+        var vsum = bvu.heatmap().svg(svg).size(125).scale(map).data(randomData).x(325);
+        var isum = bvu.heatmap().svg(svg).size(125).scale(imap).data(randomData).x(475);
+
+      </script>
+    </body>
+</html>

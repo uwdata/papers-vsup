@@ -2,6 +2,7 @@ import * as d3 from "d3";
 
 // Returns a color, based on a bivariate data point,
 // a quantization function, and a color interpolator
+// can be extended to different modes (just saturation, say)
 export function simpleMap(m_mode,m_range,m_scale) {
   var range = m_range,
       scale = m_scale ? m_scale : function(v,u) {
@@ -23,7 +24,7 @@ export function simpleMap(m_mode,m_range,m_scale) {
     switch(mode) {
       case "usl":
       default:
-        vcolor = d3.interpolateLab(vcolor,"white",uScale(data.u));
+        vcolor = d3.interpolateLab(vcolor,"white")(uScale(data.u));
       break;
     }
     return vcolor;
