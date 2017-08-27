@@ -22,7 +22,7 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
 
   legend.make = function() {
     if (!scale) {
-      return
+      return;
     }
 
     if(!el) {
@@ -155,6 +155,66 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     else {
       y = ny;
       mainG.attr("transform","translate("+x+","+y+")");
+      return legend;
+    }
+  };
+
+  legend.make();
+  return legend;
+};
+
+export function heatmapLegend(m_heatmap) {
+  var heatmap = m_heatmap;
+
+  var legend = {};
+
+  legend.make = function() {
+    if (!heatmap) {
+      return;
+    }
+    // TODO: finish
+
+    var svgGroup = heatmap.svg().append("g")
+    var size = heatmap.size;
+
+    svgGroup.attr("transform", "translate(-20, -20)");
+
+    var xAxis = d3.scalePoint().range([0, size]).domain([0,1]);
+    
+    svgGroup.append("g")
+      .call(d3.axisTop(xAxis).tickFormat(d3.format("d")));
+  
+    svgGroup.append("text")
+      .style("text-anchor", "middle")
+      .style("font-size", 13)
+      .attr("transform", "translate(" + (size / 2) + ", " + (-30) + ")")
+      .text("Value");
+  
+    var yAxis = d3.scalePoint().range([0, size]).domain([0,1]);
+  
+    svgGroup.append("g")
+      .attr("transform", "translate(" + size + ", 0)")
+      .call(d3.axisRight(yAxis).tickFormat(d3.format("d")));
+  
+    svgGroup.append("text")
+      .style("text-anchor", "middle")
+      .style("font-size", 13)
+      .attr("transform", "translate(" + (size + 40) + ", " + (size / 2) + ")rotate(90)")
+      .text("Uncertainty");
+  };
+
+  legend.unmake = function() {
+    // TODO
+  };
+
+  legend.heatmap = function(nheatmap) {
+    if(!arguments.length) {
+      return heatmap;
+    }
+    else {
+      heatmap = nheatmap;
+      legend.uname();
+      legend.make();
       return legend;
     }
   };
