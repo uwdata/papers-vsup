@@ -15,11 +15,16 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
       mainG,
       rects,
       axis,
-      label;
+      label,
+      made = false;
 
   var legend = {};
 
   legend.make = function() {
+    if (!scale) {
+      return
+    }
+
     if(!el) {
       el = d3.select("body").append("svg");
     }
@@ -30,6 +35,8 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     axis = mainG.append("g");
     label = mainG.append("text");
     legend.setProperties();
+
+    made = true;
   };
 
   legend.setProperties = function() {
@@ -61,6 +68,10 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
   };
 
   legend.unmake = function() {
+    if (!made) {
+      return false;
+    }
+
     rects.remove("*");
     axis.remove("*");
     label.remove("*");
@@ -72,7 +83,8 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
     else {
       title = t;
-      label.text(title);
+      legend.unmake();
+      legend.make();
       return legend;
     }
   };
@@ -147,8 +159,6 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
   };
 
-  if(scale) {
-    legend.make();
-  }
+  legend.make();
   return legend;
 };
