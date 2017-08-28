@@ -15,23 +15,28 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
       mainG,
       rects,
       axis,
-      label;
+      label,
+      made = false;
 
   var legend = {};
 
   legend.make = function() {
-    if(scale) {
-      if(!el) {
-        el = d3.select("body").append("svg");
-      }
+    if (!scale) {
+      return;
+    }
+
+    if(!el) {
+      el = d3.select("body").append("svg");
+    }
 
       mainG = el.append("g");
 
-      rects = mainG.selectAll("rect").data(scale.range()).enter().append("rect");
-      axis = mainG.append("g");
-      label = mainG.append("text");
-      legend.setProperties();
-    }
+    rects = mainG.selectAll("rect").data(scale.range()).enter().append("rect");
+    axis = mainG.append("g");
+    label = mainG.append("text");
+    legend.setProperties();
+
+    made = true;
   };
 
   legend.setProperties = function() {
@@ -63,11 +68,13 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
   };
 
   legend.unmake = function() {
-    if(rects && axis && label) {
-      rects.remove("*");
-      axis.remove("*");
-      label.remove("*");
+    if (!made) {
+      return false;
     }
+
+    rects.remove("*");
+    axis.remove("*");
+    label.remove("*");
   };
 
   legend.title = function(t) {
@@ -79,6 +86,8 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
       if(label) {
         label.text(title);
       }
+      legend.unmake();
+      legend.make();
       return legend;
     }
   };
@@ -168,5 +177,65 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
   if(scale) {
     legend.make();
   }
+  return legend;
+};
+
+export function heatmapLegend(m_heatmap) {
+  var heatmap = m_heatmap;
+
+  var legend = {};
+
+  legend.make = function() {
+    if (!heatmap) {
+      return;
+    }
+    // TODO: finish
+
+    var svgGroup = heatmap.svg().append("g")
+    var size = heatmap.size;
+
+    svgGroup.attr("transform", "translate(-20, -20)");
+
+    var xAxis = d3.scalePoint().range([0, size]).domain([0,1]);
+    
+    svgGroup.append("g")
+      .call(d3.axisTop(xAxis).tickFormat(d3.format("d")));
+  
+    svgGroup.append("text")
+      .style("text-anchor", "middle")
+      .style("font-size", 13)
+      .attr("transform", "translate(" + (size / 2) + ", " + (-30) + ")")
+      .text("Value");
+  
+    var yAxis = d3.scalePoint().range([0, size]).domain([0,1]);
+  
+    svgGroup.append("g")
+      .attr("transform", "translate(" + size + ", 0)")
+      .call(d3.axisRight(yAxis).tickFormat(d3.format("d")));
+  
+    svgGroup.append("text")
+      .style("text-anchor", "middle")
+      .style("font-size", 13)
+      .attr("transform", "translate(" + (size + 40) + ", " + (size / 2) + ")rotate(90)")
+      .text("Uncertainty");
+  };
+
+  legend.unmake = function() {
+    // TODO
+  };
+
+  legend.heatmap = function(nheatmap) {
+    if(!arguments.length) {
+      return heatmap;
+    }
+    else {
+      heatmap = nheatmap;
+      legend.uname();
+      legend.make();
+      return legend;
+    }
+  };
+
+  legend.make();
   return legend;
 };
