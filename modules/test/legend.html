@@ -21,7 +21,7 @@
                 .domain([0, 1])
                 .range(d3.quantize(d3.interpolateViridis, 5));
 
-            var legend = bvu.legend.simpleLegend(color)
+            var legend = bvu.legend.simpleLegend()
                 .title("Simple Legend")
                 .size(250)
                 .format(".1f")
@@ -29,7 +29,18 @@
                 .scale(color)
                 .x(10)
                 .y(20);
+
+
+            var data = [[0,0.1,0.2], [0.3,0.4,0.5],[0.6,0.7,0.8] ];
+            var hmap = bvu.heatmap()
+                .data(data)
+                .scale(d3.interpolateViridis)
+                .size(150)
+                .x(20)
+                .y(20);
                 
+            var heatLegend = bvu.legend.heatmapLegend(hmap);
+
         </script>
     </body>
 </html>
