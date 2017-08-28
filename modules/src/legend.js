@@ -29,7 +29,7 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
       el = d3.select("body").append("svg");
     }
 
-      mainG = el.append("g");
+    mainG = el.append("g");
 
     rects = mainG.selectAll("rect").data(scale.range()).enter().append("rect");
     axis = mainG.append("g");
@@ -86,8 +86,6 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
       if(label) {
         label.text(title);
       }
-      legend.unmake();
-      legend.make();
       return legend;
     }
   };
@@ -197,22 +195,22 @@ export function heatmapLegend(m_heatmap) {
     svgGroup.attr("transform", "translate(-20, -20)");
 
     var xAxis = d3.scalePoint().range([0, size]).domain([0,1]);
-    
+
     svgGroup.append("g")
       .call(d3.axisTop(xAxis).tickFormat(d3.format("d")));
-  
+
     svgGroup.append("text")
       .style("text-anchor", "middle")
       .style("font-size", 13)
       .attr("transform", "translate(" + (size / 2) + ", " + (-30) + ")")
       .text("Value");
-  
+
     var yAxis = d3.scalePoint().range([0, size]).domain([0,1]);
-  
+
     svgGroup.append("g")
       .attr("transform", "translate(" + size + ", 0)")
       .call(d3.axisRight(yAxis).tickFormat(d3.format("d")));
-  
+
     svgGroup.append("text")
       .style("text-anchor", "middle")
       .style("font-size", 13)

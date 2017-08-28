@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Continuous Heatmap test</title>
+        <meta charset="UTF-8">
+
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+        </style>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="../dist/bvu.js"></script>
+    </head>
+    <body>
+      <div id="vis"></div>
+      <script>
+        var el = d3.select("div");
+        var square = bvu.csquare(el,100,d3.interpolateViridis);
+      </script>
+    </body>
+</html>
