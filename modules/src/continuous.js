@@ -5,7 +5,6 @@ export function continuousSquare(m_el,m_size,m_scale){
   size = m_size,
   scale = m_scale,
   pixelScale,
-  pixelData,
   context,
   canvas,
   made = false;
@@ -14,7 +13,7 @@ export function continuousSquare(m_el,m_size,m_scale){
 
 
   square.makePixelData = function() {
-      pixelData = [];
+      var pixelData = [];
       var c;
       for(var i = 0;i<size;i++) {
         for(var j = 0;j<size;j++) {
@@ -28,6 +27,7 @@ export function continuousSquare(m_el,m_size,m_scale){
           pixelData.push(255);
         }
       }
+      return pixelData;
   }
 
   square.make = function() {
@@ -39,7 +39,11 @@ export function continuousSquare(m_el,m_size,m_scale){
       el = d3.select("body");
     }
 
-    canvas = el.append("canvas")
+    if(!canvas) {
+      canvas = el.append("canvas")
+    }
+
+    canvas
       .attr("width",size)
       .attr("height",size);
 
@@ -51,9 +55,8 @@ export function continuousSquare(m_el,m_size,m_scale){
   }
 
   square.setPixels = function() {
-    square.makePixelData();
     var img = context.createImageData(size,size);
-    img.data.set(pixelData);
+    img.data.set(square.makePixelData());
     context.putImageData(img,0,0);
   }
 
@@ -92,4 +95,43 @@ export function continuousSquare(m_el,m_size,m_scale){
 
   square.make();
   return square;
+}
+
+export function continuousArc(m_el,m_size,m_scale) {
+  var arc = continuousSquare(m_el,m_size,m_scale);
+
+  arc.makePixelData = function() {
+    var pixelData = [];
+    var c, x,y,theta, r;
+    var angle = d3.scaleLinear().domain([-Math.PI/6,Math.PI/6]).range([0,1]);
+    var size = arc.size();
+
+    for(var i = 0;i<size;i++) {
+      for(var j = 0;j<size;j++) {
+        x = (j/size)-0.5;
+        y = 1-(i/size);
+        r = Math.sqrt( Math.pow(x,2) + Math.pow(y,2));
+        theta = Math.atan2(y,x) - (Math.PI/2) ;
+
+        if(theta >-Math.PI/6 && theta < Math.PI/6 && r>0 && r<1){
+          c = arc.scale()(angle(theta));
+          c = d3.interpolateLab(c,d3.color("white"))(1-r);
+          c = d3.color(c);
+        }
+        else {
+          c = d3.color("white");
+          c.opacity = 0;
+        }
+
+        pixelData.push(c.r);
+        pixelData.push(c.g);
+        pixelData.push(c.b);
+        pixelData.push(255*c.opacity);
+      }
+    }
+    return pixelData;
+  }
+
+  arc.make();
+  return arc;
 }
