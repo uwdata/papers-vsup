@@ -20,16 +20,18 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
   var legend = {};
 
   legend.make = function() {
-    if(!el) {
-      el = d3.select("body").append("svg");
+    if(scale) {
+      if(!el) {
+        el = d3.select("body").append("svg");
+      }
+
+      mainG = el.append("g");
+
+      rects = mainG.selectAll("rect").data(scale.range()).enter().append("rect");
+      axis = mainG.append("g");
+      label = mainG.append("text");
+      legend.setProperties();
     }
-
-    mainG = el.append("g");
-
-    rects = mainG.selectAll("rect").data(scale.range()).enter().append("rect");
-    axis = mainG.append("g");
-    label = mainG.append("text");
-    legend.setProperties();
   };
 
   legend.setProperties = function() {
@@ -61,9 +63,11 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
   };
 
   legend.unmake = function() {
-    rects.remove("*");
-    axis.remove("*");
-    label.remove("*");
+    if(rects && axis && label) {
+      rects.remove("*");
+      axis.remove("*");
+      label.remove("*");
+    }
   };
 
   legend.title = function(t) {
@@ -72,7 +76,9 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
     else {
       title = t;
-      label.text(title);
+      if(label) {
+        label.text(title);
+      }
       return legend;
     }
   };
@@ -146,6 +152,18 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
       return legend;
     }
   };
+
+  legend.svg = function(newSvg) {
+    if(!arguments.length) {
+      return el;
+    }
+    else {
+      el = newSvg;
+      legend.unmake();
+      legend.make();
+      return legend;
+    }
+  }
 
   if(scale) {
     legend.make();
