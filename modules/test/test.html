@@ -15,7 +15,7 @@
     <body>
       <svg id="vis"></svg>
       <script>
-        var svg = d3.select("svg").attr("width",600);
+        var svg = d3.select("svg").attr("width",650);
         var scale = bvu.scale().branching(2).layers(4);
         var map = bvu.map().quantize(scale).range(d3.interpolateViridis);
         var imap = bvu.map().range(d3.interpolateViridis);
@@ -36,9 +36,13 @@
           }
         }
 
-        var vsum = bvu.heatmap().svg(svg).size(125).scale(map).data(randomData).x(325);
-        var isum = bvu.heatmap().svg(svg).size(125).scale(imap).data(randomData).x(475);
+        var vsum = bvu.heatmap().svg(svg).size(150).scale(map).data(randomData).x(325);
+        var isum = bvu.heatmap().svg(svg).size(150).scale(imap).data(randomData).x(500);
 
+        var el = d3.select("body").append("div")
+          .attr("style","float:left");
+        var square = bvu.csquare(el,150,d3.interpolateViridis);
+        var arc = bvu.carc(el,150,d3.interpolateViridis);
       </script>
     </body>
 </html>
