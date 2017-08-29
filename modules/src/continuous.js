@@ -103,7 +103,7 @@ export function continuousArc(m_el,m_size,m_scale) {
   arc.makePixelData = function() {
     var pixelData = [];
     var c, x,y,theta, r;
-    var angle = d3.scaleLinear().domain([-Math.PI/6,Math.PI/6]).range([0,1]);
+    var angle = d3.scaleLinear().domain([-Math.PI/6,Math.PI/6]).range([1,0]);
     var size = arc.size();
 
     for(var i = 0;i<size;i++) {
