@@ -18,7 +18,7 @@ export function continuousSquare(m_el,m_size,m_scale){
       for(var i = 0;i<size;i++) {
         for(var j = 0;j<size;j++) {
           c = scale(j/size);
-          c = d3.interpolateLab(c,d3.color("white"))(i/size);
+          c = d3.interpolateLab(c,d3.color("#ddd"))(i/size);
           //r,g,b,a
           c = d3.color(c);
           pixelData.push(c.r);
@@ -115,7 +115,7 @@ export function continuousArc(m_el,m_size,m_scale) {
 
         if(theta >-Math.PI/6 && theta < Math.PI/6 && r>0 && r<1){
           c = arc.scale()(angle(theta));
-          c = d3.interpolateLab(c,d3.color("white"))(1-r);
+          c = d3.interpolateLab(c,d3.color("#ddd"))(1-r);
           c = d3.color(c);
         }
         else {

@@ -24,7 +24,7 @@ export function simpleMap(m_mode,m_range,m_scale) {
     switch(mode) {
       case "usl":
       default:
-        vcolor = d3.interpolateLab(vcolor,"white")(uScale(data.u));
+        vcolor = d3.interpolateLab(vcolor,"#ddd")(uScale(data.u));
       break;
     }
     return vcolor;
