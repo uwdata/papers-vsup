@@ -99,13 +99,13 @@ export function treeScale(branchingFactor,treeLayers) {
         n;
 
     tree[0] = [];
-    tree[0].push({u: 1, v: 0.5});
+    tree[0].push({u: ( (layers-1) /layers), v: 0.5});
 
     for(var i = 1;i<layers;i++){
       tree[i] = [];
       n = 2*Math.pow(branch,i);
       for(var j = 1;j<n;j+=2){
-        tree[i].push({ u: 1 - ( i/(layers-1)), v: (j/n)});
+        tree[i].push({ u: 1 - ((i+1)/layers), v: (j/n)});
       }
     }
     return tree;

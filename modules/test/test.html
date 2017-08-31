@@ -40,10 +40,11 @@
         var iarclegend = bvu.arcmap().svg(svg).size(150).scale(smap).data(iLegendData).x(325);
         var iheatlegend = bvu.heatmap().svg(svg).size(150).scale(smap).data(iLegendData).x(475);
 
+        var n = 10;
         var randomData = [];
-        for(var i = 0;i<4;i++){
+        for(var i = 0;i<n;i++){
           randomData[i] = [];
-          for(var j = 0;j<4;j++){
+          for(var j = 0;j<n;j++){
             randomData[i][j] = {u: Math.random(), v: Math.random()};
           }
         }
