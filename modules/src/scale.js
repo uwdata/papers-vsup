@@ -37,7 +37,7 @@ export function squareScale(m_n) {
     for(var i = 0;i<n;i++){
       matrix[i] = [];
       for(var j = 1;j<(2*n);j+=2){
-        matrix[i].push({ u: 1 - ( i/(n-1)), v: (j/(2*n))});
+        matrix[i].push({ u: 1 - ((i+1)/n), v: (j/(2*n))});
       }
     }
 
