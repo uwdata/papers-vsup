@@ -94,8 +94,8 @@
 % Paper metadata (use plain text, for PDF inclusion and later
 % re-using, if desired).  Use \emtpyauthor when submitting for review
 % so you remain anonymous.
-\def\plaintitle{Tree-like Uncertainty Maps}
-\def\plainauthor{Correll, Moritz, Heer}
+\def\plaintitle{Non-Uniform Bivariate Uncertainty Scales}
+\def\plainauthor{Anonymous}
 \def\emptyauthor{}
 \def\plainkeywords{Uncertainty Visualization; Color Perception; Thematic Maps; Semiotics.}
 \def\plaingeneralterms{Uncertainty Visualization, Color Perception}
@@ -171,7 +171,13 @@
 \maketitle
 
 \begin{abstract}
-  Uncertainty is a vital concern in many datasets. Visualizations often use bivariate mappings to encode value and uncertainty simultaneously. Due to interference between visual channels, these bivariate maps are limited in discriminability. We contribute Value-Suppressing Uncertainty Maps (VSUMs), an encoding technique that intentionally impairs value discrimination as uncertainty increases. In contrast to traditional bivariate maps, VSUMs alias values when uncertainty is high: expected values with lower uncertainty can be more precisely compared, whereas similar values with higher uncertainty are made harder to differentiate. By making informed binning decisions, VSUMs seek to better use the limited budget of discriminable marks in bivariate maps, and dissuade analysts from making decisions based on data with high uncertainty. We demonstrate several examples of VSUMs and present a crowdsourced evaluation showing that, compared to traditional bivariate maps, VSUMs bias analysts to more heavily weight uncertainty information in decision-making tasks.
+  Uncertainty is a vital concern in many datasets. Visualizations often employ bivariate mappings as a way to present data and uncertainty values simultaneously.
+  Yet, these bivariates maps can be difficult to interpret, and interference between visual channels can reduce the discriminability of marks.
+  To address these issues, we contribute BIvariate Non-uniform Scales (BINS).
+  BINS allocate larger ranges of marks to data when uncertainty is low, and smaller ranges when uncertainty is high. 
+  This non-uniform budgeting of marks suppresses differences in uncertain data, but amplifies them for certain data, with the intended outcome of supporting more cautious patterns of decision-making.
+  We demonstrate several examples of BINS, and present a crowdsourced evaluation showing that, compared to traditional bivariate maps, BINS encourage people to XYZ.
+  
 \end{abstract}
 
 \category{H.5.0.}{Information Interfaces and Presentation

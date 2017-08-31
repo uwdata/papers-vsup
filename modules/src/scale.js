@@ -3,6 +3,69 @@ A tree-like bivariate quantization scheme.
 As uncertainty increases, the number of quantization bins decreases.
 */
 
+
+export function squareScale(m_n) {
+  var n = m_n,
+      uscale,
+      vscale,
+      matrix = makeMatrix();
+
+  function scale(value, uncertainty) {
+    var u = uncertainty!=undefined ? uncertainty : value.u,
+        v = uncertainty!=undefined ? value : value.v,
+        i = 0;
+
+    //find the right layer of the tree, based on uncertainty
+    while(i<matrix.length-1 && u < 1 - ((i+1)/n)){
+      i++;
+    }
+
+    //find right leaf of tree, based on value
+    var vgap = (matrix[i].length>1) ? (matrix[i][1].v - matrix[i][0].v) / 2 : 0,
+        j = 0;
+
+    while(j<(matrix[i].length-1) && v > matrix[i][j].v+vgap){
+      j++;
+    }
+
+    return matrix[i][j];
+  }
+
+  function makeMatrix() {
+    var matrix = [];
+
+    for(var i = 0;i<n;i++){
+      matrix[i] = [];
+      for(var j = 1;j<(2*n);j+=2){
+        matrix[i].push({ u: 1 - ( i/(n-1)), v: (j/(2*n))});
+      }
+    }
+
+    return matrix;
+  }
+
+  scale.range = function(newRange) {
+    return [].concat.apply([],matrix);
+  }
+
+  scale.n = function(newN) {
+      if(!arguments.length) {
+        return n;
+      }
+      else{
+        n = newN;
+        matrix = makeMatrix();
+        return scale;
+      }
+  }
+
+  scale.matrix = function() {
+    return matrix;
+  }
+
+  return scale;
+}
+
 export function treeScale(branchingFactor,treeLayers) {
   var branch = branchingFactor ? branchingFactor : 2,
       layers = treeLayers ? treeLayers : 2,

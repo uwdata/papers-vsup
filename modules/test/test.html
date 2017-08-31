@@ -15,18 +15,30 @@
     <body>
       <svg id="vis"></svg>
       <script>
-        var svg = d3.select("svg").attr("width",650);
+        var svg = d3.select("svg").attr("width",950).attr("height",350);
         var scale = bvu.scale().branching(2).layers(4);
         var map = bvu.map().quantize(scale).range(d3.interpolateViridis);
         var imap = bvu.map().range(d3.interpolateViridis);
 
+        var sscale = bvu.iscale().n(4);
+        var smap = bvu.map().quantize(sscale).range(d3.interpolateViridis);
+
         var legendData = [];
         var temp = scale.tree();
-        for(var i = 0;i<temp.length;i++){
+        for(var i = 0;i<temp.length;i++) {
           legendData[i] = temp[temp.length-i-1];
         }
+
+        var iLegendData = [];
+        temp = sscale.matrix();
+        for(var i = 0;i<temp.length;i++) {
+          iLegendData[i] = temp[temp.length-i-1];
+        }
+
         var arclegend = bvu.arcmap().svg(svg).size(150).scale(imap).data(legendData);
         var heatlegend = bvu.heatmap().svg(svg).size(150).scale(imap).data(legendData).x(150);
+        var iarclegend = bvu.arcmap().svg(svg).size(150).scale(smap).data(iLegendData).x(325);
+        var iheatlegend = bvu.heatmap().svg(svg).size(150).scale(smap).data(iLegendData).x(475);
 
         var randomData = [];
         for(var i = 0;i<4;i++){
@@ -36,8 +48,9 @@
           }
         }
 
-        var vsum = bvu.heatmap().svg(svg).size(150).scale(map).data(randomData).x(325);
-        var isum = bvu.heatmap().svg(svg).size(150).scale(imap).data(randomData).x(500);
+        var vsum = bvu.heatmap().svg(svg).size(150).scale(map).data(randomData).x(0).y(175);
+        var ssum = bvu.heatmap().svg(svg).size(150).scale(smap).data(randomData).x(175).y(175);
+        var isum = bvu.heatmap().svg(svg).size(150).scale(imap).data(randomData).x(350).y(175);
 
         var el = d3.select("body").append("div")
           .attr("style","float:left");
