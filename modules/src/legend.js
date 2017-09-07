@@ -384,7 +384,7 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
       .style("font-size", "11")
       .style("text-anchor", "middle")
       .attr("y", -10)
-      .text(d3.format(".1f"));
+      .text(d3.format(fmat));
   
     labelEnter.append("line")
       .attr("x1", 0.5)
