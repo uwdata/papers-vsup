@@ -3,78 +3,64 @@
 */
 import * as d3 from "d3";
 
-export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,m_y) {
-  var el = m_svg,
+export function simpleLegend(m_scale,m_size,m_height,m_format,m_title,m_x,m_y) {
+  var el = null,
       title = m_title,
       scale = m_scale ? m_scale : null,
       size = m_size ? m_size : 200,
       height = m_height ? m_height : 30,
       fmat = m_format ? m_format : ".2f",
       x = m_x ? m_x : 0,
-      y = m_y ? m_y : 0,
-      mainG,
-      rects,
-      axis,
-      label,
-      made = false;
+      y = m_y ? m_y : 0;
 
-  var legend = {};
+  function legend(nel) {
+    el = nel;
+    legend.setProperties();
+  }
 
-  legend.make = function() {
-    if (!scale) {
+  legend.setProperties = function() {
+    if (!el) {
       return;
     }
 
-    if(!el) {
-      el = d3.select("body").append("svg");
-    }
-
-    mainG = el.append("g");
-
-    rects = mainG.selectAll("rect").data(scale.range()).enter().append("rect");
-    axis = mainG.append("g");
-    label = mainG.append("text");
-    legend.setProperties();
-
-    made = true;
-  };
-
-  legend.setProperties = function() {
     var domain = scale.domain(),
         w = size / scale.range().length,
         step = (domain[1] - domain[0]) / scale.range().length,
         dom = d3.range(domain[0], domain[1] + step, step),
         axisScale = d3.scalePoint().range([0, size]).domain(dom).round(true);
 
-    mainG
-      .attr("transform","translate("+x+","+y+")");
+    el
+      .attr("class", "legend")
+      .attr("transform", "translate("+x+","+y+")");
 
-    rects
-      .attr("x", function(d,i) { return i * w; })
-      .attr("y", 0)
-      .attr("height", height)
-      .attr("width", w)
-      .attr("fill", function(d) { return d; });
+    var rect = el.selectAll("rect").data(scale.range())
+    
+    rect.enter()
+        .append("rect")
+      .merge(rect)
+        .attr("x", function(d,i) { return i * w; })
+        .attr("y", 0)
+        .attr("height", height)
+        .attr("width", w)
+        .attr("fill", function(d) { return d; });
 
+    var axis = el.select("g.legend > g");
+    if (axis.empty()) {
+      axis = el.append("g");
+    }
     axis
       .attr("transform", "translate(0, " + height + ")")
       .call(d3.axisBottom(axisScale).tickFormat(d3.format(fmat)));
 
+    var label = el.select("g.legend > text");
+    if (label.empty()) {
+      label = el.append("text");
+    }
     label
       .style("text-anchor", "middle")
       .style("font-size", 13)
       .attr("transform", "translate(" + (size / 2) + ", " + (height + 30) + ")")
       .text(title);
-  };
-
-  legend.unmake = function() {
-    if (!made) {
-      return false;
-    }
-
-    rects.remove("*");
-    axis.remove("*");
-    label.remove("*");
   };
 
   legend.title = function(t) {
@@ -83,9 +69,7 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
     else {
       title = t;
-      if(label) {
-        label.text(title);
-      }
+      legend.setProperties();
       return legend;
     }
   };
@@ -96,8 +80,7 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
     else {
       scale = s;
-      legend.unmake();
-      legend.make();
+      legend.setProperties();
       return legend;
     }
   };
@@ -108,8 +91,7 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
     else {
       size = s;
-      legend.unmake();
-      legend.make();
+      legend.setProperties();
       return legend;
     }
   };
@@ -120,8 +102,7 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
     else {
       height = h;
-      legend.unmake();
-      legend.make();
+      legend.setProperties();
       return legend;
     }
   };
@@ -132,8 +113,7 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
     else {
       fmat = f;
-      legend.unmake();
-      legend.make();
+      legend.setProperties();
       return legend;
     }
   };
@@ -144,7 +124,7 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
     else {
       x = nx;
-      mainG.attr("transform","translate("+x+","+y+")");
+      legend.setProperties();
       return legend;
     }
   };
@@ -155,26 +135,11 @@ export function simpleLegend(m_scale,m_size,m_svg,m_height,m_format,m_title,m_x,
     }
     else {
       y = ny;
-      mainG.attr("transform","translate("+x+","+y+")");
+      legend.setProperties();
       return legend;
     }
   };
 
-  legend.svg = function(newSvg) {
-    if(!arguments.length) {
-      return el;
-    }
-    else {
-      el = newSvg;
-      legend.unmake();
-      legend.make();
-      return legend;
-    }
-  }
-
-  if(scale) {
-    legend.make();
-  }
   return legend;
 };
 

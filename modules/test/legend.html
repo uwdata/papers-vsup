@@ -10,7 +10,7 @@
             }
         </style>
 
-        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="../node_modules/d3/build/d3.js"></script>
         <script src="../dist/bvu.js"></script>
     </head>
     <body>
@@ -30,16 +30,20 @@
                 .x(10)
                 .y(20);
 
+            d3.select("#vis")
+                .append("g")
+                .call(legend)
 
-            var data = [[0,0.1,0.2], [0.3,0.4,0.5],[0.6,0.7,0.8] ];
-            var hmap = bvu.heatmap()
-                .data(data)
-                .scale(d3.interpolateViridis)
-                .size(150)
-                .x(20)
-                .y(20);
+
+            // var data = [[0,0.1,0.2], [0.3,0.4,0.5],[0.6,0.7,0.8] ];
+            // var hmap = bvu.heatmap()
+            //     .data(data)
+            //     .scale(d3.interpolateViridis)
+            //     .size(150)
+            //     .x(20)
+            //     .y(20);
                 
-            var heatLegend = bvu.legend.heatmapLegend(hmap);
+            // var heatLegend = bvu.legend.heatmapLegend(hmap);
 
         </script>
     </body>
