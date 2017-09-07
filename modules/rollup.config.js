@@ -1,10 +1,12 @@
 import resolve from 'rollup-plugin-node-resolve';
 
 export default {
-  entry: 'src/index.js',
-  dest: 'dist/bvu.js',
-  moduleName: 'bvu',
-  format: 'iife',
+  input: 'src/index.js',
+  output: {
+    file: 'dist/bvu.js', 
+    format: 'iife'
+  },
+  name: 'bvu',
   plugins: [
     resolve()
   ]
