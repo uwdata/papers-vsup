@@ -3,11 +3,11 @@
 */
 import * as d3 from "d3";
 
-import {simpleHeatmap, simpleArcmap} from './heatmap';
+import {simpleHeatmap, simpleArcmap} from "./heatmap";
 
 var epsylon = 0.0001;
 
-export function simpleLegend(m_scale,m_size,m_height,m_format,m_title,m_x,m_y) {
+export function simpleLegend(m_scale, m_size, m_height, m_format, m_title, m_x, m_y) {
   var el = null,
       title = m_title,
       scale = m_scale ? m_scale : null,
@@ -35,14 +35,14 @@ export function simpleLegend(m_scale,m_size,m_height,m_format,m_title,m_x,m_y) {
 
     el
       .attr("class", "legend")
-      .attr("transform", "translate("+x+","+y+")");
+      .attr("transform", "translate(" + x + "," + y + ")");
 
     var rect = el.selectAll("rect").data(scale.range())
     
     rect.enter()
         .append("rect")
       .merge(rect)
-        .attr("x", function(d,i) { return i * w; })
+        .attr("x", function(d, i) { return i * w; })
         .attr("y", 0)
         .attr("height", height)
         .attr("width", w)
@@ -68,7 +68,7 @@ export function simpleLegend(m_scale,m_size,m_height,m_format,m_title,m_x,m_y) {
   };
 
   legend.title = function(t) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return title;
     }
     else {
@@ -79,7 +79,7 @@ export function simpleLegend(m_scale,m_size,m_height,m_format,m_title,m_x,m_y) {
   };
 
   legend.scale = function(s) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return scale;
     }
     else {
@@ -90,7 +90,7 @@ export function simpleLegend(m_scale,m_size,m_height,m_format,m_title,m_x,m_y) {
   };
 
   legend.size = function(s) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return size;
     }
     else {
@@ -101,7 +101,7 @@ export function simpleLegend(m_scale,m_size,m_height,m_format,m_title,m_x,m_y) {
   };
 
   legend.height = function(h) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return height;
     }
     else {
@@ -112,7 +112,7 @@ export function simpleLegend(m_scale,m_size,m_height,m_format,m_title,m_x,m_y) {
   };
 
   legend.format = function(f) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return fmat;
     }
     else {
@@ -123,7 +123,7 @@ export function simpleLegend(m_scale,m_size,m_height,m_format,m_title,m_x,m_y) {
   };
 
   legend.x = function(nx) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return x;
     }
     else {
@@ -134,7 +134,7 @@ export function simpleLegend(m_scale,m_size,m_height,m_format,m_title,m_x,m_y) {
   };
 
   legend.y = function(ny) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return y;
     }
     else {
@@ -145,9 +145,9 @@ export function simpleLegend(m_scale,m_size,m_height,m_format,m_title,m_x,m_y) {
   };
 
   return legend;
-};
+}
 
-export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,m_y) {
+export function heatmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitle, m_x, m_y) {
   var el = null,
     utitle = m_utitle ? m_utitle : "Uncertainty",
     vtitle = m_vtitle ? m_vtitle : "Value",
@@ -157,7 +157,7 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
     x = m_x ? m_x : 0,
     y = m_y ? m_y : 0;
 
-  var heatmap = simpleHeatmap(data,m_scale,m_size,null,0,0);
+  var heatmap = simpleHeatmap(data, m_scale, m_size, null, 0, 0);
 
   var legend = function(nel) {
     el = nel;
@@ -177,7 +177,7 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
 
     el
       .attr("class", "legend")
-      .attr("transform", "translate("+x+","+y+")");
+      .attr("transform", "translate(" + x + "," + y + ")");
 
     var uStep = 1 / data.length;
     var uDom = d3.range(0, 1 + uStep - epsylon, uStep);
@@ -210,7 +210,7 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
   };
 
   legend.data = function(newData) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return data;
     }
     else {
@@ -221,7 +221,7 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
   };
 
   legend.scale = function(s) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return scale;
     }
     else {
@@ -232,7 +232,7 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
   };
 
   legend.size = function(s) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return size;
     }
     else {
@@ -243,7 +243,7 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
   };
 
   legend.format = function(f) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return fmat;
     }
     else {
@@ -254,7 +254,7 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
   };
 
   legend.x = function(nx) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return x;
     }
     else {
@@ -265,7 +265,7 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
   };
 
   legend.y = function(ny) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return y;
     }
     else {
@@ -276,7 +276,7 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
   };
 
   legend.utitle = function(t) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return utitle;
     }
     else {
@@ -287,7 +287,7 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
   };
 
   legend.vtitle = function(t) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return vtitle;
     }
     else {
@@ -298,10 +298,10 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
   };
 
   return legend;
-};
+}
 
 
-export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,m_y) {
+export function arcmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitle, m_x, m_y) {
   var el = null,
     utitle = m_utitle ? m_utitle : "Uncertainty",
     vtitle = m_vtitle ? m_vtitle : "Value",
@@ -311,7 +311,7 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
     x = m_x ? m_x : 0,
     y = m_y ? m_y : 0;
 
-  var arcmap = simpleArcmap(data,m_scale,m_size,null,0,0);
+  var arcmap = simpleArcmap(data, m_scale, m_size, null, 0, 0);
 
   var legend = function(nel) {
     el = nel;
@@ -331,14 +331,14 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
 
     el
       .attr("class", "legend")
-      .attr("transform", "translate("+x+","+y+")");
+      .attr("transform", "translate(" + x + "," + y + ")");
 
     var uStep = 1 / data.length;
     var uDom = d3.range(0, 1 + uStep - epsylon, uStep);
 
     var uAxis = d3.scalePoint().range([0, size]).domain(uDom);
 
-    var px = size/180;
+    var px = size / 180;
     el.append("g")
       .attr("transform", "translate(" + (size + 6 * px) + "," + (28 * px) + ")rotate(30)")
       .call(d3.axisRight(uAxis).tickFormat(d3.format(fmat)));
@@ -350,7 +350,7 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
       .text(utitle);
 
 
-    var vStep = 1/data.length;
+    var vStep = 1 / data.length;
     var vTicks = d3.range(0, 1 + vStep - epsylon, vStep);
 
     var angle = d3.scaleLinear()
@@ -362,8 +362,8 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
     var myArc = d3.arc()
       .innerRadius(size + offset)
       .outerRadius(size + offset + 1)
-      .startAngle(-Math.PI/6)
-      .endAngle(Math.PI/6);
+      .startAngle(-Math.PI / 6)
+      .endAngle(Math.PI / 6);
 
     var arcAxis = el.append("g")
       .attr("transform", "translate(" + (size / 2) + "," + (size - offset) + ")");
@@ -396,13 +396,13 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
     el.append("text")
       .style("text-anchor", "middle")
       .style("font-size", 13)
-      .attr("x", size/2)
+      .attr("x", size / 2)
       .attr("y", -30)
       .text(vtitle);
   };
 
   legend.data = function(newData) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return data;
     }
     else {
@@ -413,7 +413,7 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
   };
 
   legend.scale = function(s) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return scale;
     }
     else {
@@ -424,7 +424,7 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
   };
 
   legend.size = function(s) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return size;
     }
     else {
@@ -435,7 +435,7 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
   };
 
   legend.format = function(f) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return fmat;
     }
     else {
@@ -446,7 +446,7 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
   };
 
   legend.x = function(nx) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return x;
     }
     else {
@@ -457,7 +457,7 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
   };
 
   legend.y = function(ny) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return y;
     }
     else {
@@ -468,7 +468,7 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
   };
 
   legend.utitle = function(t) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return utitle;
     }
     else {
@@ -479,7 +479,7 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
   };
 
   legend.vtitle = function(t) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return vtitle;
     }
     else {
@@ -490,4 +490,4 @@ export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,
   };
 
   return legend;
-};
+}

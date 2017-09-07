@@ -3,10 +3,10 @@ A lightweight factory for making d3 heatmaps.
 */
 import * as d3 from "d3";
 
-export function simpleHeatmap(data,m_scale,m_size,m_id,m_x,m_y) {
+export function simpleHeatmap(data, m_scale, m_size, m_id, m_x, m_y) {
   var x = m_x ? m_x : 0,
     y = m_y ? m_y : 0,
-    size = m_size ? m_size: 0,
+    size = m_size ? m_size : 0,
     scale = m_scale ? m_scale : function(){ return "#fff"; },
     id = m_id,
     h;
@@ -21,55 +21,55 @@ export function simpleHeatmap(data,m_scale,m_size,m_id,m_x,m_y) {
       return;
     }
 
-    if(!heatmap.svgGroup) {
+    if (!heatmap.svgGroup) {
       heatmap.svgGroup = heatmap.el.append("g");
     }
 
-    heatmap.svgGroup.attr("transform", "translate("+x+","+y+")");
+    heatmap.svgGroup.attr("transform", "translate(" + x + "," + y + ")");
 
     heatmap.svgGroup.selectAll("g")
       .data(data)
       .enter()
       .append("g")
       .selectAll("rect")
-        .data(function(d,i) {
+        .data(function(d, i) {
           return d.map(function(val) {
             return {r:i, v:val};
           });
         })
         .enter()
         .append("rect")
-        .datum(function(d,i){
+        .datum(function(d, i){
           d.c = i;
           return d;
         });
 
     heatmap.svgGroup.selectAll("g").selectAll("rect")
-      .attr("x", function(d){ return (size/data[d.r].length)*d.c;})
-      .attr("y", function(d){ return d.r*h;})
-      .attr("width", function(d){ return (size/data[d.r].length);})
+      .attr("x", function(d){ return (size / data[d.r].length) * d.c;})
+      .attr("y", function(d){ return d.r * h;})
+      .attr("width", function(d){ return (size / data[d.r].length);})
       .attr("height", h)
       .attr("fill", function(d){ return scale(d.v);});
 
-    if(id) {
-      arcmap.svgGroup.attr("id",id);
+    if (id) {
+      heatmap.svgGroup.attr("id", id);
     }
   };
 
   heatmap.data = function(newData) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return data;
     }
     else {
       data = newData;
-      h = size/data.length;
+      h = size / data.length;
       heatmap.setProperties();
       return heatmap;
     }
   };
 
   heatmap.x = function(newX) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return x;
     }
     else {
@@ -80,7 +80,7 @@ export function simpleHeatmap(data,m_scale,m_size,m_id,m_x,m_y) {
   };
 
   heatmap.y = function(newY) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return y;
     }
     else {
@@ -91,13 +91,13 @@ export function simpleHeatmap(data,m_scale,m_size,m_id,m_x,m_y) {
   };
 
   heatmap.size = function(newSize) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return size;
     }
     else {
       size = newSize;
       if (data) {
-        h = size/data.length;
+        h = size / data.length;
         heatmap.setProperties();
       }
       return heatmap;
@@ -105,12 +105,12 @@ export function simpleHeatmap(data,m_scale,m_size,m_id,m_x,m_y) {
   };
 
   heatmap.scale = function(newScale) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return scale;
     }
     else {
       scale = newScale;
-      if(data) {
+      if (data) {
         heatmap.setProperties();
       }
       return heatmap;
@@ -118,7 +118,7 @@ export function simpleHeatmap(data,m_scale,m_size,m_id,m_x,m_y) {
   };
 
   heatmap.id = function(newId) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return id;
     }
     else {
@@ -131,18 +131,18 @@ export function simpleHeatmap(data,m_scale,m_size,m_id,m_x,m_y) {
   return heatmap;
 }
 
-export function simpleArcmap(data,m_scale,m_size,m_id,m_x,m_y) {
-  var arcmap = simpleHeatmap(data,m_scale,m_size,m_id,m_x,m_y);
+export function simpleArcmap(data, m_scale, m_size, m_id, m_x, m_y) {
+  var arcmap = simpleHeatmap(data, m_scale, m_size, m_id, m_x, m_y);
 
-  function makeArc(d,size,rows,cols) {
-    var angle = d3.scaleLinear().domain([0,cols]).range([-Math.PI/6,Math.PI/6]);
-    var radius = d3.scaleLinear().domain([0,rows]).range([size,0]);
+  function makeArc(d, size, rows, cols) {
+    var angle = d3.scaleLinear().domain([0, cols]).range([-Math.PI / 6, Math.PI / 6]);
+    var radius = d3.scaleLinear().domain([0, rows]).range([size, 0]);
 
     var arcPath = d3.arc()
-      .innerRadius(radius(d.r+1))
+      .innerRadius(radius(d.r + 1))
       .outerRadius(radius(d.r))
       .startAngle(angle(d.c))
-      .endAngle(angle(d.c+1));
+      .endAngle(angle(d.c + 1));
 
     return arcPath();
   }
@@ -159,36 +159,36 @@ export function simpleArcmap(data,m_scale,m_size,m_id,m_x,m_y) {
       return;
     }
 
-    if(!arcmap.svgGroup) {
+    if (!arcmap.svgGroup) {
       arcmap.svgGroup = arcmap.el.append("g");
     }
 
-    arcmap.svgGroup.attr("transform", "translate("+x+","+y+")");
+    arcmap.svgGroup.attr("transform", "translate(" + x + "," + y + ")");
 
     arcmap.svgGroup.selectAll("g")
       .data(data)
       .enter()
       .append("g")
       .selectAll("path")
-        .data(function(d,i){
+        .data(function(d, i){
           return d.map(function(val){
             return {r:i, v:val};
           });
         })
         .enter()
         .append("path")
-        .datum(function(d,i){
+        .datum(function(d, i){
           d.c = i;
           return d;
         });
 
         arcmap.svgGroup.selectAll("g").selectAll("path")
-      .attr("transform","translate("+(size/2.0)+","+size+")")
-      .attr("d", function(d){ return makeArc(d,size,data.length,data[d.r].length);})
+      .attr("transform", "translate(" + (size / 2.0) + "," + size + ")")
+      .attr("d", function(d){ return makeArc(d, size, data.length, data[d.r].length);})
       .attr("fill", function(d){ return scale(d.v);});
 
     if (id) {
-      arcmap.svgGroup.attr("id",id);
+      arcmap.svgGroup.attr("id", id);
     }
   };
 

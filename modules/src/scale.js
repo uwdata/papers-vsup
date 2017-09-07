@@ -6,25 +6,23 @@ As uncertainty increases, the number of quantization bins decreases.
 
 export function squareScale(m_n) {
   var n = m_n,
-      uscale,
-      vscale,
       matrix = makeMatrix();
 
   function scale(value, uncertainty) {
-    var u = uncertainty!=undefined ? uncertainty : value.u,
-        v = uncertainty!=undefined ? value : value.v,
+    var u = uncertainty != undefined ? uncertainty : value.u,
+        v = uncertainty != undefined ? value : value.v,
         i = 0;
 
     //find the right layer of the tree, based on uncertainty
-    while(i<matrix.length-1 && u < 1 - ((i+1)/n)){
+    while (i < matrix.length - 1 && u < 1 - ((i + 1) / n)){
       i++;
     }
 
     //find right leaf of tree, based on value
-    var vgap = (matrix[i].length>1) ? (matrix[i][1].v - matrix[i][0].v) / 2 : 0,
+    var vgap = (matrix[i].length > 1) ? (matrix[i][1].v - matrix[i][0].v) / 2 : 0,
         j = 0;
 
-    while(j<(matrix[i].length-1) && v > matrix[i][j].v+vgap){
+    while (j < (matrix[i].length - 1) && v > matrix[i][j].v + vgap){
       j++;
     }
 
@@ -34,25 +32,25 @@ export function squareScale(m_n) {
   function makeMatrix() {
     var matrix = [];
 
-    for(var i = 0;i<n;i++){
+    for (var i = 0;i < n;i++){
       matrix[i] = [];
-      for(var j = 1;j<(2*n);j+=2){
-        matrix[i].push({ u: 1 - ((i+1)/n), v: (j/(2*n))});
+      for (var j = 1;j < (2 * n);j += 2){
+        matrix[i].push({ u: 1 - ((i + 1) / n), v: (j / (2 * n))});
       }
     }
 
     return matrix;
   }
 
-  scale.range = function(newRange) {
-    return [].concat.apply([],matrix);
+  scale.range = function() {
+    return [].concat.apply([], matrix);
   }
 
   scale.n = function(newN) {
-      if(!arguments.length) {
+      if (!arguments.length) {
         return n;
       }
-      else{
+      else {
         n = newN;
         matrix = makeMatrix();
         return scale;
@@ -66,26 +64,26 @@ export function squareScale(m_n) {
   return scale;
 }
 
-export function treeScale(branchingFactor,treeLayers) {
+export function treeScale(branchingFactor, treeLayers) {
   var branch = branchingFactor ? branchingFactor : 2,
       layers = treeLayers ? treeLayers : 2,
       tree = makeTree();
 
-  function scale(value,uncertainty) {
-    var u = uncertainty!=undefined ? uncertainty : value.u,
-        v = uncertainty!=undefined ? value : value.v,
+  function scale(value, uncertainty) {
+    var u = uncertainty != undefined ? uncertainty : value.u,
+        v = uncertainty != undefined ? value : value.v,
         i = 0;
 
     //find the right layer of the tree, based on uncertainty
-    while(i<tree.length-1 && u < 1 - ((i+1)/layers)){
+    while (i < tree.length - 1 && u < 1 - ((i + 1) / layers)){
       i++;
     }
 
     //find right leaf of tree, based on value
-    var vgap = (tree[i].length>1) ? (tree[i][1].v - tree[i][0].v) / 2 : 0,
+    var vgap = (tree[i].length > 1) ? (tree[i][1].v - tree[i][0].v) / 2 : 0,
         j = 0;
 
-    while(j<(tree[i].length-1) && v > tree[i][j].v+vgap){
+    while (j < (tree[i].length - 1) && v > tree[i][j].v + vgap){
       j++;
     }
 
@@ -99,13 +97,13 @@ export function treeScale(branchingFactor,treeLayers) {
         n;
 
     tree[0] = [];
-    tree[0].push({u: ( (layers-1) /layers), v: 0.5});
+    tree[0].push({u: ( (layers - 1) / layers), v: 0.5});
 
-    for(var i = 1;i<layers;i++){
+    for (var i = 1;i < layers;i++){
       tree[i] = [];
-      n = 2*Math.pow(branch,i);
-      for(var j = 1;j<n;j+=2){
-        tree[i].push({ u: 1 - ((i+1)/layers), v: (j/n)});
+      n = 2 * Math.pow(branch, i);
+      for (var j = 1;j < n;j += 2){
+        tree[i].push({ u: 1 - ((i + 1) / layers), v: (j / n)});
       }
     }
     return tree;
@@ -116,29 +114,29 @@ export function treeScale(branchingFactor,treeLayers) {
   }
 
   scale.branching = function(newbranch) {
-      if(!arguments.length) {
+      if (!arguments.length) {
         return branch;
       }
-      else{
-        branch = Math.max(1,newbranch);
+      else {
+        branch = Math.max(1, newbranch);
         tree = makeTree();
         return scale;
       }
   }
 
   scale.layers = function(newlayers) {
-    if(!arguments.length) {
+    if (!arguments.length) {
       return layers;
     }
-    else{
-      layers = Math.max(1,newlayers);
+    else {
+      layers = Math.max(1, newlayers);
       tree = makeTree();
       return scale;
     }
   }
 
   scale.range = function() {
-    return [].concat.apply([],tree);
+    return [].concat.apply([], tree);
   }
 
   return scale;
