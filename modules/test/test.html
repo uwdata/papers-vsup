@@ -39,6 +39,7 @@
         svg.append("g").call(arclegend);
         var heatlegend = bvu.heatmap().size(150).scale(imap).data(legendData).x(150);
         svg.append("g").call(heatlegend);
+        
         var iarclegend = bvu.arcmap().size(150).scale(smap).data(iLegendData).x(325);
         svg.append("g").call(iarclegend);
         var iheatlegend = bvu.heatmap().size(150).scale(smap).data(iLegendData).x(475);
