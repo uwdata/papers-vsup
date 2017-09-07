@@ -299,3 +299,195 @@ export function heatmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x
 
   return legend;
 };
+
+
+export function arcmapLegend(data,m_scale,m_size,m_format,m_utitle,m_vtitle,m_x,m_y) {
+  var el = null,
+    utitle = m_utitle ? m_utitle : "Uncertainty",
+    vtitle = m_vtitle ? m_vtitle : "Value",
+    scale = m_scale ? m_scale : null,
+    size = m_size ? m_size : 200,
+    fmat = m_format ? m_format : ".2f",
+    x = m_x ? m_x : 0,
+    y = m_y ? m_y : 0;
+
+  var arcmap = simpleArcmap(data,m_scale,m_size,null,0,0);
+
+  var legend = function(nel) {
+    el = nel;
+    legend.setProperties();
+
+    el.call(arcmap);
+  }
+
+  legend.setProperties = function() {
+    if (!el) {
+      return;
+    }
+
+    arcmap.data(data);
+    arcmap.scale(scale);
+    arcmap.size(size);
+
+    el
+      .attr("class", "legend")
+      .attr("transform", "translate("+x+","+y+")");
+
+    var uStep = 1 / data.length;
+    var uDom = d3.range(0, 1 + uStep - epsylon, uStep);
+
+    var uAxis = d3.scalePoint().range([0, size]).domain(uDom);
+
+    var px = size/180;
+    el.append("g")
+      .attr("transform", "translate(" + (size + 6 * px) + "," + (28 * px) + ")rotate(30)")
+      .call(d3.axisRight(uAxis).tickFormat(d3.format(fmat)));
+
+    el.append("text")
+      .style("text-anchor", "middle")
+      .style("font-size", 13)
+      .attr("transform", "translate(" + (size + 10 * px) + "," + (40 * px + size / 2) + ")rotate(-60)")
+      .text(utitle);
+
+
+    var vStep = 1/data.length;
+    var vTicks = d3.range(0, 1 + vStep - epsylon, vStep);
+
+    var angle = d3.scaleLinear()
+      .domain([vTicks[0], vTicks[vTicks.length - 1]])
+      .range([-30, 30]);
+  
+    var offset = 3 * px;
+  
+    var myArc = d3.arc()
+      .innerRadius(size + offset)
+      .outerRadius(size + offset + 1)
+      .startAngle(-Math.PI/6)
+      .endAngle(Math.PI/6);
+
+    var arcAxis = el.append("g")
+      .attr("transform", "translate(" + (size / 2) + "," + (size - offset) + ")");
+  
+    arcAxis.append("path")
+      .attr("fill", "black")
+      .attr("stroke", "transparent")
+      .attr("d", myArc);
+  
+    var labelEnter = arcAxis.selectAll(".arc-label").data(vTicks).enter()
+      .append("g")
+        .attr("class", "arc-label")
+        .attr("transform", function(d) {
+          return "rotate(" + angle(d) + ")translate(" + 0 + "," + (-size - offset) + ")";
+        })
+  
+    labelEnter.append("text")
+      .style("font-size", "11")
+      .style("text-anchor", "middle")
+      .attr("y", -10)
+      .text(d3.format(".1f"));
+  
+    labelEnter.append("line")
+      .attr("x1", 0.5)
+      .attr("x2", 0.5)
+      .attr("y1", -6)
+      .attr("y2", 0)
+      .attr("stroke", "#000");
+  
+    el.append("text")
+      .style("text-anchor", "middle")
+      .style("font-size", 13)
+      .attr("x", size/2)
+      .attr("y", -30)
+      .text(vtitle);
+  };
+
+  legend.data = function(newData) {
+    if(!arguments.length) {
+      return data;
+    }
+    else {
+      data = newData;
+      legend.setProperties();
+      return legend;
+    }
+  };
+
+  legend.scale = function(s) {
+    if(!arguments.length) {
+      return scale;
+    }
+    else {
+      scale = s;
+      legend.setProperties();
+      return legend;
+    }
+  };
+
+  legend.size = function(s) {
+    if(!arguments.length) {
+      return size;
+    }
+    else {
+      size = s;
+      legend.setProperties();
+      return legend;
+    }
+  };
+
+  legend.format = function(f) {
+    if(!arguments.length) {
+      return fmat;
+    }
+    else {
+      fmat = f;
+      legend.setProperties();
+      return legend;
+    }
+  };
+
+  legend.x = function(nx) {
+    if(!arguments.length) {
+      return x;
+    }
+    else {
+      x = nx;
+      legend.setProperties();
+      return legend;
+    }
+  };
+
+  legend.y = function(ny) {
+    if(!arguments.length) {
+      return y;
+    }
+    else {
+      y = ny;
+      legend.setProperties();
+      return legend;
+    }
+  };
+
+  legend.utitle = function(t) {
+    if(!arguments.length) {
+      return utitle;
+    }
+    else {
+      utitle = t;
+      legend.setProperties();
+      return legend;
+    }
+  };
+
+  legend.vtitle = function(t) {
+    if(!arguments.length) {
+      return vtitle;
+    }
+    else {
+      vtitle = t;
+      legend.setProperties();
+      return legend;
+    }
+  };
+
+  return legend;
+};

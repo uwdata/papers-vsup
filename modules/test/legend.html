@@ -18,7 +18,7 @@
 
         <script>
             var svg = d3.select("#vis");
-            svg.attr("width",300).attr("height",600);
+            svg.attr("width",400).attr("height",800);
 
             var color = d3.scaleQuantize()
                 .domain([0, 1])
@@ -44,11 +44,23 @@
                 .scale(d3.interpolateViridis)
                 .size(150)
                 .x(60)
-                .y(140);
+                .y(160);
 
             svg
                 .append("g")
                 .call(heatLegend);
+
+
+            var arcLegend = bvu.legend.arcmapLegend()
+                .data(data)
+                .scale(d3.interpolateViridis)
+                .size(150)
+                .x(60)
+                .y(380);
+
+            svg
+                .append("g")
+                .call(arcLegend);
         </script>
     </body>
 </html>
