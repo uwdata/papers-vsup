@@ -1,16 +1,17 @@
 import * as d3 from "d3";
 
-export function continuousSquare(m_el,m_size,m_scale){
-  var el = m_el,
-  size = m_size,
-  scale = m_scale,
-  pixelScale,
-  context,
-  canvas,
-  made = false;
+export function continuousSquare(m_size,m_scale){
+  var el = null,
+    size = m_size,
+    scale = m_scale,
+    pixelScale,
+    context,
+    canvas;
 
-  var square = {};
-
+  function square(nel) {
+    el = nel;
+    square.make();
+  }
 
   square.makePixelData = function() {
       var pixelData = [];
@@ -31,12 +32,8 @@ export function continuousSquare(m_el,m_size,m_scale){
   }
 
   square.make = function() {
-    if(!scale) {
+    if (!el) {
       return;
-    }
-
-    if(!el) {
-      el = d3.select("body");
     }
 
     if(!canvas) {
@@ -51,7 +48,6 @@ export function continuousSquare(m_el,m_size,m_scale){
     context = cnode.getContext("2d");
 
     square.setPixels();
-    made = true;
   }
 
   square.setPixels = function() {
@@ -66,7 +62,7 @@ export function continuousSquare(m_el,m_size,m_scale){
     }
     else {
       size = newSize;
-      if(made) {
+      if(canvas) {
         canvas
           .attr("width",size)
           .attr("height",size);
@@ -83,7 +79,7 @@ export function continuousSquare(m_el,m_size,m_scale){
     }
     else {
       scale = newScale;
-      if(made) {
+      if(canvas) {
         square.setPixels();
       }
       else {
@@ -93,12 +89,11 @@ export function continuousSquare(m_el,m_size,m_scale){
     }
   }
 
-  square.make();
   return square;
 }
 
-export function continuousArc(m_el,m_size,m_scale) {
-  var arc = continuousSquare(m_el,m_size,m_scale);
+export function continuousArc(m_size,m_scale) {
+  var arc = continuousSquare(m_size,m_scale);
 
   arc.makePixelData = function() {
     var pixelData = [];
@@ -132,6 +127,5 @@ export function continuousArc(m_el,m_size,m_scale) {
     return pixelData;
   }
 
-  arc.make();
   return arc;
 }

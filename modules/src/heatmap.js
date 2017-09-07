@@ -3,51 +3,60 @@ A lightweight factory for making d3 heatmaps.
 */
 import * as d3 from "d3";
 
-export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
-  var svg = m_svg,
-  x = m_x ? m_x : 0,
-  y = m_y ? m_y : 0,
-  size = m_size ? m_size: 0,
-  scale = m_scale ? m_scale : function(){ return "#fff"; },
-  name = m_name;
+export function simpleHeatmap(data,m_scale,m_size,m_id,m_x,m_y) {
+  var el = null,
+    x = m_x ? m_x : 0,
+    y = m_y ? m_y : 0,
+    size = m_size ? m_size: 0,
+    scale = m_scale ? m_scale : function(){ return "#fff"; },
+    id = m_id,
+    svgGroup = null,
+    h;
 
-  var h;
-  var heatmap = {};
+  function heatmap(nel) {
+    el = nel;
+    heatmap.setProperties();
+  }
+  
+  heatmap.setProperties = function() {
+    if (!el) {
+      return;
+    }
 
-  heatmap.make = function() {
-    if(data){
-      if(!svg) {
-        svg = d3.select("body").append("svg");
-      }
+    if(!this.svgGroup) {
+      svgGroup = el.append("g");
+    }
 
-      if(!this.svgGroup) {
-        this.svgGroup = svg.append("g")
-          .attr("transform","translate("+x+","+y+")");
-      }
+    svgGroup.attr("transform", "translate("+x+","+y+")");
 
-      this.svgGroup.selectAll("g")
-        .data(data)
+    svgGroup.selectAll("g")
+      .data(data)
+      .enter()
+      .append("g")
+      .selectAll("rect")
+        .data(function(d,i) {
+          return d.map(function(val) {
+            return {r:i, v:val};
+          });
+        })
         .enter()
-        .append("g")
-        .selectAll("rect")
-          .data(function(d,i){ return d.map(function(val){ return {r:i, v:val};});})
-          .enter()
-          .append("rect")
-          .datum(function(d,i){ d.c = i; return d; });
+        .append("rect")
+        .datum(function(d,i){
+          d.c = i;
+          return d;
+        });
 
-      heatmap.setProperties();
+    svgGroup.selectAll("g").selectAll("rect")
+      .attr("x", function(d){ return (size/data[d.r].length)*d.c;})
+      .attr("y", function(d){ return d.r*h;})
+      .attr("width", function(d){ return (size/data[d.r].length);})
+      .attr("height", h)
+      .attr("fill", function(d){ return scale(d.v);});
 
-      if(name) {
-        this.svgGroup.attr("id",name);
-      }
+    if(id) {
+      svgGroup.attr("id",id);
     }
   };
-
-  heatmap.unmake = function() {
-    if(this.svgGroup) {
-      this.svgGroup.selectAll("g").remove("*");
-    }
-  }
 
   heatmap.data = function(newData) {
     if(!arguments.length) {
@@ -56,20 +65,7 @@ export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
     else {
       data = newData;
       h = size/data.length;
-      heatmap.unmake();
-      heatmap.make();
-      return heatmap;
-    }
-  };
-
-  heatmap.svg = function(newSvg) {
-    if(!arguments.length) {
-      return svg;
-    }
-    else {
-      svg = newSvg;
-      heatmap.unmake();
-      heatmap.make();
+      heatmap.setProperties();
       return heatmap;
     }
   };
@@ -80,9 +76,7 @@ export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
     }
     else {
       x = newX;
-      if(this.svgGroup){
-        this.svgGroup.attr("transform","translate("+x+","+y+")");
-      }
+      heatmap.setProperties();
       return heatmap;
     }
   };
@@ -93,9 +87,7 @@ export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
     }
     else {
       y = newY;
-      if(this.svgGroup) {
-        this.svgGroup.attr("transform","translate("+x+","+y+")");
-      }
+      heatmap.setProperties();
       return heatmap;
     }
   };
@@ -106,7 +98,7 @@ export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
     }
     else {
       size = newSize;
-      if(data) {
+      if (data) {
         h = size/data.length;
         heatmap.setProperties();
       }
@@ -127,36 +119,29 @@ export function simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
     }
   };
 
-  heatmap.name = function(newName) {
+  heatmap.id = function(newId) {
     if(!arguments.length) {
-      return name;
+      return id;
     }
     else {
-      name = newName;
-      if(this.svgGroup) {
-        this.svgGroup.attr("id",name);
-      }
+      id = newId;
+      heatmap.setProperties();
       return heatmap;
     }
   };
 
-  heatmap.setProperties= function() {
-    this.svgGroup.selectAll("g").selectAll("rect")
-      .attr("x", function(d){ return (size/data[d.r].length)*d.c;})
-      .attr("y", function(d){ return d.r*h;})
-      .attr("width",function(d){ return (size/data[d.r].length);})
-      .attr("height",h)
-      .attr("fill", function(d){ return scale(d.v);});
-  };
-
-  if(data) {
-    heatmap.make();
-  }
   return heatmap;
 }
 
-export function simpleArcmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
-  var hmap = simpleHeatmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y);
+export function simpleArcmap(data,m_scale,m_size,m_id,m_x,m_y) {
+  var el = null,
+    x = m_x ? m_x : 0,
+    y = m_y ? m_y : 0,
+    size = m_size ? m_size: 0,
+    scale = m_scale ? m_scale : function(){ return "#fff"; },
+    id = m_id,
+    svgGroup = null,
+    h;
 
   function makeArc(d,size,rows,cols) {
     var angle = d3.scaleLinear().domain([0,cols]).range([-Math.PI/6,Math.PI/6]);
@@ -171,45 +156,120 @@ export function simpleArcmap(data,m_scale,m_size,m_svg,m_name,m_x,m_y) {
     return arcPath();
   }
 
-  hmap.make = function() {
-    if(hmap.data()) {
-      if(!hmap.svg()){
-        hmap.svg(d3.select("body").append("svg"));
-      }
+  function arcmap(nel) {
+    el = nel;
+    arcmap.setProperties();
+  }
 
-      if(!hmap.svgGroup) {
-        hmap.svgGroup = svg.append("g")
-          .attr("transform","translate("+hmap.x()+","+hmap.y()+")");
-      }
-
-      hmap.svgGroup.selectAll("g")
-        .data(hmap.data())
-        .enter()
-        .append("g")
-        .selectAll("path")
-          .data(function(d,i){ return d.map(function(val){ return {r:i, v:val};});})
-          .enter()
-          .append("path")
-          .datum(function(d,i){ d.c = i; return d; });
-
-      hmap.setProperties();
-
-      if(hmap.name()) {
-        hmap.svgGroup.attr("id",hmap.name());
-      }
+  arcmap.setProperties = function() {
+    if (!el) {
+      return;
     }
-  }
 
-  hmap.setProperties = function() {
-    hmap.svgGroup.attr("transform","translate("+hmap.x()+","+hmap.y()+")");
-    hmap.svgGroup.selectAll("g").selectAll("path")
-    .attr("transform","translate("+(hmap.size()/2.0)+","+hmap.size()+")")
-    .attr("d", function(d){ return makeArc(d,hmap.size(),hmap.data().length,hmap.data()[d.r].length);})
-    .attr("fill", function(d){ return hmap.scale()(d.v);});
-  }
+    if(!this.svgGroup) {
+      svgGroup = el.append("g");
+    }
 
-  if(hmap.data()) {
-    hmap.make();
-  }
-  return hmap;
+    svgGroup.attr("transform", "translate("+x+","+y+")");
+
+    svgGroup.selectAll("g")
+      .data(data)
+      .enter()
+      .append("g")
+      .selectAll("path")
+        .data(function(d,i){
+          return d.map(function(val){
+            return {r:i, v:val};
+          });
+        })
+        .enter()
+        .append("path")
+        .datum(function(d,i){
+          d.c = i;
+          return d;
+        });
+
+    svgGroup.selectAll("g").selectAll("path")
+      .attr("transform","translate("+(size/2.0)+","+size+")")
+      .attr("d", function(d){ return makeArc(d,size,data.length,data[d.r].length);})
+      .attr("fill", function(d){ return scale(d.v);});
+
+    if(id) {
+      svgGroup.attr("id",id);
+    }
+  };
+
+  arcmap.data = function(newData) {
+    if(!arguments.length) {
+      return data;
+    }
+    else {
+      data = newData;
+      h = size/data.length;
+      arcmap.setProperties();
+      return arcmap;
+    }
+  };
+
+  arcmap.x = function(newX) {
+    if(!arguments.length) {
+      return x;
+    }
+    else {
+      x = newX;
+      arcmap.setProperties();
+      return arcmap;
+    }
+  };
+
+  arcmap.y = function(newY) {
+    if(!arguments.length) {
+      return y;
+    }
+    else {
+      y = newY;
+      arcmap.setProperties();
+      return arcmap;
+    }
+  };
+
+  arcmap.size = function(newSize) {
+    if(!arguments.length) {
+      return size;
+    }
+    else {
+      size = newSize;
+      if (data) {
+        h = size/data.length;
+        arcmap.setProperties();
+      }
+      return arcmap;
+    }
+  };
+
+  arcmap.scale = function(newScale) {
+    if(!arguments.length) {
+      return scale;
+    }
+    else {
+      scale = newScale;
+      if(data) {
+        arcmap.setProperties();
+      }
+      return arcmap;
+    }
+  };
+
+  arcmap.id = function(newId) {
+    if(!arguments.length) {
+      return id;
+    }
+    else {
+      id = newId;
+      arcmap.setProperties();
+      return arcmap;
+    }
+  };
+
+  return arcmap;
 }
