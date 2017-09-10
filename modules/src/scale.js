@@ -74,12 +74,12 @@ export function treeScale(branchingFactor, treeLayers) {
         v = uncertainty != undefined ? value : value.v,
         i = 0;
 
-    //find the right layer of the tree, based on uncertainty
+    // find the right layer of the tree, based on uncertainty
     while (i < tree.length - 1 && u < 1 - ((i + 1) / layers)){
       i++;
     }
 
-    //find right leaf of tree, based on value
+    // find right leaf of tree, based on value
     var vgap = (tree[i].length > 1) ? (tree[i][1].v - tree[i][0].v) / 2 : 0,
         j = 0;
 

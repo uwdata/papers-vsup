@@ -35,15 +35,15 @@
           iLegendData[i] = temp[temp.length-i-1];
         }
 
-        var arclegend = bvu.arcmap().size(150).scale(imap).data(legendData);
-        svg.append("g").call(arclegend);
-        var heatlegend = bvu.heatmap().size(150).scale(imap).data(legendData).x(150);
-        svg.append("g").call(heatlegend);
+        var arcmap = bvu.arcmap().size(150).scale(imap).data(legendData);
+        svg.append("g").call(arcmap);
+        var heatmap = bvu.heatmap().size(150).scale(imap).data(legendData).x(150);
+        svg.append("g").call(heatmap);
         
-        var iarclegend = bvu.arcmap().size(150).scale(smap).data(iLegendData).x(325);
-        svg.append("g").call(iarclegend);
-        var iheatlegend = bvu.heatmap().size(150).scale(smap).data(iLegendData).x(475);
-        svg.append("g").call(iheatlegend);
+        var iarcmap = bvu.arcmap().size(150).scale(smap).data(iLegendData).x(325);
+        svg.append("g").call(iarcmap);
+        var iheatmap = bvu.heatmap().size(150).scale(smap).data(iLegendData).x(475);
+        svg.append("g").call(iheatmap);
 
         var n = 10;
         var randomData = [];
