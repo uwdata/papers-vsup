@@ -1,143 +1,92 @@
-/*
-A tree-like bivariate quantization scheme.
-As uncertainty increases, the number of quantization bins decreases.
-*/
+import * as d3 from "d3";
 
+// Returns a color, based on a bivariate data point,
+// a quantization function, and a color interpolator
+// can be extended to different modes (just saturation, say)
+export function simpleScale(m_mode, m_range, m_scale) {
+  var range = m_range,
+      scale = m_scale ? m_scale : function(v, u) {
+        var data = u != undefined ? {v:v, u:u} : {v:v.v, u:v.u};
+        return data;
+      },
+      mode = m_mode;
 
-export function squareScale(m_n) {
-  var n = m_n,
-      matrix = makeMatrix();
+  function CIEdist(color1, color2) {
+      var c1 = d3.lab(d3.color(color1)),
+          c2 = d3.lab(d3.color(color2));
+      return Math.sqrt(Math.pow( (c1.l - c2.l), 2) + Math.pow(c1.a - c2.a, 2) + Math.pow(c1.b - c2.b, 2));
+  }
 
-  function scale(value, uncertainty) {
-    var u = uncertainty != undefined ? uncertainty : value.u,
-        v = uncertainty != undefined ? value : value.v,
-        i = 0;
-
-    //find the right layer of the tree, based on uncertainty
-    while (i < matrix.length - 1 && u < 1 - ((i + 1) / n)){
-      i++;
+  function map(value, uncertainty) {
+    var data = scale(value, uncertainty);
+    var vcolor = range(data.v);
+    var uScale = d3.scaleLinear().domain([0, 1]).range([0.0, 1.0]);
+    switch (mode) {
+      case "usl":
+      default:
+        vcolor = d3.interpolateLab(vcolor, "#ddd")(uScale(data.u));
+      break;
     }
-
-    //find right leaf of tree, based on value
-    var vgap = (matrix[i].length > 1) ? (matrix[i][1].v - matrix[i][0].v) / 2 : 0,
-        j = 0;
-
-    while (j < (matrix[i].length - 1) && v > matrix[i][j].v + vgap){
-      j++;
-    }
-
-    return matrix[i][j];
+    return vcolor;
   }
 
-  function makeMatrix() {
-    var matrix = [];
+  map.colorList = function() {
+    return scale.range().map(map);
+  }
 
-    for (var i = 0;i < n;i++){
-      matrix[i] = [];
-      for (var j = 1;j < (2 * n);j += 2){
-        matrix[i].push({ u: 1 - ((i + 1) / n), v: (j / (2 * n))});
+  map.colorDists = function() {
+      var clist = this.colorList(),
+          matrix = new Array(clist.length),
+          minDist,
+          minPair = new Array(2),
+          dist;
+
+      for (var i = 0;i < matrix.length;i++) {
+        matrix[i] = new Array(clist.length);
+        for (var j = 0;j < matrix[i].length;j++) {
+          dist = CIEDist(clist[i], clist[j]);
+          matrix[i][j] = dist;
+          if (i != j && ((i == 0 && j == 1) || (dist < minDist))) {
+            minDist = dist;
+            minPair = [clist[i], clist[j]];
+          }
+        }
       }
-    }
 
-    return matrix;
-  }
+      matrix.minDist = minDist;
+      matrix.minPair = minPair;
+      return matrix;
+  };
 
-  scale.range = function() {
-    return [].concat.apply([], matrix);
-  }
-
-  scale.n = function(newN) {
-      if (!arguments.length) {
-        return n;
-      }
-      else {
-        n = newN;
-        matrix = makeMatrix();
-        return scale;
-      }
-  }
-
-  scale.matrix = function() {
-    return matrix;
-  }
-
-  return scale;
-}
-
-export function treeScale(branchingFactor, treeLayers) {
-  var branch = branchingFactor ? branchingFactor : 2,
-      layers = treeLayers ? treeLayers : 2,
-      tree = makeTree();
-
-  function scale(value, uncertainty) {
-    var u = uncertainty != undefined ? uncertainty : value.u,
-        v = uncertainty != undefined ? value : value.v,
-        i = 0;
-
-    // find the right layer of the tree, based on uncertainty
-    while (i < tree.length - 1 && u < 1 - ((i + 1) / layers)){
-      i++;
-    }
-
-    // find right leaf of tree, based on value
-    var vgap = (tree[i].length > 1) ? (tree[i][1].v - tree[i][0].v) / 2 : 0,
-        j = 0;
-
-    while (j < (tree[i].length - 1) && v > tree[i][j].v + vgap){
-      j++;
-    }
-
-    return tree[i][j];
-  }
-
-  function makeTree() {
-    // Our tree should be "squarish" - it should have about
-    // as many layers as leaves.
-    var tree = [],
-        n;
-
-    tree[0] = [];
-    tree[0].push({u: ( (layers - 1) / layers), v: 0.5});
-
-    for (var i = 1;i < layers;i++){
-      tree[i] = [];
-      n = 2 * Math.pow(branch, i);
-      for (var j = 1;j < n;j += 2){
-        tree[i].push({ u: 1 - ((i + 1) / layers), v: (j / n)});
-      }
-    }
-    return tree;
-  }
-
-  scale.tree = function() {
-    return tree;
-  }
-
-  scale.branching = function(newbranch) {
-      if (!arguments.length) {
-        return branch;
-      }
-      else {
-        branch = Math.max(1, newbranch);
-        tree = makeTree();
-        return scale;
-      }
-  }
-
-  scale.layers = function(newlayers) {
+  map.mode = function(newMode) {
     if (!arguments.length) {
-      return layers;
+      return mode;
     }
     else {
-      layers = Math.max(1, newlayers);
-      tree = makeTree();
-      return scale;
+      mode = newMode;
+      return map;
     }
   }
 
-  scale.range = function() {
-    return [].concat.apply([], tree);
+  map.range = function(newRange) {
+    if (!arguments.length) {
+      return range;
+    }
+    else {
+      range = newRange;
+      return map;
+    }
   }
 
-  return scale;
+  map.quantize = function(newScale) {
+    if (!arguments.length) {
+      return scale;
+    }
+    else {
+      scale = newScale;
+      return map;
+    }
+  }
+
+  return map;
 }

@@ -17,11 +17,11 @@
       <script>
         var svg = d3.select("svg").attr("width",950).attr("height",350);
         var quantization = bvu.quantization().branching(2).layers(4);
-        var map = bvu.map().quantize(quantization).range(d3.interpolateViridis);
-        var imap = bvu.map().range(d3.interpolateViridis);
+        var scale = bvu.scale().quantize(quantization).range(d3.interpolateViridis);
+        var iscale = bvu.scale().range(d3.interpolateViridis);
 
         var sQuantization = bvu.squareQuantization().n(4);
-        var smap = bvu.map().quantize(sQuantization).range(d3.interpolateViridis);
+        var sScale = bvu.scale().quantize(sQuantization).range(d3.interpolateViridis);
 
         var legendData = [];
         var temp = quantization.tree();
@@ -35,14 +35,14 @@
           iLegendData[i] = temp[temp.length-i-1];
         }
 
-        var arcmap = bvu.arcmap().size(150).scale(imap).data(legendData);
+        var arcmap = bvu.arcmap().size(150).scale(iscale).data(legendData);
         svg.append("g").call(arcmap);
-        var heatmap = bvu.heatmap().size(150).scale(imap).data(legendData).x(150);
+        var heatmap = bvu.heatmap().size(150).scale(iscale).data(legendData).x(150);
         svg.append("g").call(heatmap);
         
-        var iarcmap = bvu.arcmap().size(150).scale(smap).data(iLegendData).x(325);
+        var iarcmap = bvu.arcmap().size(150).scale(sScale).data(iLegendData).x(325);
         svg.append("g").call(iarcmap);
-        var iheatmap = bvu.heatmap().size(150).scale(smap).data(iLegendData).x(475);
+        var iheatmap = bvu.heatmap().size(150).scale(sScale).data(iLegendData).x(475);
         svg.append("g").call(iheatmap);
 
         var n = 10;
@@ -54,11 +54,11 @@
           }
         }
 
-        var vsum = bvu.heatmap().size(150).scale(map).data(randomData).x(0).y(175);
+        var vsum = bvu.heatmap().size(150).scale(scale).data(randomData).x(0).y(175);
         svg.append("g").call(vsum);
-        var ssum = bvu.heatmap().size(150).scale(smap).data(randomData).x(175).y(175);
+        var ssum = bvu.heatmap().size(150).scale(sScale).data(randomData).x(175).y(175);
         svg.append("g").call(ssum);
-        var isum = bvu.heatmap().size(150).scale(imap).data(randomData).x(350).y(175);
+        var isum = bvu.heatmap().size(150).scale(iscale).data(randomData).x(350).y(175);
         svg.append("g").call(isum);
 
         var el = d3.select("body").append("div")

@@ -24,19 +24,19 @@
           }
         });
 
-        var scale = bvu.scale().branching(2).layers(4);
+        var quantization = bvu.quantization().branching(2).layers(4);
 
-        var imap = bvu.map().range(d3.interpolateViridis);
+        var scale = bvu.scale().range(d3.interpolateViridis);
 
-        var sscale = bvu.iscale().n(4);
-        var smap = bvu.map().quantize(sscale).range(d3.interpolateViridis);
+        var squareQuantization = bvu.squareQuantization().n(4);
+        var squareScale = bvu.scale().quantize(squareQuantization).range(d3.interpolateViridis);
 
         var body = d3.select('body');
-        makeFlightExample(body.append("svg"), scale, imap, data, "arc");
+        makeFlightExample(body.append("svg"), quantization, scale, data, "arc");
         // makeFlightExample(body.append("svg"), smap, data, "square");
       });
 
-      function makeFlightExample(svg, scale, map, data, type) {
+      function makeFlightExample(svg, quantization, scale, data, type) {
         var w = 560;
         var h = 240;
 
@@ -63,7 +63,7 @@
           .attr("width", x.bandwidth())
           .attr("height", y.bandwidth())
           .attr("title", JSON.stringify)
-          .attr("fill", function(d) { return map(v(d.DepDelay), u(d.StdMeanErr)); });
+          .attr("fill", function(d) { return scale(v(d.DepDelay), u(d.StdMeanErr)); });
 
         // axes
         heatmap.append("g")
@@ -90,16 +90,15 @@
         var legendX = w + 140;
         
         if (type === "arc") {
-          // TODO: shoudn't this contain 0 and 1?
           var legendData = [];
-          var temp = scale.tree();
+          var temp = quantization.tree();
           for(var i = 0; i < temp.length; i++) {
             legendData[i] = temp[temp.length-i-1];
           }
 
           var arcLegend = bvu.legend.arcmapLegend()
             .data(legendData)
-            .scale(map)
+            .scale(scale)
             .size(160)
             .x(legendX)
             .y(60)
