@@ -114,14 +114,14 @@ export function treeQuantization(branchingFactor, treeLayers) {
   }
 
   quantization.branching = function(newbranch) {
-      if (!arguments.length) {
-        return branch;
-      }
-      else {
-        branch = Math.max(1, newbranch);
-        tree = makeTree();
-        return quantization;
-      }
+    if (!arguments.length) {
+      return branch;
+    }
+    else {
+      branch = Math.max(1, newbranch);
+      tree = makeTree();
+      return quantization;
+    }
   }
 
   quantization.layers = function(newlayers) {

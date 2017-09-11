@@ -33,7 +33,7 @@
 
         var body = d3.select('body');
         makeFlightExample(body.append("svg"), quantization, scale, data, "arc");
-        // makeFlightExample(body.append("svg"), smap, data, "square");
+        makeFlightExample(body.append("svg"), squareQuantization, squareScale, data, "square");
       });
 
       function makeFlightExample(svg, quantization, scale, data, type) {
@@ -88,7 +88,8 @@
 
         // legend
         var legendX = w + 140;
-        
+        var legend;
+
         if (type === "arc") {
           var legendData = [];
           var temp = quantization.tree();
@@ -96,18 +97,28 @@
             legendData[i] = temp[temp.length-i-1];
           }
 
-          var arcLegend = bvu.legend.arcmapLegend()
+          legend = bvu.legend.arcmapLegend()
             .data(legendData)
-            .scale(scale)
-            .size(160)
-            .x(legendX)
-            .y(60)
-            .utitle("Standard Mean Error")
-            .vtitle("Departure Delay (minutes)");
-
-          svg.append("g").call(arcLegend);
+            .scale(scale);
         } else {
+          var legendData = [];
+          temp = quantization.matrix();
+          for(var i = 0; i < temp.length; i++) {
+            legendData[i] = temp[temp.length-i-1];
+          }
+
+          legend = bvu.legend.heatmapLegend()
+            .data(legendData)
+            .scale(scale);
         }
+
+        legend
+          .size(160)
+          .x(legendX)
+          .y(60).utitle("Standard Mean Error")
+          .vtitle("Departure Delay (minutes)");
+
+        svg.append("g").call(legend)
       }
     </script>
   </body>
