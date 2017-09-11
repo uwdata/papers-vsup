@@ -25,18 +25,17 @@
         });
 
         var quantization = bvu.quantization().branching(2).layers(4);
-
-        var scale = bvu.scale().range(d3.interpolateViridis);
+        var scale = bvu.scale().quantize(quantization).range(d3.interpolateViridis);
 
         var squareQuantization = bvu.squareQuantization().n(4);
         var squareScale = bvu.scale().quantize(squareQuantization).range(d3.interpolateViridis);
 
         var body = d3.select('body');
-        makeFlightExample(body.append("svg"), quantization, scale, data, "arc");
-        makeFlightExample(body.append("svg"), squareQuantization, squareScale, data, "square");
+        makeFlightExample(body.append("svg"), scale, data, "arc");
+        makeFlightExample(body.append("svg"), squareScale, data, "square");
       });
 
-      function makeFlightExample(svg, quantization, scale, data, type) {
+      function makeFlightExample(svg, scale, data, type) {
         var w = 560;
         var h = 240;
 
@@ -92,7 +91,7 @@
 
         if (type === "arc") {
           var legendData = [];
-          var temp = quantization.tree();
+          var temp = scale.quantize().tree();
           for(var i = 0; i < temp.length; i++) {
             legendData[i] = temp[temp.length-i-1];
           }
@@ -102,7 +101,7 @@
             .scale(scale);
         } else {
           var legendData = [];
-          temp = quantization.matrix();
+          temp = scale.quantize().matrix();
           for(var i = 0; i < temp.length; i++) {
             legendData[i] = temp[temp.length-i-1];
           }

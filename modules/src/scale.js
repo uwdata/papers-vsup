@@ -35,27 +35,27 @@ export function simpleScale(m_mode, m_range, m_scale) {
   }
 
   map.colorDists = function() {
-      var clist = this.colorList(),
-          matrix = new Array(clist.length),
-          minDist,
-          minPair = new Array(2),
-          dist;
+    var clist = this.colorList(),
+      matrix = new Array(clist.length),
+      minDist,
+      minPair = new Array(2),
+      dist;
 
-      for (var i = 0;i < matrix.length;i++) {
-        matrix[i] = new Array(clist.length);
-        for (var j = 0;j < matrix[i].length;j++) {
-          dist = CIEDist(clist[i], clist[j]);
-          matrix[i][j] = dist;
-          if (i != j && ((i == 0 && j == 1) || (dist < minDist))) {
-            minDist = dist;
-            minPair = [clist[i], clist[j]];
-          }
+    for (var i = 0;i < matrix.length;i++) {
+      matrix[i] = new Array(clist.length);
+      for (var j = 0;j < matrix[i].length;j++) {
+        dist = CIEDist(clist[i], clist[j]);
+        matrix[i][j] = dist;
+        if (i != j && ((i == 0 && j == 1) || (dist < minDist))) {
+          minDist = dist;
+          minPair = [clist[i], clist[j]];
         }
       }
+    }
 
-      matrix.minDist = minDist;
-      matrix.minPair = minPair;
-      return matrix;
+    matrix.minDist = minDist;
+    matrix.minPair = minPair;
+    return matrix;
   };
 
   map.mode = function(newMode) {
