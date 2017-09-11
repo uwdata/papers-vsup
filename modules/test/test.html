@@ -16,21 +16,21 @@
       <svg id="vis"></svg>
       <script>
         var svg = d3.select("svg").attr("width",950).attr("height",350);
-        var scale = bvu.scale().branching(2).layers(4);
-        var map = bvu.map().quantize(scale).range(d3.interpolateViridis);
+        var quantization = bvu.quantization().branching(2).layers(4);
+        var map = bvu.map().quantize(quantization).range(d3.interpolateViridis);
         var imap = bvu.map().range(d3.interpolateViridis);
 
-        var sscale = bvu.iscale().n(4);
-        var smap = bvu.map().quantize(sscale).range(d3.interpolateViridis);
+        var sQuantization = bvu.squareQuantization().n(4);
+        var smap = bvu.map().quantize(sQuantization).range(d3.interpolateViridis);
 
         var legendData = [];
-        var temp = scale.tree();
+        var temp = quantization.tree();
         for(var i = 0;i<temp.length;i++) {
           legendData[i] = temp[temp.length-i-1];
         }
 
         var iLegendData = [];
-        temp = sscale.matrix();
+        temp = sQuantization.matrix();
         for(var i = 0;i<temp.length;i++) {
           iLegendData[i] = temp[temp.length-i-1];
         }
