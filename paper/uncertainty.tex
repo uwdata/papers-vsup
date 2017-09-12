@@ -94,7 +94,7 @@
 % Paper metadata (use plain text, for PDF inclusion and later
 % re-using, if desired).  Use \emtpyauthor when submitting for review
 % so you remain anonymous.
-\def\plaintitle{Non-Uniform Bivariate Uncertainty Scales}
+\def\plaintitle{Value Suppressing Uncertainty Palettes}
 \def\plainauthor{Anonymous}
 \def\emptyauthor{}
 \def\plainkeywords{Uncertainty Visualization; Color Perception; Thematic Maps; Semiotics.}
@@ -171,12 +171,10 @@
 \maketitle
 
 \begin{abstract}
-  Uncertainty is a vital concern in many datasets. Visualizations often employ bivariate mappings as a way to present data and uncertainty values simultaneously.
-  Yet, these bivariates maps can be difficult to interpret, and interference between visual channels can reduce the discriminability of marks.
-  To address these issues, we contribute BIvariate Non-uniform Scales (BINS).
-  BINS allocate larger ranges of marks to data when uncertainty is low, and smaller ranges when uncertainty is high. 
-  This non-uniform budgeting of marks suppresses differences in uncertain data, but amplifies them for certain data, with the intended outcome of supporting more cautious patterns of decision-making.
-  We demonstrate several examples of BINS, and present a crowdsourced evaluation showing that, compared to traditional bivariate maps, BINS encourage people to XYZ.
+  Understanding uncertainty is critical for many analytical tasks. 
+  One common approach is to encode data values and uncertainty values independently, using two visual variables. These resulting bivariates maps can be difficult to interpret, and interference between visual channels can reduce the discriminability of marks.
+  To address this issue, we contribute Value-Suppressing Uncertainty Palettes (VSUPs). VSUPs allocate larger ranges of a visual channel to data when uncertainty is low, and smaller ranges when uncertainty is high. This non-uniform budgeting of the visual channels makes more economical use of the limited visual encoding space when uncertainty is low, and encourages more cautious decision-making when uncertainty is high. 
+  We demonstrate several examples of VSUPs, and present a crowdsourced evaluation showing that, compared to traditional bivariate maps, VSUPs encourage people to more heavily weight uncertainty information in decision-making tasks.
   
 \end{abstract}
 

@@ -1,8 +1,36 @@
-/*
-A tree-like bivariate quantization scheme.
-As uncertainty increases, the number of quantization bins decreases.
-*/
+import * as d3 from "d3";
 
+export function linearQuantization(m_n, m_range) {
+  var n = m_n,
+  range = m_range,
+  scale = makeScale();
+
+  function makeScale() {
+    return d3.scaleQuantize().range(d3.quantize(range, n));
+  }
+
+  function quantization(value) {
+    return scale(value);
+  }
+
+
+  quantization.range = function() {
+    return scale.range();
+  }
+
+  quantization.n = function(newN) {
+      if (!arguments.length) {
+        return n;
+      }
+      else {
+        n = newN;
+        scale = makeScale();
+        return quantization;
+      }
+  }
+
+  return quantization;
+}
 
 export function squareQuantization(m_n) {
   var n = m_n,

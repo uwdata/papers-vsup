@@ -11,7 +11,7 @@ export function simpleScale(m_mode, m_range, m_scale) {
       },
       mode = m_mode;
 
-  function CIEdist(color1, color2) {
+  function CIEDist(color1, color2) {
       var c1 = d3.lab(d3.color(color1)),
           c2 = d3.lab(d3.color(color2));
       return Math.sqrt(Math.pow( (c1.l - c2.l), 2) + Math.pow(c1.a - c2.a, 2) + Math.pow(c1.b - c2.b, 2));

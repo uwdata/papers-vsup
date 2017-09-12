@@ -128,3 +128,26 @@ export function continuousArc(m_size, m_scale) {
 
   return arc;
 }
+
+export function continuousLine(m_size, m_scale) {
+  var line = continuousSquare(m_size, m_scale);
+
+  line.makePixelData = function() {
+    var pixelData = [];
+    var c;
+    var size = line.size();
+
+    for (var i = 0;i < size;i++) {
+      for (var j = 0;j < size;j++) {
+        c = line.scale()(j / size);
+        pixelData.push(c.r);
+        pixelData.push(c.g);
+        pixelData.push(c.b);
+        pixelData.push(255);
+      }
+    }
+    return pixelData;
+  }
+
+  return line;
+}

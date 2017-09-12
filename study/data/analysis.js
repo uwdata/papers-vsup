@@ -3,7 +3,7 @@ var dataTwo;
 
 analysis();
 
-function process(){
+function process() {
   //Steps:
   // 1. Load in csvs of both raw data, and turk completion information.
   // 2. Filter out rows from turkIDs who didn't complete the HIT.
@@ -21,7 +21,7 @@ function process(){
   var turkId;
   var row;
 
-  for(var i = 0;i<demoTable.length;i++){
+  for(var i = 0;i<demoTable.length;i++) {
     row = demoTable[i];
     turkId = row.WorkerId;
     valids = dataOneTable.filter(function(x){ return x.workerId == turkId;});
@@ -32,11 +32,11 @@ function process(){
     cleanedOne = cleanedTwo.concat(valids);
   }
 
-  for(var i = 0;i<cleanedOne.length;i++){
+  for(var i = 0;i<cleanedOne.length;i++) {
     writeRow(cleanedOne[i]);
   }
 
-  for(var i = 0;i<cleanedTwo.length;i++){
+  for(var i = 0;i<cleanedTwo.length;i++) {
     writeRow(cleanedTwo[i]);
   }
 
@@ -44,7 +44,7 @@ function process(){
   dataTwo = cleanedTwo;
 }
 
-function writeRow(row){
+function writeRow(row) {
   var writeRequest = new XMLHttpRequest();
   var writeString = "clean=true&answer="+JSON.stringify(row);
   //console.log(writeString);
@@ -53,10 +53,10 @@ function writeRow(row){
   writeRequest.send();
 }
 
-function cleanRows(rows,index){
+function cleanRows(rows, index) {
   var cleanedRows = [];
   var seen = dl.repeat(false,100);
-  for(let row of rows){
+  for(let row of rows) {
     row.id = index;
     if(!seen[row.index]){
       seen[row.index]=true;
@@ -108,12 +108,12 @@ dl.bootstrap.midmeanci = function(values, a, b, c, d) {
           ];
 };
 
-function analysis(){
+function analysis() {
   dataOne = dl.csv("taskOne.csv");
   dataTwo = dl.csv("taskTwo.csv");
 }
 
-function bsci(data,facet,measure){
+function bsci(data, facet, measure) {
   var values = d3.nest().key(function(d){ return d[facet];}).entries(data);
   var cis = values.map(function(d){ return {"key": d.key, "midmean": dl.mean.iqm(d.values,measure), "ci": dl.bootstrap.midmeanci(d.values,measure,1000)};});
   return cis;

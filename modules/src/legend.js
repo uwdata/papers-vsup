@@ -27,7 +27,7 @@ export function simpleLegend(m_scale, m_size, m_height, m_format, m_title, m_x, 
       return;
     }
 
-    var domain = scale.domain(),
+    var domain = scale.domain ? scale.domain() : [0, 1],
         w = size / scale.range().length,
         step = (domain[1] - domain[0]) / scale.range().length,
         dom = d3.range(domain[0], domain[1] + step, step),
@@ -38,7 +38,7 @@ export function simpleLegend(m_scale, m_size, m_height, m_format, m_title, m_x, 
       .attr("transform", "translate(" + x + "," + y + ")");
 
     var rect = el.selectAll("rect").data(scale.range())
-    
+
     rect.enter()
         .append("rect")
       .merge(rect)
@@ -181,7 +181,7 @@ export function heatmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitl
 
     var uStep = 1 / data.length;
     var uDom = d3.range(0, 1 + uStep - epsylon, uStep);
-  
+
     var vStep = 1 / data.length;
     var vDom = d3.range(0, 1 + vStep - epsylon, vStep);
 
@@ -356,9 +356,9 @@ export function arcmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitle
     var angle = d3.scaleLinear()
       .domain([vTicks[0], vTicks[vTicks.length - 1]])
       .range([-30, 30]);
-  
+
     var offset = 3 * px;
-  
+
     var myArc = d3.arc()
       .innerRadius(size + offset)
       .outerRadius(size + offset + 1)
@@ -367,32 +367,32 @@ export function arcmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitle
 
     var arcAxis = el.append("g")
       .attr("transform", "translate(" + (size / 2) + "," + (size - offset) + ")");
-  
+
     arcAxis.append("path")
       .attr("fill", "black")
       .attr("stroke", "transparent")
       .attr("d", myArc);
-  
+
     var labelEnter = arcAxis.selectAll(".arc-label").data(vTicks).enter()
       .append("g")
         .attr("class", "arc-label")
         .attr("transform", function(d) {
           return "rotate(" + angle(d) + ")translate(" + 0 + "," + (-size - offset) + ")";
         })
-  
+
     labelEnter.append("text")
       .style("font-size", "11")
       .style("text-anchor", "middle")
       .attr("y", -10)
       .text(d3.format(fmat));
-  
+
     labelEnter.append("line")
       .attr("x1", 0.5)
       .attr("x2", 0.5)
       .attr("y1", -6)
       .attr("y2", 0)
       .attr("stroke", "#000");
-  
+
     el.append("text")
       .style("text-anchor", "middle")
       .style("font-size", 13)

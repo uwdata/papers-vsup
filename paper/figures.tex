@@ -20,7 +20,7 @@
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=0.9\columnwidth]{example.pdf}
-	\caption{A standard bivariate map (left) and a VSUM (right), used to encode an identical 5x5 grid of random data. Both use the same visual channels to encode value (position along the Viridis~\protect\cite{viridis} color map) and uncertainty (lightness and saturation), and have an equal standard of perceptual discriminability (at least 18 units of distance in CIELAB color space between colors). However, highly uncertain values result in colors that are very close together in the bivariate case, meaning the full bivariate map is only 9 bins under these constraints\,---\,a 4x4 map would result in colors that are perceptually too close together. By contrast, the VSUM intentionally reduces bins when uncertainty is high, eventually aliasing all highly uncertain values to the same color. This decision affords more distinct colors in other regions of the map, and so an increase in overall bins to 15. The resulting map suppresses the value of highly uncertain data, but increases the discriminability of data with low uncertainty.}
+	\caption{A standard bivariate map (left) and a VSUP (right), used to encode an identical 5x5 grid of random data. Both use the same visual channels to encode value (position along the Viridis~\protect\cite{viridis} color map) and uncertainty (lightness and saturation), and have an equal standard of perceptual discriminability (at least 18 units of distance in CIELAB color space between colors). However, highly uncertain values result in colors that are very close together in the bivariate case, meaning the full bivariate map is only 9 bins under these constraints\,---\,a 4x4 map would result in colors that are perceptually too close together. By contrast, the VSUP intentionally reduces bins when uncertainty is high, eventually aliasing all highly uncertain values to the same color. This decision affords more distinct colors in other regions of the map, and so an increase in overall bins to 15. The resulting map suppresses the value of highly uncertain data, but increases the discriminability of data with low uncertainty.}
 	\label{fig:example}
 \end{figure}
 }
@@ -29,7 +29,7 @@
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.9\columnwidth]{size.pdf}
-		\caption{A VSUM where value is mapped to color, and uncertainty is mapped to glyph area. As glyphs become smaller, it becomes more difficult to distinguish their colors~\protect\cite{stone2014engineering}. VSUMs, by reducing the number of color categories as uncertainty increases, account for this ambiguity. On the right, the VSUM has been used to encode a 5x5 grid of random data.}
+		\caption{A VSUP where value is mapped to color, and uncertainty is mapped to glyph area. As glyphs become smaller, it becomes more difficult to distinguish their colors~\protect\cite{stone2014engineering}. VSUPs, by reducing the number of color categories as uncertainty increases, account for this ambiguity. On the right, the VSUP has been used to encode a 5x5 grid of random data.}
 		\label{fig:size}
 	\end{figure}
 }
@@ -52,9 +52,9 @@
 		\begin{subfigure}{0.3\textwidth}
 			\centering
 			\includegraphics[width=0.45\textwidth]{conditions3.pdf}
-			\caption{Value-Suppressing Uncertainty Map}
+			\caption{Value-Suppressing Uncertainty Palette}
 		\end{subfigure}
-		\caption{The three graph types in our evaluation. Bivariate color ramps ensure that there are orthogonal mappings for each combination of value and uncertainty, but, since color channels are not separable, can afford only a few discrete colors before color categories become unacceptably close, perceptually. Juxtaposed maps, by keeping these channels separate, afford a larger range of colors, but require a visual search task to recover both value and uncertainty in a region. VSUMs have many of the advantages of bivariate maps, but assign more color categories to certain data, at the expense of ambiguity when uncertainty is high.}
+		\caption{The three graph types in our evaluation. Bivariate color ramps ensure that there are orthogonal mappings for each combination of value and uncertainty, but, since color channels are not separable, can afford only a few discrete colors before color categories become unacceptably close, perceptually. Juxtaposed maps, by keeping these channels separate, afford a larger range of colors, but require a visual search task to recover both value and uncertainty in a region. VSUPs have many of the advantages of bivariate maps, but assign more color categories to certain data, at the expense of ambiguity when uncertainty is high.}
 		\label{fig:conditions}
 	\end{figure*}
 }
@@ -83,7 +83,7 @@
 		\centering
 		\includegraphics[width=0.9\columnwidth]{performance.pdf}
 		\caption{
-			The number of discrete color categories in traditional bivariate color maps versus VSUMs, assuming value is encoded by the Viridis color map~\protect\cite{viridis}, and uncertainty is encoded by saturation/value (whiter values are more uncertain). Since these whiter uncertain colors are closer together in CIELAB space, and VSUMs intentionally require fewer color bins in those regions, VSUMs always have more color categories than the corresponding 2D bivariate map. The red lines denote:
+			The number of discrete color categories in traditional bivariate color maps versus VSUPs, assuming value is encoded by the Viridis color map~\protect\cite{viridis}, and uncertainty is encoded by saturation/value (whiter values are more uncertain). Since these whiter uncertain colors are closer together in CIELAB space, and VSUPs intentionally require fewer color bins in those regions, VSUPs always have more color categories than the corresponding 2D bivariate map. The red lines denote:
 		  \textbf{1)} Theoretical 50\% JND from CIELAB specification.
 			\textbf{2)} 50\% JND from controlled lab study of Mahy et al.~\protect\cite{mahy1994evaluation}.
 			\textbf{3)} 50\% JND from Szafir et al.\protect\cite{szafir2014adapting}.
@@ -98,8 +98,8 @@
 	\begin{figure}[t]
 		\centering
 		\includegraphics[width=0.95\columnwidth]{flow.pdf}
-		\caption{The process for creating a VSUM. VSUMs guarantee that no two marks in the resulting bivariate mapping are perceptually closer than some pre-specified threshold. This guarantee removes some of the issues of non-separability and ambiguity that are otherwise a concern when designing bivariate maps. \\
-		In this example two colors from the map for $n=9$ are too close in CIELAB space. Thus, we create a VSUM with $n=8$ color bins at the lowest level of uncertainty.}
+		\caption{The process for creating a VSUP. VSUPs guarantee that no two marks in the resulting bivariate mapping are perceptually closer than some pre-specified threshold. This guarantee removes some of the issues of non-separability and ambiguity that are otherwise a concern when designing bivariate maps. \\
+		In this example two colors from the map for $n=9$ are too close in CIELAB space. Thus, we create a VSUP with $n=8$ color bins at the lowest level of uncertainty.}
 		\label{fig:flow}
 	\end{figure}
 }
@@ -117,7 +117,7 @@
 	\centering
 	\includegraphics[width=\columnwidth]{airline-vsum.png}
 	\vspace{-15px}
-	\caption{Flight delay data encoded with a VSUM.}
+	\caption{Flight delay data encoded with a VSUP.}
 	\label{fig:airlineVsum}
 \end{figure}
 }
@@ -135,7 +135,7 @@
 	\centering
 	\includegraphics[width=\columnwidth]{viral-vsum.pdf}
 	\vspace{-15px}
-	\caption{Variability for 25 different viral populations of SIV, encoded with a VSUM. The magnitude of mutation rate, as well as the generally poorer quality of data towards the end of the sequence, is more readily visible than with the traditional bivariate color map. }
+	\caption{Variability for 25 different viral populations of SIV, encoded with a VSUP. The magnitude of mutation rate, as well as the generally poorer quality of data towards the end of the sequence, is more readily visible than with the traditional bivariate color map. }
 	\label{fig:viralVsum}
 \end{figure}
 }
@@ -153,7 +153,7 @@
 	\begin{figure}[t]
 		\centering
 		\includegraphics[height=2.4cm]{accuracy1.pdf}
-		\caption{The effect of chart type on accuracy for the identification task. VSUMS are similarly accurate for simple search tasks as more traditional bivariate visualizations, despite containing additional colors categories, and having a more complex relationship between uncertainty, value, and color than traditional charts. The confidence intervals are bootstrapped 95\% CIs of trimmed means.}
+		\caption{The effect of chart type on accuracy for the identification task. VSUPS are similarly accurate for simple search tasks as more traditional bivariate visualizations, despite containing additional colors categories, and having a more complex relationship between uncertainty, value, and color than traditional charts. The confidence intervals are bootstrapped 95\% CIs of trimmed means.}
 		\label{fig:accuracy1}
 	\end{figure}
 }
@@ -162,7 +162,7 @@
 	\begin{figure}[t]
 		\centering
 		\includegraphics[height=2.4cm]{uncertainty2.pdf}
-		\caption{The effect of chart type on the average uncertainty in predictions for the prediction task. By reducing the number of color categories as uncertainty increases, VSUMs encourage more caution in predictions, making people less likely to consider data with strong, but spurious patterns. The confidence intervals are bootstrapped 95\% CIs of trimmed means.}
+		\caption{The effect of chart type on the average uncertainty in predictions for the prediction task. By reducing the number of color categories as uncertainty increases, VSUPs encourage more caution in predictions, making people less likely to consider data with strong, but spurious patterns. The confidence intervals are bootstrapped 95\% CIs of trimmed means.}
 		\label{fig:uncertainty2}
 	\end{figure}
 }
