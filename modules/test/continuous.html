@@ -18,10 +18,13 @@
         var el = d3.select("div");
 
         var square = bvu.csquare(100,d3.interpolateViridis);
-        el.append("div").call(square)
+        el.append("div").call(square);
 
         var arc = bvu.carc(100,d3.interpolateViridis);
         el.append("div").call(arc);
+
+        var line = bvu.cline(100,10,d3.interpolateViridis);
+        el.append("div").call(line);
       </script>
     </body>
 </html>

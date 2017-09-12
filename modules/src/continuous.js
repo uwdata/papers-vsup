@@ -129,21 +129,30 @@ export function continuousArc(m_size, m_scale) {
   return arc;
 }
 
-export function continuousLine(m_size, m_scale) {
-  var line = continuousSquare(m_size, m_scale);
+export function continuousLine(m_length, m_width, m_scale) {
+  var line = continuousSquare(m_length, m_scale);
+  var width = m_width;
+  var length = m_length;
 
   line.makePixelData = function() {
     var pixelData = [];
     var c;
-    var size = line.size();
-
-    for (var i = 0;i < size;i++) {
-      for (var j = 0;j < size;j++) {
-        c = line.scale()(j / size);
-        pixelData.push(c.r);
-        pixelData.push(c.g);
-        pixelData.push(c.b);
-        pixelData.push(255);
+    for (var i = 0;i < length;i++) {
+      for (var j = 0;j < length;j++) {
+        if (i < width) {
+          c = line.scale()(j / length);
+          c = d3.color(c);
+          pixelData.push(c.r);
+          pixelData.push(c.g);
+          pixelData.push(c.b);
+          pixelData.push(255);
+        }
+        else {
+          pixelData.push(255);
+          pixelData.push(255);
+          pixelData.push(255);
+          pixelData.push(0);
+        }
       }
     }
     return pixelData;

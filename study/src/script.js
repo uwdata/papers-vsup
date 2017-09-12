@@ -77,7 +77,7 @@ var uncertaintyScale = d3.scaleQuantize()
 var scale1dV = function(d){ return valueScale(d.v);};
 var scale1dU = function(d){ return uncertaintyScale(d.u);};
 var scaleContinuous1dV = function(d){return d3.interpolateViridis(d.v);};
-var scaleContinuous1dU = function(d){return d3.interpolateGreys(d.u);};
+var scaleContinuous1dU = function(d){return d3.interpolateGreys(1-d.u);};
 
 
 var vsumLegend = [];
@@ -252,14 +252,14 @@ function makeTaskOneStimuli(){
 
   var types =
   [
-    {binned: "discrete", shape:"square", vsum:false},
-  //  {bin: "continuous", shape:"square", vsum:false},
-  //  {bin: "discrete", shape:"juxtaposed", vsum:false},
-  //  {bin: "continuous", shape:"juxtaposed", vsum:false},
-    {binned: "discrete", shape:"arc", vsum:false},
-  //  {bin: "continuous", shape:"arc", vsum:false},
-    {binned: "discrete", shape:"square", vsum:true},
-    {binned: "discrete", shape:"arc", vsum:true}
+//    {binned: "discrete", shape:"square", vsum:false},
+//    {binned: "continuous", shape:"square", vsum:false},
+    {binned: "discrete", shape:"juxtaposed", vsum:false},
+  //  {binned: "continuous", shape:"juxtaposed", vsum:false},
+//    {binned: "discrete", shape:"arc", vsum:false},
+//    {binned: "continuous", shape:"arc", vsum:false},
+//    {binned: "discrete", shape:"square", vsum:true},
+//    {binned: "discrete", shape:"arc", vsum:true}
   ];
 
   var validQs = Q2d.range();
@@ -411,7 +411,32 @@ function drawMap(stim,data){
   }
 
   if(stim.binned=="continuous"){
-    var legendCanvas = d3.select("#legend").append("canvas").attr("style","position:absolute; float: left; width: 100%; height: 100%");
+    var canvasDiv = d3.select("#legend").append("div")
+      .attr("style","position: relative; margin-top: -175px; margin-left: 275px;")
+    if(stim.shape=="square"){
+      var square = bvu.csquare(150,d3.interpolateViridis);
+      canvasDiv.call(square);
+    }
+    else if(stim.shape=="arc"){
+      var arc = bvu.carc(150,d3.interpolateViridis);
+      canvasDiv.call(arc);
+    }
+    else{
+      legendSvg.attr("style","width: 100%; height: 75");
+      var vLine = bvu.cline(250,20,d3.interpolateViridis);
+      var uLine = bvu.cline(250,20,function(d){ return d3.interpolateGreys(1-d);});
+
+      canvasDiv
+        .attr("style","position: relative; margin-top: -55px; height: 75px");
+
+      canvasDiv.call(vLine);
+
+      var uCanvasDiv = d3.select("#legend").append("div")
+        .attr("style","position: relative; margin-left: 300px; margin-top: -75px; height: 75px");
+
+      uCanvasDiv.call(uLine);
+    }
+
   }
 
   //make map
@@ -423,9 +448,9 @@ function drawMap(stim,data){
   }
   else if(stim.shape=="juxtaposed"){
     var umap = bvu.heatmap().size(250).scale(scale1dU).data(data).x(300);
-    map.scale(scale1dV);
+    map.x(0).scale(scale1dV);
     if(stim.binned=="continuous"){
-      map.x(0).scale(scaleContinuous1dV)
+      map.scale(scaleContinuous1dV)
       umap.scale(scaleContinuous1dU);
     }
     mapSvg.append("g").call(umap);
