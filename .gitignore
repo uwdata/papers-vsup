@@ -3,10 +3,10 @@ node_modules
 *.blg
 *.fdb_latexmk
 *.fls
-paper/template.out
-paper/template.log
-paper/template.aux
+paper/uncertainty.out
+paper/uncertainty.log
+paper/uncertainty.aux
 paper/pictures/sample-eps-converted-to.pdf
-paper/template.synctex.gz
+paper/uncertainty.synctex.gz
 modules/dist
 *.psd
