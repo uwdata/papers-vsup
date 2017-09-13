@@ -79,6 +79,23 @@ var scale1dU = function(d){ return uncertaintyScale(d.u);};
 var scaleContinuous1dV = function(d){return d3.interpolateViridis(d.v);};
 var scaleContinuous1dU = function(d){return d3.interpolateGreys(1-d.u);};
 
+//our potential values. these are values that are guaranteed to not lie on a
+//bin border of any of our discrete color scales, but also result in unique
+//colors for each scale, but also are not aligned with any tick marks
+
+var validQs = [
+  {u:0.1,v:0.2},
+  {u:0.1,v:0.45},
+  {u:0.1,v:0.7},
+  {u:0.1,v:0.95},
+  {v:0.1,u:0.4},
+  {v:0.4,u:0.4},
+  {v:0.7,u:0.4},
+  {v:0.8,u:0.4},
+  {v:0.3,u:0.6},
+  {v:0.8,u:0.6},
+  {v:0.4,u:0.8},
+];
 
 var vsumLegend = [];
 var temp = Qvsum.tree();
@@ -252,17 +269,16 @@ function makeTaskOneStimuli(){
 
   var types =
   [
-//    {binned: "discrete", shape:"square", vsum:false},
-//    {binned: "continuous", shape:"square", vsum:false},
+    {binned: "discrete", shape:"square", vsum:false},
+    {binned: "continuous", shape:"square", vsum:false},
     {binned: "discrete", shape:"juxtaposed", vsum:false},
-  //  {binned: "continuous", shape:"juxtaposed", vsum:false},
-//    {binned: "discrete", shape:"arc", vsum:false},
-//    {binned: "continuous", shape:"arc", vsum:false},
-//    {binned: "discrete", shape:"square", vsum:true},
-//    {binned: "discrete", shape:"arc", vsum:true}
+    {binned: "continuous", shape:"juxtaposed", vsum:false},
+    {binned: "discrete", shape:"arc", vsum:false},
+    {binned: "continuous", shape:"arc", vsum:false},
+    {binned: "discrete", shape:"square", vsum:true},
+    {binned: "discrete", shape:"arc", vsum:true}
   ];
 
-  var validQs = Q2d.range();
   var replicates = 8;
 
   for(var type of types){
@@ -285,12 +301,12 @@ function makeTaskTwoStimuli(){
 function makeTaskOneMap(size){
   // Each map has exactly one of each color in the 2D map
 
-  var values = Q2d.range();
+  var values = validQs.slice();
 
   //the rest are just random distractors.
 
   for(var i = values.length;i<(size*size);i++){
-    values.push(Q2d.range()[Math.floor(Math.random()*Q2d.range().length)]);
+    values.push(validQs[Math.floor(Math.random()*validQs.length)]);
   }
 
   dl.permute(values);
@@ -890,6 +906,7 @@ function riskAversion(form){
 
       questions.append("input")
       .attr("type","radio")
+      .attr("required","required")
       .attr("name","risk"+index)
       .attr("value",i*valences[index]);
 
@@ -954,7 +971,9 @@ function postTest(){
   q.append("input")
   .attr("type","radio")
   .attr("name","vision")
+  .attr("required","required")
   .attr("value","Yes");
+
   q.append("span").html("Yes <br />");
 
   q = visionQ.append("label");
@@ -962,6 +981,7 @@ function postTest(){
   q.append("input")
   .attr("type","radio")
   .attr("name","vision")
+  .attr("required","required")
   .attr("value","No");
   q.append("span").html("No <br />");
 
@@ -974,6 +994,7 @@ function postTest(){
     q.append("input")
     .attr("type","radio")
     .attr("name","gender")
+    .attr("required","required")
     .attr("value",gender);
 
     q.append("span").html(gender +"<br />");
@@ -987,6 +1008,7 @@ function postTest(){
     q.append("input")
     .attr("type","radio")
     .attr("name","education")
+    .attr("required","required")
     .attr("value",education);
 
     q.append("span").html(education + "<br />");
@@ -1000,6 +1022,7 @@ function postTest(){
     q.append("input")
     .attr("type","radio")
     .attr("name","experience")
+    .attr("required","required")
     .attr("value",i);
 
     q.append("span").html(experiences[i]+"<br />");
@@ -1010,6 +1033,7 @@ function postTest(){
   ageQ.append("input")
   .attr("type","number")
   .attr("name","age")
+  .attr("required","required")
   .attr("min","18")
   .attr("max","100");
 
