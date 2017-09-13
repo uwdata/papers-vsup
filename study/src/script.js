@@ -56,7 +56,7 @@ var Q2d = bvu.squareQuantization().n(4);
 //bivariate scales
 var scaleVsum = bvu.scale().quantize(Qvsum).range(d3.interpolateViridis);
 var scale2d = bvu.scale().quantize(Q2d).range(d3.interpolateViridis);
-var scaleContinuous = function(d){
+var scaleContinuous = function(d) {
   var c = d3.interpolateViridis(d.v);
   return d3.interpolateLab(c, d3.color("#ddd"))(d.u);
 }
@@ -71,10 +71,10 @@ var uncertaintyScale = d3.scaleQuantize()
     .domain([0, 1])
     .range(d3.schemeGreys[4].reverse());
 
-var scale1dV = function(d){ return valueScale(d.v);};
-var scale1dU = function(d){ return uncertaintyScale(d.u);};
-var scaleContinuous1dV = function(d){return d3.interpolateViridis(d.v);};
-var scaleContinuous1dU = function(d){return d3.interpolateGreys(1 - d.u);};
+var scale1dV = function(d) { return valueScale(d.v);};
+var scale1dU = function(d) { return uncertaintyScale(d.u);};
+var scaleContinuous1dV = function(d) {return d3.interpolateViridis(d.v);};
+var scaleContinuous1dU = function(d) {return d3.interpolateGreys(1 - d.u);};
 
 //our potential values. these are values that are guaranteed to not lie on a
 //bin border of any of our discrete color scales, but also result in unique
@@ -106,7 +106,7 @@ for (i = 0;i < temp.length;i++) {
   squareLegend[i] = temp[temp.length - i - 1];
 }
 
-function gup(name){
+function gup(name) {
   var regexS = "[\\?&]" + name + "=([^&#]*)";
   var regex = new RegExp( regexS );
   var tmpURL = window.location.href;
@@ -118,16 +118,16 @@ function gup(name){
 }
 
 var workerId = gup("workerId");
-if (!workerId){
+if (!workerId) {
   workerId = "UNKNOWN";
 }
 
 var assignmentId = gup("assignmentId");
-if (!assignmentId){
+if (!assignmentId) {
   assignmentId = "";
 }
 
-function consent(){
+function consent() {
   //Consent form
   main.append("iframe")
   .attr("src", "consent.html");
@@ -140,20 +140,20 @@ function consent(){
   .text("I Consent")
   .on("click", finishConsent);
 
-  if (assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE"){
+  if (assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {
     readyBtn.attr("disabled", "disabled");
     readyBtn.text("PREVIEW");
   }
 
 }
 
-function finishConsent(){
+function finishConsent() {
   //Thing to do when we've consented.
   //Ought to be setting up for a tutorial.
   ishihara();
 }
 
-function ishihara(){
+function ishihara() {
   var plates = [5, 6, 8, 12, 42];
   dl.permute(plates);
 
@@ -171,7 +171,7 @@ function ishihara(){
   var platesDiv = main.append("div")
   .attr("id", "plates");
 
-  for (var i = 0;i < numPlates;i++){
+  for (var i = 0;i < numPlates;i++) {
     platesDiv.append("div")
     .append("img")
     .attr("width", "300px")
@@ -197,19 +197,19 @@ function ishihara(){
 
 }
 
-function finishIshihara(){
+function finishIshihara() {
   var plates = [];
   var plate;
-  main.select("#plates").selectAll("input").each( function(){
+  main.select("#plates").selectAll("input").each( function() {
     plates.push({"right": d3.select(this).attr("name").replace("plate", ""), "guess": d3.select(this).property("value")});
   });
   var correct = true;
 
-  for (plate of plates){
+  for (plate of plates) {
     correct = correct && plate.right == (plate.guess + "");
   }
 
-  if (correct){
+  if (correct) {
     tutorial();
   }
   else {
@@ -218,7 +218,7 @@ function finishIshihara(){
 
 }
 
-function tutorial(){
+function tutorial() {
   //Set up taske one tutorial. When we're done, start the first task
   main.selectAll("*").remove();
 
@@ -234,13 +234,13 @@ function tutorial(){
   .on("click", finishTutorial);
 }
 
-function finishTutorial(){
+function finishTutorial() {
   main.selectAll("#answer").remove();
   main.selectAll("iframe").remove();
   taskOne();
 }
 
-function tutorialTwo(){
+function tutorialTwo() {
   //Set up task two tutorial. When we're done, start the second task
   main.selectAll("*").remove();
 
@@ -256,13 +256,13 @@ function tutorialTwo(){
   .on("click", finishTutorialTwo);
 }
 
-function finishTutorialTwo(){
+function finishTutorialTwo() {
   main.selectAll("#answer").remove();
   main.selectAll("iframe").remove();
   taskTwo();
 }
 
-function makeTaskOneStimuli(){
+function makeTaskOneStimuli() {
   var stimuli = [];
 
   var types =
@@ -279,8 +279,8 @@ function makeTaskOneStimuli(){
 
   var replicates = 8;
 
-  for (var type of types){
-    for (var i = 0;i < replicates;i++){
+  for (var type of types) {
+    for (var i = 0;i < replicates;i++) {
       stimuli.push({binned: type.binned, shape:type.shape, vsum: type.vsum, question: validQs[Math.floor(Math.random() * validQs.length)]});
     }
   }
@@ -289,7 +289,7 @@ function makeTaskOneStimuli(){
   return stimuli;
 }
 
-function makeTaskTwoStimuli(){
+function makeTaskTwoStimuli() {
   var stimuli = [];
 
   var types =
@@ -306,8 +306,8 @@ function makeTaskTwoStimuli(){
 
   var replicates = 8;
 
-  for (var type of types){
-    for (var i = 0;i < replicates;i++){
+  for (var type of types) {
+    for (var i = 0;i < replicates;i++) {
       stimuli.push({binned: type.binned, shape:type.shape, vsum: type.vsum});
     }
   }
@@ -316,14 +316,14 @@ function makeTaskTwoStimuli(){
   return stimuli;
 }
 
-function makeTaskOneMap(size){
+function makeTaskOneMap(size) {
   // Each map has exactly one of each color in the 2D map
 
   var values = validQs.slice();
 
   //the rest are just random distractors.
 
-  for (var i = values.length;i < (size * size);i++){
+  for (var i = values.length;i < (size * size);i++) {
     values.push(validQs[Math.floor(Math.random() * validQs.length)]);
   }
 
@@ -331,9 +331,9 @@ function makeTaskOneMap(size){
 
   var matrix = [];
 
-  for (i = 0;i < size;i++){
+  for (i = 0;i < size;i++) {
     matrix[i] = [];
-    for (var j = 0;j < size;j++){
+    for (var j = 0;j < size;j++) {
       matrix[i][j] = values[i * size + j];
     }
   }
@@ -341,7 +341,7 @@ function makeTaskOneMap(size){
   return matrix;
 }
 
-function taskOne(){
+function taskOne() {
   taskOneStimuli = makeTaskOneStimuli();
 
   main.append("p")
@@ -369,7 +369,7 @@ function taskOne(){
   initializeTaskOne();
 }
 
-function initializeTaskOne(){
+function initializeTaskOne() {
   d3.select("#map").selectAll("*").remove();
   d3.select("#legend").selectAll("*").remove();
 
@@ -388,12 +388,12 @@ function initializeTaskOne(){
 }
 
 
-function drawMap(stim, data, task){
+function drawMap(stim, data, task) {
 
   //make legend
   var legendSvg, legend;
   var vtitle = task == "two" ? "Danger" : "Value";
-  if (stim.shape == "juxtaposed"){
+  if (stim.shape == "juxtaposed") {
     legendSvg = d3.select("#legend").append("svg").attr("style", "width: 100%; height: 75");
     legend = bvu.legend.simpleLegend()
     .title(vtitle)
@@ -419,7 +419,7 @@ function drawMap(stim, data, task){
   }
   else {
     legendSvg = d3.select("#legend").append("svg").attr("style", "width: 100%; height: 225");
-    if (stim.shape == "arc"){
+    if (stim.shape == "arc") {
       legend = bvu.legend.arcmapLegend()
           .size(150)
           .x(275)
@@ -434,7 +434,7 @@ function drawMap(stim, data, task){
           .scale(scaleContinuous);
     }
 
-    if (stim.vsum){
+    if (stim.vsum) {
       legend.data(vsumLegend);
     }
     else {
@@ -444,21 +444,21 @@ function drawMap(stim, data, task){
     legendSvg.append("g").call(legend);
   }
 
-  if (stim.binned == "continuous"){
+  if (stim.binned == "continuous") {
     var canvasDiv = d3.select("#legend").append("div")
       .attr("style", "position: relative; margin-top: -175px; margin-left: 275px;")
-    if (stim.shape == "square"){
+    if (stim.shape == "square") {
       var square = bvu.csquare(150, d3.interpolateViridis);
       canvasDiv.call(square);
     }
-    else if (stim.shape == "arc"){
+    else if (stim.shape == "arc") {
       var arc = bvu.carc(150, d3.interpolateViridis);
       canvasDiv.call(arc);
     }
     else {
       legendSvg.attr("style", "width: 100%; height: 75");
       var vLine = bvu.cline(250, 20, d3.interpolateViridis);
-      var uLine = bvu.cline(250, 20, function(d){ return d3.interpolateGreys(1 - d);});
+      var uLine = bvu.cline(250, 20, function(d) { return d3.interpolateGreys(1 - d);});
 
       canvasDiv
         .attr("style", "position: relative; margin-left: 100px; margin-top: -55px; height: 75px");
@@ -476,25 +476,25 @@ function drawMap(stim, data, task){
   var mapSvg = d3.select("#map");
   var map = bvu.heatmap().x(225).size(250).scale(scale2d).data(data);
 
-  if (stim.vsum){
+  if (stim.vsum) {
     map.scale(scaleVsum);
   }
-  else if (stim.shape == "juxtaposed"){
+  else if (stim.shape == "juxtaposed") {
     var umap = bvu.heatmap().size(250).scale(scale1dU).data(data).x(400);
     map.x(100).scale(scale1dV);
-    if (stim.binned == "continuous"){
+    if (stim.binned == "continuous") {
       map.scale(scaleContinuous1dV)
       umap.scale(scaleContinuous1dU);
     }
     mapSvg.append("g").call(umap);
   }
-  else if (stim.binned == "continuous"){
+  else if (stim.binned == "continuous") {
     map.scale(scaleContinuous);
   }
   mapSvg.append("g").call(map);
 }
 
-function revealTaskOne(){
+function revealTaskOne() {
   main.select("#answer").remove();
   var mapSvg = d3.select("#map");
   var stim = taskOneStimuli[questionNum - 1];
@@ -519,13 +519,13 @@ function revealTaskOne(){
 }
 
 
-function answerTaskOne(){
+function answerTaskOne() {
   var rt = (new Date()).getTime() - startTime;
   var d = d3.select(this).datum();
   var stim = taskOneStimuli[questionNum - 1];
   var stimProp;
   var answerData = { "workerId": workerId, "task": "One", "index": questionNum, "rt": rt, "v": d.v.v, "u": d.v.u};
-  for (stimProp in stim){
+  for (stimProp in stim) {
     answerData[stimProp] = stim[stimProp];
   }
 
@@ -542,7 +542,7 @@ function answerTaskOne(){
   writeAnswerTaskOne(answerData);
 }
 
-function writeAnswerTaskOne(response){
+function writeAnswerTaskOne(response) {
   //Called when we answer a question in the first task
   //XML to call out to a php script to store our data in a csv over in ./data/
   console.log(response);
@@ -554,7 +554,7 @@ function writeAnswerTaskOne(response){
   writeRequest.send();
 }
 
-function doneAnswerTaskOne(){
+function doneAnswerTaskOne() {
   //What to do when we get our XML request back.
 
   //TODO error handling here
@@ -564,7 +564,7 @@ function doneAnswerTaskOne(){
   done = questionNum > taskOneStimuli.length;
   d3.select("#questionNum").html(questionNum);
 
-  if (done){
+  if (done) {
     tutorialTwo();
   }
   else {
@@ -573,7 +573,7 @@ function doneAnswerTaskOne(){
 
 }
 
-function makeTaskTwoMap(size){
+function makeTaskTwoMap(size) {
 
   // Unlike task one, we don't care about
   // distinguishability. So we make samples of values
@@ -589,8 +589,8 @@ function makeTaskTwoMap(size){
   ];
 
   //16 "potential" values, one for each of our 4 levels
-  for (var i = 0;i < 4;i++){
-    for (var j = 0;j < 4;j++){
+  for (var i = 0;i < 4;i++) {
+    for (var j = 0;j < 4;j++) {
       values.push({u: sampler[i](), v: sampler[j]()});
     }
   }
@@ -600,7 +600,7 @@ function makeTaskTwoMap(size){
   var badValue = dl.random.uniform(0.5, 1);
   var lowUncertainty = dl.random.uniform(0, 0.5);
 
-  for (i = values.length;i < (size * size);i++){
+  for (i = values.length;i < (size * size);i++) {
     values.push({u: lowUncertainty(), v: badValue()});
   }
 
@@ -608,9 +608,9 @@ function makeTaskTwoMap(size){
 
   var matrix = [];
 
-  for (i = 0;i < size;i++){
+  for (i = 0;i < size;i++) {
     matrix[i] = [];
-    for (j = 0;j < size;j++){
+    for (j = 0;j < size;j++) {
       matrix[i][j] = values[i * size + j];
     }
   }
@@ -618,7 +618,7 @@ function makeTaskTwoMap(size){
   return matrix;
 }
 
-function taskTwo(){
+function taskTwo() {
   questionNum = 1;
   taskTwoStimuli = makeTaskTwoStimuli();
   main.selectAll("*").remove();
@@ -660,7 +660,7 @@ function taskTwo(){
 
 }
 
-function initializeTaskTwo(){
+function initializeTaskTwo() {
   var size = 5;
   d3.select("#map").selectAll("*").remove();
   d3.select("#legend").selectAll("*").remove();
@@ -675,7 +675,7 @@ function initializeTaskTwo(){
   taskTwoTokens = size;
 
   taskTwoGrid = [];
-  for (var i = 0;i < size;i++){
+  for (var i = 0;i < size;i++) {
     taskTwoGrid.push(dl.repeat(false, size));
   }
 
@@ -686,7 +686,7 @@ function initializeTaskTwo(){
 
   var tokenImg = "ship.png";
 
-  for (i = 0;i < tokens;i++){
+  for (i = 0;i < tokens;i++) {
     d3.select("#tokenBar").append("svg:image")
     .attr("x", i * tokenSize)
     .attr("height", tokenSize)
@@ -705,20 +705,20 @@ function initializeTaskTwo(){
 
 }
 
-function toggleToken(){
+function toggleToken() {
   var d = d3.select(this).datum();
-  if (taskTwoTokens > 0 && !taskTwoGrid[d.r][d.c]){
+  if (taskTwoTokens > 0 && !taskTwoGrid[d.r][d.c]) {
     placeToken(d);
   }
-  else if (taskTwoGrid[d.r][d.c]){
+  else if (taskTwoGrid[d.r][d.c]) {
     removeToken(d);
   }
 }
 
-function placeToken(d){
+function placeToken(d) {
   taskTwoGrid[d.r][d.c] = true;
   //gimme the first unplaced token
-  var token = d3.select("#tokenBar").selectAll("image").filter(function(t){ return !t.placed;});
+  var token = d3.select("#tokenBar").selectAll("image").filter(function(t) { return !t.placed;});
   token = d3.select(token.node());
   token.attr("y", "-50px");
   token.datum().placed = true;
@@ -731,7 +731,7 @@ function placeToken(d){
   var xoffset = 225;
   var yoffset = 0;
 
-  if (stim.shape == "juxtaposed"){
+  if (stim.shape == "juxtaposed") {
     xoffset = 100;
   }
 
@@ -746,37 +746,37 @@ function placeToken(d){
   .on("click", toggleToken);
 
   taskTwoTokens--;
-  if (taskTwoTokens == 0){
+  if (taskTwoTokens == 0) {
     d3.select("#answer").attr("disabled", null);
   }
 }
 
-function removeToken(d){
+function removeToken(d) {
   taskTwoGrid[d.r][d.c] = false;
   //gimme the token that was placed here
-  var token = d3.select("#tokenBar").selectAll("image").filter(function(t){ return d.r == t.r && d.c == t.c;});
+  var token = d3.select("#tokenBar").selectAll("image").filter(function(t) { return d.r == t.r && d.c == t.c;});
   token.attr("y", "0px");
   token.datum().placed = false;
   token.datum().u = -1;
   token.datum().v = -1;
   taskTwoTokens++;
   d3.select("#answer").attr("disabled", "disabled");
-  d3.select("#map").selectAll("image").filter(function(t){ return d.r == t.r && d.c == t.c;}).remove();
+  d3.select("#map").selectAll("image").filter(function(t) { return d.r == t.r && d.c == t.c;}).remove();
 }
 
-function answerTaskTwo(){
+function answerTaskTwo() {
   var data = [];
   var stimProp;
   var rt = (new Date()).getTime() - startTime;
   var stim = taskTwoStimuli[questionNum - 1];
   var answerData = { "workerId": workerId, "task": "Two", "index": questionNum, "rt": rt};
-  for (stimProp in stim){
+  for (stimProp in stim) {
     answerData[stimProp] = stim[stimProp];
   }
 
-  d3.select("#tokenBar").selectAll("image").each(function(d){ data.push({"v":d.v, "u":d.u});});
-  answerData.Vs = data.map(function(obj){ return obj.v;}).toString();
-  answerData.Us = data.map(function(obj){ return obj.u;}).toString();
+  d3.select("#tokenBar").selectAll("image").each(function(d) { data.push({"v":d.v, "u":d.u});});
+  answerData.Vs = data.map(function(obj) { return obj.v;}).toString();
+  answerData.Us = data.map(function(obj) { return obj.u;}).toString();
   answerData.meanV = dl.mean(data, "v");
   answerData.meanU = dl.mean(data, "u");
   answerData.stdV = dl.stdev(data, "v");
@@ -785,7 +785,7 @@ function answerTaskTwo(){
   writeAnswerTaskTwo(answerData);
 }
 
-function writeAnswerTaskTwo(response){
+function writeAnswerTaskTwo(response) {
   //Called when we answer a question in the second task
   //XML to call out to a php script to store our data in a csv over in ./data/
   console.log(response);
@@ -797,7 +797,7 @@ function writeAnswerTaskTwo(response){
   writeRequest.send();
 }
 
-function doneAnswerTaskTwo(){
+function doneAnswerTaskTwo() {
   //What to do when we get our XML request back.
 
   //TODO error handling here
@@ -807,7 +807,7 @@ function doneAnswerTaskTwo(){
   done = questionNum > taskTwoStimuli.length;
   d3.select("#questionNum").html(questionNum);
 
-  if (done){
+  if (done) {
     finishTask();
   }
   else {
@@ -816,13 +816,13 @@ function doneAnswerTaskTwo(){
 
 }
 
-function finishTask(){
+function finishTask() {
   //When we're finished with all tasks.
   main.selectAll("*").remove();
   postTest();
 }
 
-function riskAversion(form){
+function riskAversion(form) {
   //A risk aversion assay, from Mandrik and Bao 2005:
 
   var items = [
@@ -852,7 +852,7 @@ function riskAversion(form){
   var dlist = form.append("ol");
   var index = 0;
 
-  for (var item of items){
+  for (var item of items) {
     var question = dlist.append("li");
 
     question.html(item);
@@ -877,7 +877,7 @@ function riskAversion(form){
 
     questions.classed("likert", true);
 
-    for (var i = 1;i <= 7;i++){
+    for (var i = 1;i <= 7;i++) {
       numbers.append("span")
       .html(i + "");
 
@@ -895,7 +895,7 @@ function riskAversion(form){
   }
 }
 
-function postTest(){
+function postTest() {
   //Demographics and submission information.
 
   // Any metadata we want to be able to read over on MTurk should be set here.
@@ -908,7 +908,7 @@ function postTest(){
   .attr("id", "mturk_form")
   .attr("method", "post");
 
-  if (document.referrer && (document.referrer.indexOf("workersandbox") != -1)){
+  if (document.referrer && (document.referrer.indexOf("workersandbox") != -1)) {
     form.attr("action", "https://workersandbox.mturk.com/mturk/externalSubmit")
   }
   else {
@@ -964,7 +964,7 @@ function postTest(){
   var genderQ = dlist.append("li").html("What is your gender <br />");
 
 
-  for (var gender of genders){
+  for (var gender of genders) {
     q = genderQ.append("label");
 
     q.append("input")
@@ -978,7 +978,7 @@ function postTest(){
 
   var eduQ = dlist.append("li").html("What is your highest level of education? <br />");
 
-  for (var education of educations){
+  for (var education of educations) {
     q = eduQ.append("label");
 
     q.append("input")
@@ -992,7 +992,7 @@ function postTest(){
 
   var expQ = dlist.append("li").html("How do you rate your experience interpreting graphs and charts (1-5)? <br />");
 
-  for (var i = 0;i < experiences.length;i++){
+  for (var i = 0;i < experiences.length;i++) {
     q = expQ.append("label");
 
     q.append("input")
@@ -1033,7 +1033,7 @@ function postTest(){
 
 }
 
-function ineligible(){
+function ineligible() {
   main.selectAll("*").remove();
   main.append("p")
   .html("We're sorry, but your responses indicate that you are not eligible to participate in this study.");
