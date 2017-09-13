@@ -37,7 +37,7 @@ var taskTwoStimuli = [];
 var taskTwoGrid = [];
 var taskTwoTokens = 0;
 
-var maxSize = 200/16;
+var maxSize = 200 / 16;
 
 
 //Variables for our 8 conditions
@@ -71,80 +71,80 @@ var valueScale = d3.scaleQuantize()
     .range(d3.quantize(d3.interpolateViridis, 4));
 
 var uncertaintyScale = d3.scaleQuantize()
-    .domain([0,1])
+    .domain([0, 1])
     .range(d3.schemeGreys[4].reverse());
 
 var scale1dV = function(d){ return valueScale(d.v);};
 var scale1dU = function(d){ return uncertaintyScale(d.u);};
 var scaleContinuous1dV = function(d){return d3.interpolateViridis(d.v);};
-var scaleContinuous1dU = function(d){return d3.interpolateGreys(1-d.u);};
+var scaleContinuous1dU = function(d){return d3.interpolateGreys(1 - d.u);};
 
 //our potential values. these are values that are guaranteed to not lie on a
 //bin border of any of our discrete color scales, but also result in unique
 //colors for each scale, but also are not aligned with any tick marks
 
 var validQs = [
-  {u:0.1,v:0.2},
-  {u:0.1,v:0.45},
-  {u:0.1,v:0.7},
-  {u:0.1,v:0.95},
-  {v:0.1,u:0.4},
-  {v:0.4,u:0.4},
-  {v:0.7,u:0.4},
-  {v:0.8,u:0.4},
-  {v:0.3,u:0.6},
-  {v:0.8,u:0.6},
-  {v:0.4,u:0.8},
+  {u:0.1, v:0.2},
+  {u:0.1, v:0.45},
+  {u:0.1, v:0.7},
+  {u:0.1, v:0.95},
+  {v:0.1, u:0.4},
+  {v:0.4, u:0.4},
+  {v:0.7, u:0.4},
+  {v:0.8, u:0.4},
+  {v:0.3, u:0.6},
+  {v:0.8, u:0.6},
+  {v:0.4, u:0.8},
 ];
 
 var vsumLegend = [];
 var temp = Qvsum.tree();
-for(var i = 0;i<temp.length;i++) {
-  vsumLegend[i] = temp[temp.length-i-1];
+for (var i = 0;i < temp.length;i++) {
+  vsumLegend[i] = temp[temp.length - i - 1];
 }
 
 var squareLegend = [];
 temp = Q2d.matrix();
-for(var i = 0;i<temp.length;i++) {
-  squareLegend[i] = temp[temp.length-i-1];
+for (var i = 0;i < temp.length;i++) {
+  squareLegend[i] = temp[temp.length - i - 1];
 }
 
 function gup(name){
-  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regexS = "[\\?&]" + name + "=([^&#]*)";
   var regex = new RegExp( regexS );
   var tmpURL = window.location.href;
   var results = regex.exec( tmpURL );
-  if( results == null )
+  if ( results == null )
   return "";
   else
   return results[1];
 }
 
 var workerId = gup("workerId");
-if(!workerId){
+if (!workerId){
   workerId = "UNKNOWN";
 }
 
 var assignmentId = gup("assignmentId");
-if(!assignmentId){
+if (!assignmentId){
   assignmentId = "";
 }
 
 function consent(){
   //Consent form
   main.append("iframe")
-  .attr("src","consent.html");
+  .attr("src", "consent.html");
 
   var readyBtn = main.append("button")
-  .attr("class","button")
-  .attr("type","button")
-  .attr("id","answer")
-  .attr("name","answer")
+  .attr("class", "button")
+  .attr("type", "button")
+  .attr("id", "answer")
+  .attr("name", "answer")
   .text("I Consent")
-  .on("click",finishConsent);
+  .on("click", finishConsent);
 
-  if(assignmentId=="ASSIGNMENT_ID_NOT_AVAILABLE"){
-    readyBtn.attr("disabled","disabled");
+  if (assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE"){
+    readyBtn.attr("disabled", "disabled");
     readyBtn.text("PREVIEW");
   }
 
@@ -157,7 +157,7 @@ function finishConsent(){
 }
 
 function ishihara(){
-  var plates = [5,6,8,12,42];
+  var plates = [5, 6, 8, 12, 42];
   dl.permute(plates);
 
   main.selectAll("iframe").remove();
@@ -172,49 +172,49 @@ function ishihara(){
   var numPlates = 3;
 
   var platesDiv = main.append("div")
-  .attr("id","plates");
+  .attr("id", "plates");
 
-  for(var i = 0;i<3;i++){
+  for (var i = 0;i < 3;i++){
     platesDiv.append("div")
     .append("img")
-    .attr("width","300px")
-    .attr("src","img/ishihara/"+plates[i]+".png");
+    .attr("width", "300px")
+    .attr("src", "img/ishihara/" + plates[i] + ".png");
 
     platesDiv.append("div")
     .html("Visible number:")
     .append("input")
-    .attr("type","number")
-    .attr("name","plate"+plates[i])
-    .attr("id","plate"+plates[i]);
+    .attr("type", "number")
+    .attr("name", "plate" + plates[i])
+    .attr("id", "plate" + plates[i]);
 
   }
 
   main.append("p")
   .append("button")
-  .attr("class","button")
-  .attr("type","button")
-  .attr("id","answer")
-  .attr("name","answer")
+  .attr("class", "button")
+  .attr("type", "button")
+  .attr("id", "answer")
+  .attr("name", "answer")
   .text("Ready")
-  .on("click",finishIshihara);
+  .on("click", finishIshihara);
 
 }
 
 function finishIshihara(){
   var plates = [];
   main.select("#plates").selectAll("input").each( function(){
-    plates.push({"right": d3.select(this).attr("name").replace("plate",""), "guess": d3.select(this).property("value")});
+    plates.push({"right": d3.select(this).attr("name").replace("plate", ""), "guess": d3.select(this).property("value")});
   });
   var correct = true;
 
-  for(plate of plates){
-    correct = correct && plate.right==(plate.guess+"");
+  for (plate of plates){
+    correct = correct && plate.right == (plate.guess + "");
   }
 
-  if(correct){
+  if (correct){
     tutorial();
   }
-  else{
+  else {
     ineligible();
   }
 
@@ -225,15 +225,15 @@ function tutorial(){
   main.selectAll("*").remove();
 
   main.append("iframe")
-  .attr("src","tutorial.html");
+  .attr("src", "tutorial.html");
 
   main.append("button")
-  .attr("class","button")
-  .attr("type","button")
-  .attr("id","answer")
-  .attr("name","answer")
+  .attr("class", "button")
+  .attr("type", "button")
+  .attr("id", "answer")
+  .attr("name", "answer")
   .text("Ready")
-  .on("click",finishTutorial);
+  .on("click", finishTutorial);
 }
 
 function finishTutorial(){
@@ -247,15 +247,15 @@ function tutorialTwo(){
   main.selectAll("*").remove();
 
   main.append("iframe")
-  .attr("src","tutorialTwo.html");
+  .attr("src", "tutorialTwo.html");
 
   main.append("button")
-  .attr("class","button")
-  .attr("type","button")
-  .attr("id","answer")
-  .attr("name","answer")
+  .attr("class", "button")
+  .attr("type", "button")
+  .attr("id", "answer")
+  .attr("name", "answer")
   .text("Ready")
-  .on("click",finishTutorialTwo);
+  .on("click", finishTutorialTwo);
 }
 
 function finishTutorialTwo(){
@@ -281,9 +281,9 @@ function makeTaskOneStimuli(){
 
   var replicates = 8;
 
-  for(var type of types){
-    for(var i = 0;i<replicates;i++){
-      stimuli.push({binned: type.binned, shape:type.shape, vsum: type.vsum, question: validQs[Math.floor(Math.random()*validQs.length)]});
+  for (var type of types){
+    for (var i = 0;i < replicates;i++){
+      stimuli.push({binned: type.binned, shape:type.shape, vsum: type.vsum, question: validQs[Math.floor(Math.random() * validQs.length)]});
     }
   }
 
@@ -308,8 +308,8 @@ function makeTaskTwoStimuli(){
 
   var replicates = 8;
 
-  for(var type of types){
-    for(var i = 0;i<replicates;i++){
+  for (var type of types){
+    for (var i = 0;i < replicates;i++){
       stimuli.push({binned: type.binned, shape:type.shape, vsum: type.vsum});
     }
   }
@@ -325,18 +325,18 @@ function makeTaskOneMap(size){
 
   //the rest are just random distractors.
 
-  for(var i = values.length;i<(size*size);i++){
-    values.push(validQs[Math.floor(Math.random()*validQs.length)]);
+  for (var i = values.length;i < (size * size);i++){
+    values.push(validQs[Math.floor(Math.random() * validQs.length)]);
   }
 
   dl.permute(values);
 
   var matrix = [];
 
-  for(var i = 0;i<size;i++){
+  for (var i = 0;i < size;i++){
     matrix[i] = [];
-    for(var j = 0;j<size;j++){
-      matrix[i][j] = values[i*size + j];
+    for (var j = 0;j < size;j++){
+      matrix[i][j] = values[i * size + j];
     }
   }
 
@@ -347,23 +347,23 @@ function taskOne(){
   taskOneStimuli = makeTaskOneStimuli();
 
   main.append("p")
-  .attr("id","questionTitle")
-  .html("Question <span id=\"questionNum\">"+questionNum+"</span>/<span id=\"maxQuestions\">"+taskOneStimuli.length+"</span>");
+  .attr("id", "questionTitle")
+  .html("Question <span id=\"questionNum\">" + questionNum + "</span>/<span id=\"maxQuestions\">" + taskOneStimuli.length + "</span>");
 
   main.append("p")
-  .attr("id","prompt")
+  .attr("id", "prompt")
   .html("Click the \"Ready\" button to begin.");
 
   main.append("p")
-  .attr("id","question");
+  .attr("id", "question");
 
   main.append("svg")
-  .attr("id","map")
-  .attr("style","width: 700px; height: 250px;");
+  .attr("id", "map")
+  .attr("style", "width: 700px; height: 250px;");
 
   main.append("div")
-  .attr("id","legend")
-  .attr("style","width: 700px;");
+  .attr("id", "legend")
+  .attr("style", "width: 700px;");
 
   main.append("p")
   .html("You will be asked to find a location on a map that fits a certain criteria. Multiple locations might fit the criteria, in which case choose any valid location.");
@@ -379,24 +379,24 @@ function initializeTaskOne(){
   .html("Click the \"Ready\" button to begin.");
 
   d3.select("#question").append("button")
-  .attr("class","button")
-  .attr("type","button")
-  .attr("id","answer")
-  .attr("name","answer")
+  .attr("class", "button")
+  .attr("type", "button")
+  .attr("id", "answer")
+  .attr("name", "answer")
   .text("Ready")
-  .attr("style","position: relative; top: 125px;")
-  .on("click",revealTaskOne);
+  .attr("style", "position: relative; top: 125px;")
+  .on("click", revealTaskOne);
 
 }
 
 
-function drawMap(stim,data,task){
+function drawMap(stim, data, task){
 
   //make legend
   var legendSvg, legend;
-  var vtitle = task=="two" ? "Danger" : "Value";
-  if(stim.shape=="juxtaposed"){
-    legendSvg = d3.select("#legend").append("svg").attr("style","width: 100%; height: 75");
+  var vtitle = task == "two" ? "Danger" : "Value";
+  if (stim.shape == "juxtaposed"){
+    legendSvg = d3.select("#legend").append("svg").attr("style", "width: 100%; height: 75");
     legend = bvu.legend.simpleLegend()
     .title(vtitle)
     .size(250)
@@ -419,16 +419,16 @@ function drawMap(stim,data,task){
     legendSvg.append("g").call(legend);
 
   }
-  else{
-    legendSvg = d3.select("#legend").append("svg").attr("style","width: 100%; height: 225");
-    if(stim.shape=="arc"){
+  else {
+    legendSvg = d3.select("#legend").append("svg").attr("style", "width: 100%; height: 225");
+    if (stim.shape == "arc"){
       legend = bvu.legend.arcmapLegend()
           .size(150)
           .x(275)
           .y(50)
           .scale(scaleContinuous);
     }
-    else{
+    else {
       legend = bvu.legend.heatmapLegend()
           .size(150)
           .x(275)
@@ -436,39 +436,39 @@ function drawMap(stim,data,task){
           .scale(scaleContinuous);
     }
 
-    if(stim.vsum){
+    if (stim.vsum){
       legend.data(vsumLegend);
     }
-    else{
+    else {
       legend.data(squareLegend);
     }
     legend.vtitle(vtitle);
     legendSvg.append("g").call(legend);
   }
 
-  if(stim.binned=="continuous"){
+  if (stim.binned == "continuous"){
     var canvasDiv = d3.select("#legend").append("div")
-      .attr("style","position: relative; margin-top: -175px; margin-left: 275px;")
-    if(stim.shape=="square"){
-      var square = bvu.csquare(150,d3.interpolateViridis);
+      .attr("style", "position: relative; margin-top: -175px; margin-left: 275px;")
+    if (stim.shape == "square"){
+      var square = bvu.csquare(150, d3.interpolateViridis);
       canvasDiv.call(square);
     }
-    else if(stim.shape=="arc"){
-      var arc = bvu.carc(150,d3.interpolateViridis);
+    else if (stim.shape == "arc"){
+      var arc = bvu.carc(150, d3.interpolateViridis);
       canvasDiv.call(arc);
     }
-    else{
-      legendSvg.attr("style","width: 100%; height: 75");
-      var vLine = bvu.cline(250,20,d3.interpolateViridis);
-      var uLine = bvu.cline(250,20,function(d){ return d3.interpolateGreys(1-d);});
+    else {
+      legendSvg.attr("style", "width: 100%; height: 75");
+      var vLine = bvu.cline(250, 20, d3.interpolateViridis);
+      var uLine = bvu.cline(250, 20, function(d){ return d3.interpolateGreys(1 - d);});
 
       canvasDiv
-        .attr("style","position: relative; margin-left: 100px; margin-top: -55px; height: 75px");
+        .attr("style", "position: relative; margin-left: 100px; margin-top: -55px; height: 75px");
 
       canvasDiv.call(vLine);
 
       var uCanvasDiv = d3.select("#legend").append("div")
-        .attr("style","position: relative; margin-left: 400px; margin-top: -75px; height: 75px");
+        .attr("style", "position: relative; margin-left: 400px; margin-top: -75px; height: 75px");
 
       uCanvasDiv.call(uLine);
     }
@@ -478,19 +478,19 @@ function drawMap(stim,data,task){
   var mapSvg = d3.select("#map");
   var map = bvu.heatmap().x(225).size(250).scale(scale2d).data(data);
 
-  if(stim.vsum){
+  if (stim.vsum){
     map.scale(scaleVsum);
   }
-  else if(stim.shape=="juxtaposed"){
+  else if (stim.shape == "juxtaposed"){
     var umap = bvu.heatmap().size(250).scale(scale1dU).data(data).x(400);
     map.x(100).scale(scale1dV);
-    if(stim.binned=="continuous"){
+    if (stim.binned == "continuous"){
       map.scale(scaleContinuous1dV)
       umap.scale(scaleContinuous1dU);
     }
     mapSvg.append("g").call(umap);
   }
-  else if(stim.binned=="continuous"){
+  else if (stim.binned == "continuous"){
     map.scale(scaleContinuous);
   }
   mapSvg.append("g").call(map);
@@ -499,24 +499,24 @@ function drawMap(stim,data,task){
 function revealTaskOne(){
   main.select("#answer").remove();
   var mapSvg = d3.select("#map");
-  var stim = taskOneStimuli[questionNum-1];
+  var stim = taskOneStimuli[questionNum - 1];
 
   //make data
   var data = makeTaskOneMap(5);
 
   //make map
-  drawMap(stim,data);
+  drawMap(stim, data);
 
   //make question
   //prep for a response
 
   var questionString =
-  "Select the location with a value of "+stim.question.v+" and an uncertainty of "+stim.question.u;
+  "Select the location with a value of " + stim.question.v + " and an uncertainty of " + stim.question.u;
   main.select("#prompt").html(questionString);
   startTime = (new Date()).getTime();
 
   mapSvg.selectAll("rect")
-  .on("click",answerTaskOne);
+  .on("click", answerTaskOne);
 
 }
 
@@ -524,10 +524,10 @@ function revealTaskOne(){
 function answerTaskOne(){
   var rt = (new Date()).getTime() - startTime;
   var d = d3.select(this).datum();
-  var stim = taskOneStimuli[questionNum-1];
+  var stim = taskOneStimuli[questionNum - 1];
 
   var answerData = { "workerId": workerId, "task": "One", "index": questionNum, "rt": rt, "v": d.v.v, "u": d.v.u};
-  for(stimProp in stim){
+  for (stimProp in stim){
     answerData[stimProp] = stim[stimProp];
   }
 
@@ -538,7 +538,7 @@ function answerTaskOne(){
   answerData.qU = answerData.question.u;
   answerData.vError = vError;
   answerData.uError = uError;
-  answerData.error = vError+uError;
+  answerData.error = vError + uError;
 
   delete answerData.question;
   writeAnswerTaskOne(answerData);
@@ -549,10 +549,10 @@ function writeAnswerTaskOne(response){
   //XML to call out to a php script to store our data in a csv over in ./data/
   console.log(response);
   var writeRequest = new XMLHttpRequest();
-  var writeString = "answer="+JSON.stringify(response);
-  writeRequest.open("GET","data/writeJSON.php?"+writeString,true);
+  var writeString = "answer=" + JSON.stringify(response);
+  writeRequest.open("GET", "data/writeJSON.php?" + writeString, true);
   writeRequest.setRequestHeader("Content-Type", "application/json");
-  writeRequest.addEventListener("load",doneAnswerTaskOne);
+  writeRequest.addEventListener("load", doneAnswerTaskOne);
   writeRequest.send();
 }
 
@@ -563,13 +563,13 @@ function doneAnswerTaskOne(){
 
   //Should check to see if we've run out of questions to answer
   questionNum++;
-  done = questionNum>taskOneStimuli.length;
+  done = questionNum > taskOneStimuli.length;
   d3.select("#questionNum").html(questionNum);
 
-  if(done){
+  if (done){
     tutorialTwo();
   }
-  else{
+  else {
     initializeTaskOne();
   }
 
@@ -584,25 +584,25 @@ function makeTaskTwoMap(size){
 
   var values = [];
   var sampler = [
-    dl.random.uniform(0,0.24),
-    dl.random.uniform(0.26,0.49),
-    dl.random.uniform(0.51,0.74),
-    dl.random.uniform(0.76,1.0)
+    dl.random.uniform(0, 0.24),
+    dl.random.uniform(0.26, 0.49),
+    dl.random.uniform(0.51, 0.74),
+    dl.random.uniform(0.76, 1.0)
   ];
 
   //16 "potential" values, one for each of our 4 levels
-  for(var i = 0;i<4;i++){
-    for(var j = 0;j<4;j++){
+  for (var i = 0;i < 4;i++){
+    for (var j = 0;j < 4;j++){
       values.push({u: sampler[i](), v: sampler[j]()});
     }
   }
 
   //remaining samples are just "bad" values that are unsafe
   // with high certainty
-  var badValue = dl.random.uniform(0.5,1);
-  var lowUncertainty = dl.random.uniform(0,0.5);
+  var badValue = dl.random.uniform(0.5, 1);
+  var lowUncertainty = dl.random.uniform(0, 0.5);
 
-  for(var i = values.length;i<(size*size);i++){
+  for (var i = values.length;i < (size * size);i++){
     values.push({u: lowUncertainty(), v: badValue()});
   }
 
@@ -610,10 +610,10 @@ function makeTaskTwoMap(size){
 
   var matrix = [];
 
-  for(var i = 0;i<size;i++){
+  for (var i = 0;i < size;i++){
     matrix[i] = [];
-    for(var j = 0;j<size;j++){
-      matrix[i][j] = values[i*size + j];
+    for (var j = 0;j < size;j++){
+      matrix[i][j] = values[i * size + j];
     }
   }
 
@@ -626,35 +626,35 @@ function taskTwo(){
   main.selectAll("*").remove();
 
   main.append("p")
-  .attr("id","questionTitle")
-  .html("Question <span id=\"questionNum\">"+questionNum+"</span>/<span id=\"maxQuestions\">"+taskTwoStimuli.length+"</span>");
+  .attr("id", "questionTitle")
+  .html("Question <span id=\"questionNum\">" + questionNum + "</span>/<span id=\"maxQuestions\">" + taskTwoStimuli.length + "</span>");
 
   main.append("p")
-  .attr("id","question");
+  .attr("id", "question");
 
   main.append("svg")
-  .attr("id","tokenBar")
-  .attr("style","width: 250px; height: 50px;");
+  .attr("id", "tokenBar")
+  .attr("style", "width: 250px; height: 50px;");
 
   main.append("svg")
-  .attr("id","map")
-  .attr("style","width: 700px; height: 250px;");
+  .attr("id", "map")
+  .attr("style", "width: 700px; height: 250px;");
 
   main.append("div")
-  .attr("id","legend")
-  .attr("style","width: 700px;");
+  .attr("id", "legend")
+  .attr("style", "width: 700px;");
 
   main.append("input")
-  .attr("class","button")
-  .attr("type","button")
-  .attr("id","answer")
-  .attr("name","answer")
-  .attr("value","Confirm")
-  .attr("disabled","disabled")
-  .on("click",answerTaskTwo);
+  .attr("class", "button")
+  .attr("type", "button")
+  .attr("id", "answer")
+  .attr("name", "answer")
+  .attr("value", "Confirm")
+  .attr("disabled", "disabled")
+  .on("click", answerTaskTwo);
 
   main.append("p")
-  .attr("id","prompt")
+  .attr("id", "prompt")
   .html("Once you have placed all targets, click the \"Confirm\" button to confirm your choices.");
 
 
@@ -669,7 +669,7 @@ function initializeTaskTwo(){
   d3.select("#tokenBar").selectAll("*").remove();
 
   startTime = (new Date()).getTime();
-  var stim = taskTwoStimuli[questionNum-1];
+  var stim = taskTwoStimuli[questionNum - 1];
   var data = makeTaskTwoMap(5);
   var tokens = size;
   var mapSvg = d3.select("#map");
@@ -677,8 +677,8 @@ function initializeTaskTwo(){
   taskTwoTokens = size;
 
   taskTwoGrid = [];
-  for(var i = 0;i<size;i++){
-    taskTwoGrid.push(dl.repeat(false,size));
+  for (var i = 0;i < size;i++){
+    taskTwoGrid.push(dl.repeat(false, size));
   }
 
   d3.select("#question")
@@ -688,31 +688,31 @@ function initializeTaskTwo(){
 
   var tokenImg = "ship.png";
 
-  for(var i =0;i<tokens;i++){
+  for (var i = 0;i < tokens;i++){
     d3.select("#tokenBar").append("svg:image")
-    .attr("x", i*tokenSize)
+    .attr("x", i * tokenSize)
     .attr("height", tokenSize)
     .attr("width", tokenSize)
-    .attr("xlink:href","img/"+tokenImg)
+    .attr("xlink:href", "img/" + tokenImg)
     .datum({"placed":false, "r": -1, "c": -1});
 
   }
 
-  drawMap(stim,data,"two");
+  drawMap(stim, data, "two");
 
   mapSvg.selectAll("rect")
-  .on("click",toggleToken);
+  .on("click", toggleToken);
 
-  d3.select("#answer").attr("disabled","disabled");
+  d3.select("#answer").attr("disabled", "disabled");
 
 }
 
 function toggleToken(){
   var d = d3.select(this).datum();
-  if(taskTwoTokens>0 && !taskTwoGrid[d.r][d.c]){
+  if (taskTwoTokens > 0 && !taskTwoGrid[d.r][d.c]){
     placeToken(d);
   }
-  else if(taskTwoGrid[d.r][d.c]){
+  else if (taskTwoGrid[d.r][d.c]){
     removeToken(d);
   }
 }
@@ -722,66 +722,66 @@ function placeToken(d){
   //gimme the first unplaced token
   var token = d3.select("#tokenBar").selectAll("image").filter(function(t){ return !t.placed;});
   token = d3.select(token.node());
-  token.attr("y","-50px");
+  token.attr("y", "-50px");
   token.datum().placed = true;
   token.datum().r = d.r;
   token.datum().c = d.c;
   token.datum().v = d.v.v;
   token.datum().u = d.v.u;
 
-  var stim = taskTwoStimuli[questionNum-1];
+  var stim = taskTwoStimuli[questionNum - 1];
   var xoffset = 225;
   var yoffset = 0;
 
-  if(stim.shape=="juxtaposed"){
+  if (stim.shape == "juxtaposed"){
     xoffset = 100;
   }
 
   d3.select("#map").append("svg:image")
-  .attr("x", (d.c*token.attr("width")) + xoffset)
-  .attr("y",(d.r*token.attr("height")) + yoffset)
-  .attr("width",token.attr("width"))
-  .attr("height",token.attr("height"))
-  .attr("transform",d3.select("#map").select("g").attr("transform"))
-  .attr("xlink:href",token.attr("xlink:href"))
+  .attr("x", (d.c * token.attr("width")) + xoffset)
+  .attr("y", (d.r * token.attr("height")) + yoffset)
+  .attr("width", token.attr("width"))
+  .attr("height", token.attr("height"))
+  .attr("transform", d3.select("#map").select("g").attr("transform"))
+  .attr("xlink:href", token.attr("xlink:href"))
   .datum({"r": d.r, "c": d.c})
-  .on("click",toggleToken);
+  .on("click", toggleToken);
 
   taskTwoTokens--;
-  if(taskTwoTokens==0){
-    d3.select("#answer").attr("disabled",null);
+  if (taskTwoTokens == 0){
+    d3.select("#answer").attr("disabled", null);
   }
 }
 
 function removeToken(d){
   taskTwoGrid[d.r][d.c] = false;
   //gimme the token that was placed here
-  var token = d3.select("#tokenBar").selectAll("image").filter(function(t){ return d.r==t.r && d.c==t.c;});
-  token.attr("y","0px");
+  var token = d3.select("#tokenBar").selectAll("image").filter(function(t){ return d.r == t.r && d.c == t.c;});
+  token.attr("y", "0px");
   token.datum().placed = false;
   token.datum().u = -1;
   token.datum().v = -1;
   taskTwoTokens++;
-  d3.select("#answer").attr("disabled","disabled");
-  d3.select("#map").selectAll("image").filter(function(t){ return d.r==t.r && d.c==t.c;}).remove();
+  d3.select("#answer").attr("disabled", "disabled");
+  d3.select("#map").selectAll("image").filter(function(t){ return d.r == t.r && d.c == t.c;}).remove();
 }
 
 function answerTaskTwo(){
   var data = [];
   var d = d3.select("#tokenBar").selectAll("image").each(function(d){ data.push({"v":d.v, "u":d.u});});
   var rt = (new Date()).getTime() - startTime;
-  var stim = taskTwoStimuli[questionNum-1];
+  var stim = taskTwoStimuli[questionNum - 1];
   var answerData = { "workerId": workerId, "task": "Two", "index": questionNum, "rt": rt};
-  for(stimProp in stim){
+  for (stimProp in stim){
     answerData[stimProp] = stim[stimProp];
   }
 
   answerData.Vs = data.map(function(obj){ return obj.v;}).toString();
   answerData.Us = data.map(function(obj){ return obj.u;}).toString();
-  answerData.meanV = dl.mean(data,"v");
-  answerData.meanU = dl.mean(data,"u");
-  answerData.stdV = dl.stdev(data,"v");
-  answerData.stdU = dl.stdev(data,"u");
+  answerData.meanV = dl.mean(data, "v");
+  answerData.meanU = dl.mean(data, "u");
+  answerData.stdV = dl.stdev(data, "v");
+  answerData.stdU = dl.stdev(data, "u");
 
   writeAnswerTaskTwo(answerData);
 }
@@ -791,10 +791,10 @@ function writeAnswerTaskTwo(response){
   //XML to call out to a php script to store our data in a csv over in ./data/
   console.log(response);
   var writeRequest = new XMLHttpRequest();
-  var writeString = "answer="+JSON.stringify(response);
-  writeRequest.open("GET","data/writeJSON.php?"+writeString,true);
+  var writeString = "answer=" + JSON.stringify(response);
+  writeRequest.open("GET", "data/writeJSON.php?" + writeString, true);
   writeRequest.setRequestHeader("Content-Type", "application/json");
-  writeRequest.addEventListener("load",doneAnswerTaskTwo);
+  writeRequest.addEventListener("load", doneAnswerTaskTwo);
   writeRequest.send();
 }
 
@@ -805,13 +805,13 @@ function doneAnswerTaskTwo(){
   //Should check to see if we've run out of questions to answer
 
   questionNum++;
-  done = questionNum>taskTwoStimuli.length;
+  done = questionNum > taskTwoStimuli.length;
   d3.select("#questionNum").html(questionNum);
 
-  if(done){
+  if (done){
     finishTask();
   }
-  else{
+  else {
     initializeTaskTwo();
   }
 
@@ -853,40 +853,40 @@ function riskAversion(form){
   var dlist = form.append("ol");
   var index = 0;
 
-  for(var item of items){
+  for (var item of items){
     var question = dlist.append("li");
 
     question.html(item);
 
     var label = question.append("div");
 
-    label.classed("likert",true);
+    label.classed("likert", true);
 
     label.append("span")
     .html("Strongly Disagree")
-    .attr("style","align-self: left");
+    .attr("style", "align-self: left");
 
     label.append("span")
     .html("Strongly Agree")
-    .attr("style","align-self: right");
+    .attr("style", "align-self: right");
 
     var numbers = question.append("div");
 
-    numbers.classed("likert",true);
+    numbers.classed("likert", true);
 
     var questions = question.append("div");
 
-    questions.classed("likert",true);
+    questions.classed("likert", true);
 
-    for(var i = 1;i<=7;i++){
+    for (var i = 1;i <= 7;i++){
       numbers.append("span")
-      .html(i+"");
+      .html(i + "");
 
       questions.append("input")
-      .attr("type","radio")
-      .attr("required","required")
-      .attr("name","risk"+index)
-      .attr("value",i*valences[index]);
+      .attr("type", "radio")
+      .attr("required", "required")
+      .attr("name", "risk" + index)
+      .attr("value", i * valences[index]);
 
     }
 
@@ -907,30 +907,30 @@ function postTest(){
   .html("This concludes the main task of the study. Thank you for your participation!");
 
   form = main.append("form")
-  .attr("id","mturk_form")
-  .attr("method","post");
+  .attr("id", "mturk_form")
+  .attr("method", "post");
 
-  if(document.referrer && (document.referrer.indexOf("workersandbox")!=-1)){
-    form.attr("action","https://workersandbox.mturk.com/mturk/externalSubmit")
+  if (document.referrer && (document.referrer.indexOf("workersandbox") != -1)){
+    form.attr("action", "https://workersandbox.mturk.com/mturk/externalSubmit")
   }
-  else{
-    form.attr("action","https://www.mturk.com/mturk/externalSubmit");
+  else {
+    form.attr("action", "https://www.mturk.com/mturk/externalSubmit");
   }
 
   form.append("input")
-  .attr("type","hidden")
-  .attr("name","experiment")
-  .attr("value",experiment);
+  .attr("type", "hidden")
+  .attr("name", "experiment")
+  .attr("value", experiment);
 
   form.append("input")
-  .attr("type","hidden")
-  .attr("name","assignmentId")
-  .attr("value",assignmentId);
+  .attr("type", "hidden")
+  .attr("name", "assignmentId")
+  .attr("value", assignmentId);
 
   form.append("input")
-  .attr("type","hidden")
-  .attr("name","workerId")
-  .attr("value",workerId);
+  .attr("type", "hidden")
+  .attr("name", "workerId")
+  .attr("value", workerId);
 
   var q;
 
@@ -939,99 +939,99 @@ function postTest(){
 
   var dlist = form.append("ol");
 
-  var genders = ["Male","Female","Other","Decline to state"];
-  var educations = ["Some high school","High school degree","Some college","College degree","Graduate degree"];
-  var experiences = ["1. No experience","2.","3. Some experience","4.","5. A great deal of experience"];
+  var genders = ["Male", "Female", "Other", "Decline to state"];
+  var educations = ["Some high school", "High school degree", "Some college", "College degree", "Graduate degree"];
+  var experiences = ["1. No experience", "2.", "3. Some experience", "4.", "5. A great deal of experience"];
 
   var visionQ = dlist.append("li").html("Do you have normal vision (or vision which has been corrected to normal)? <br />");
   var q = visionQ.append("label");
 
   q.append("input")
-  .attr("type","radio")
-  .attr("name","vision")
-  .attr("required","required")
-  .attr("value","Yes");
+  .attr("type", "radio")
+  .attr("name", "vision")
+  .attr("required", "required")
+  .attr("value", "Yes");
 
   q.append("span").html("Yes <br />");
 
   q = visionQ.append("label");
 
   q.append("input")
-  .attr("type","radio")
-  .attr("name","vision")
-  .attr("required","required")
-  .attr("value","No");
+  .attr("type", "radio")
+  .attr("name", "vision")
+  .attr("required", "required")
+  .attr("value", "No");
   q.append("span").html("No <br />");
 
   var genderQ = dlist.append("li").html("What is your gender <br />");
 
 
-  for(var gender of genders){
+  for (var gender of genders){
     q = genderQ.append("label");
 
     q.append("input")
-    .attr("type","radio")
-    .attr("name","gender")
-    .attr("required","required")
-    .attr("value",gender);
+    .attr("type", "radio")
+    .attr("name", "gender")
+    .attr("required", "required")
+    .attr("value", gender);
 
-    q.append("span").html(gender +"<br />");
+    q.append("span").html(gender + "<br />");
   }
 
   var eduQ = dlist.append("li").html("What is your highest level of education? <br />");
 
-  for(var education of educations){
+  for (var education of educations){
     q = eduQ.append("label");
 
     q.append("input")
-    .attr("type","radio")
-    .attr("name","education")
-    .attr("required","required")
-    .attr("value",education);
+    .attr("type", "radio")
+    .attr("name", "education")
+    .attr("required", "required")
+    .attr("value", education);
 
     q.append("span").html(education + "<br />");
   }
 
   var expQ = dlist.append("li").html("How do you rate your experience interpreting graphs and charts (1-5)? <br />");
 
-  for(var i = 0;i<experiences.length;i++){
+  for (var i = 0;i < experiences.length;i++){
     q = expQ.append("label");
 
     q.append("input")
-    .attr("type","radio")
-    .attr("name","experience")
-    .attr("required","required")
-    .attr("value",i);
+    .attr("type", "radio")
+    .attr("name", "experience")
+    .attr("required", "required")
+    .attr("value", i);
 
-    q.append("span").html(experiences[i]+"<br />");
+    q.append("span").html(experiences[i] + "<br />");
   }
 
   var ageQ = dlist.append("li").html("What is your age? <br />");
 
   ageQ.append("input")
-  .attr("type","number")
-  .attr("name","age")
-  .attr("required","required")
-  .attr("min","18")
-  .attr("max","100");
+  .attr("type", "number")
+  .attr("name", "age")
+  .attr("required", "required")
+  .attr("min", "18")
+  .attr("max", "100");
 
 
   var commentQ = dlist.append("li").html("Any additional comments of feedback? <br />");
 
   commentQ.append("textarea")
-  .attr("name","comments")
-  .attr("rows","4")
-  .attr("cols","50");
+  .attr("name", "comments")
+  .attr("rows", "4")
+  .attr("cols", "50");
 
   riskAversion(form);
 
   form.append("input")
-  .attr("id","turkBtn")
-  .attr("type","submit")
-  .attr("class","button")
-  .attr("type","submit")
-  .attr("name","submit")
-  .attr("value","Submit");
+  .attr("id", "turkBtn")
+  .attr("type", "submit")
+  .attr("class", "button")
+  .attr("type", "submit")
+  .attr("name", "submit")
+  .attr("value", "Submit");
 
 }
 
