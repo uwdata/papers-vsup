@@ -61,7 +61,7 @@ var scaleVsum = bvu.scale().quantize(Qvsum).range(d3.interpolateViridis);
 var scale2d = bvu.scale().quantize(Q2d).range(d3.interpolateViridis);
 var scaleContinuous = function(d){
   var c = d3.interpolateViridis(d.v);
-  return d3.interpolateLab(c, d3.color("#fff"))(d.u);
+  return d3.interpolateLab(c, d3.color("#ddd"))(d.u);
 }
 
 //juxtaposed univated scales
@@ -294,6 +294,26 @@ function makeTaskOneStimuli(){
 function makeTaskTwoStimuli(){
   var stimuli = [];
 
+  var types =
+  [
+    {binned: "discrete", shape:"square", vsum:false},
+    {binned: "continuous", shape:"square", vsum:false},
+    {binned: "discrete", shape:"juxtaposed", vsum:false},
+    {binned: "continuous", shape:"juxtaposed", vsum:false},
+    {binned: "discrete", shape:"arc", vsum:false},
+    {binned: "continuous", shape:"arc", vsum:false},
+    {binned: "discrete", shape:"square", vsum:true},
+    {binned: "discrete", shape:"arc", vsum:true}
+  ];
+
+  var replicates = 8;
+
+  for(var type of types){
+    for(var i = 0;i<replicates;i++){
+      stimuli.push({binned: type.binned, shape:type.shape, vsum: type.vsum});
+    }
+  }
+
   dl.permute(stimuli);
   return stimuli;
 }
@@ -370,20 +390,20 @@ function initializeTaskOne(){
 }
 
 
-function drawMap(stim,data){
+function drawMap(stim,data,task){
 
   //make legend
   var legendSvg, legend;
-
+  var vtitle = task=="two" ? "Danger" : "Value";
   if(stim.shape=="juxtaposed"){
     legendSvg = d3.select("#legend").append("svg").attr("style","width: 100%; height: 75");
     legend = bvu.legend.simpleLegend()
-    .title("Value")
+    .title(vtitle)
     .size(250)
     .format(".2f")
     .height(20)
     .scale(valueScale)
-    .x(0)
+    .x(100)
     .y(20);
 
     var ulegend = bvu.legend.simpleLegend()
@@ -392,7 +412,7 @@ function drawMap(stim,data){
     .format(".2f")
     .height(20)
     .scale(uncertaintyScale)
-    .x(300)
+    .x(400)
     .y(20);
 
     legendSvg.append("g").call(ulegend);
@@ -422,7 +442,7 @@ function drawMap(stim,data){
     else{
       legend.data(squareLegend);
     }
-
+    legend.vtitle(vtitle);
     legendSvg.append("g").call(legend);
   }
 
@@ -443,16 +463,15 @@ function drawMap(stim,data){
       var uLine = bvu.cline(250,20,function(d){ return d3.interpolateGreys(1-d);});
 
       canvasDiv
-        .attr("style","position: relative; margin-top: -55px; height: 75px");
+        .attr("style","position: relative; margin-left: 100px; margin-top: -55px; height: 75px");
 
       canvasDiv.call(vLine);
 
       var uCanvasDiv = d3.select("#legend").append("div")
-        .attr("style","position: relative; margin-left: 300px; margin-top: -75px; height: 75px");
+        .attr("style","position: relative; margin-left: 400px; margin-top: -75px; height: 75px");
 
       uCanvasDiv.call(uLine);
     }
-
   }
 
   //make map
@@ -463,13 +482,16 @@ function drawMap(stim,data){
     map.scale(scaleVsum);
   }
   else if(stim.shape=="juxtaposed"){
-    var umap = bvu.heatmap().size(250).scale(scale1dU).data(data).x(300);
-    map.x(0).scale(scale1dV);
+    var umap = bvu.heatmap().size(250).scale(scale1dU).data(data).x(400);
+    map.x(100).scale(scale1dV);
     if(stim.binned=="continuous"){
       map.scale(scaleContinuous1dV)
       umap.scale(scaleContinuous1dU);
     }
     mapSvg.append("g").call(umap);
+  }
+  else if(stim.binned=="continuous"){
+    map.scale(scaleContinuous);
   }
   mapSvg.append("g").call(map);
 }
@@ -554,9 +576,34 @@ function doneAnswerTaskOne(){
 }
 
 function makeTaskTwoMap(size){
-  //want an even sampling of outcomes
+
+  // Unlike task one, we don't care about
+  // distinguishability. So we make samples of values
+  // at each level of uncertainty.
+
+
+  var values = [];
+  var sampler = [
+    dl.random.uniform(0,0.24),
+    dl.random.uniform(0.26,0.49),
+    dl.random.uniform(0.51,0.74),
+    dl.random.uniform(0.76,1.0)
+  ];
+
+  //16 "potential" values, one for each of our 4 levels
+  for(var i = 0;i<4;i++){
+    for(var j = 0;j<4;j++){
+      values.push({u: sampler[i](), v: sampler[j]()});
+    }
+  }
+
+  //remaining samples are just "bad" values that are unsafe
+  // with high certainty
+  var badValue = dl.random.uniform(0.5,1);
+  var lowUncertainty = dl.random.uniform(0,0.5);
 
   for(var i = values.length;i<(size*size);i++){
+    values.push({u: lowUncertainty(), v: badValue()});
   }
 
   dl.permute(values);
@@ -583,19 +630,19 @@ function taskTwo(){
   .html("Question <span id=\"questionNum\">"+questionNum+"</span>/<span id=\"maxQuestions\">"+taskTwoStimuli.length+"</span>");
 
   main.append("p")
-  .attr("id","prompt")
-  .html("Once you have placed all targets, click the \"Confirm\" button to confirm your choices.");
+  .attr("id","question");
 
   main.append("svg")
   .attr("id","tokenBar")
-  .attr("style","width: 400px; height: 50px;");
+  .attr("style","width: 250px; height: 50px;");
 
   main.append("svg")
   .attr("id","map")
   .attr("style","width: 700px; height: 250px;");
 
-  main.append("p")
-  .attr("id","question");
+  main.append("div")
+  .attr("id","legend")
+  .attr("style","width: 700px;");
 
   main.append("input")
   .attr("class","button")
@@ -606,39 +653,41 @@ function taskTwo(){
   .attr("disabled","disabled")
   .on("click",answerTaskTwo);
 
+  main.append("p")
+  .attr("id","prompt")
+  .html("Once you have placed all targets, click the \"Confirm\" button to confirm your choices.");
+
+
   initializeTaskTwo();
 
 }
 
 function initializeTaskTwo(){
-
+  var size = 5;
   d3.select("#map").selectAll("*").remove();
   d3.select("#legend").selectAll("*").remove();
   d3.select("#tokenBar").selectAll("*").remove();
 
   startTime = (new Date()).getTime();
   var stim = taskTwoStimuli[questionNum-1];
-
-  var tokens = stim.size;
+  var data = makeTaskTwoMap(5);
+  var tokens = size;
   var mapSvg = d3.select("#map");
 
-  taskTwoTokens = stim.size;
+  taskTwoTokens = size;
 
   taskTwoGrid = [];
   for(var i = 0;i<size;i++){
     taskTwoGrid.push(dl.repeat(false,size));
   }
-  if(stim.role=="att"){
-    d3.select("#question")
-    .html("Click to place missiles on the map on locations where you think you will sink the most ships: where the probability of a hit is <b>greatest</b>. <br />Bright <span class=\"sYellow\">YELLOW</span> squares with low uncertainty are the best targets.");
-  }
-  else{
-    d3.select("#question")
-    .html("Click to place ships on the map on locations where you think your ships are safest: where the probabilty of a strike is <b>least</b>. <br />Bright <span class=\"sPurple\">PURPLE</span> squares with low uncertainty are the safest locations for ships.");
-  }
-  var tokenSize = 200/tokens;
 
-  var tokenImg = stim.role=="att" ? "boom.png" : "ship.png";
+  d3.select("#question")
+    .html("Click to place ships on the map on locations where you think your ships are safest.");
+
+  var tokenSize = 50;
+
+  var tokenImg = "ship.png";
+
   for(var i =0;i<tokens;i++){
     d3.select("#tokenBar").append("svg:image")
     .attr("x", i*tokenSize)
@@ -649,79 +698,7 @@ function initializeTaskTwo(){
 
   }
 
-  var vLabel = stim.role=="att" ? "Hit Chance" : "Danger";
-  var uLabel = "Uncertainty of Prediction";
-
-  var taskMap = stim.role=="att" ? pMap : cMap;
-  var taskJMap = stim.role=="att" ? pMap.juxtaposedValueScale : cMap.juxtaposedValueScale;
-  var taskLMap =  stim.role=="att" ? d3.interpolatePlasma : d3.interpolateCool;
-  switch(stim.type){
-    case "vsum":
-    if(stim.ramp=="Size"){
-      var tempMap = makeTaskTwoMap(stim.size);
-      makeHexmap(mapSvg,100,0,200,tempMap,taskMap.arcSizeScale,maxSize);
-      makeHeatmap(mapSvg,100,0,200,tempMap,empty);
-      makeArcHexmap(mapSvg, 420, 50, 160,taskMap.arc,taskMap.arcSizeScale,maxSize);
-    }
-    else{
-      makeHeatmap(mapSvg,100,0,200,makeTaskTwoMap(stim.size),taskMap.arcScale);
-      makeArcmap(mapSvg, 420, 50, 160,taskMap.arc,taskMap.arcScale);
-    }
-    makeArcLegend(mapSvg, 420, 50, 160, taskMap.arc, [0,100], [0,100], vLabel, uLabel);
-
-    break;
-
-    case "juxta":
-    var tempMap = makeTaskTwoMap(stim.size);
-    if(stim.ramp=="Size"){
-      makeHeatmap(mapSvg,0,0,200,tempMap,taskJMap);
-      mapSvg.append("rect")
-        .attr("fill","transparent")
-        .attr("stroke","black")
-        .attr("stroke-width","3px")
-        .attr("x","225px")
-        .attr("y","0px")
-        .attr("width","200px")
-        .attr("height","200px");
-      makeHexmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedSizeScale,maxSize);
-      makeHeatmap(mapSvg,225,0,200,tempMap,empty);
-
-      makeSimpleLegend(mapSvg, 440,20,20, 160,vMap.linearValue, taskLMap,vLabel);
-      makeSimpleLegend(mapSvg, 440,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
-    }
-    else{
-      makeHeatmap(mapSvg,0,0,200,tempMap,taskJMap);
-      mapSvg.append("rect")
-        .attr("fill","transparent")
-        .attr("stroke","black")
-        .attr("stroke-width","3px")
-        .attr("x","225px")
-        .attr("y","0px")
-        .attr("width","200px")
-        .attr("height","200px");
-      makeHeatmap(mapSvg,225,0,200,tempMap,vMap.juxtaposedUncertaintyScale);
-
-      makeSimpleLegend(mapSvg, 440,20,20, 160,vMap.linearValue, taskLMap,vLabel);
-      makeSimpleLegend(mapSvg, 440,100,20, 160,vMap.linearUncertainty,reverseGrey,uLabel);
-    }
-    //makeHeatmap(legendSvg, 20, 60, 80,vMap.square,vMap.squareScale);
-    //makeJuxtaLegend(legendSvg, 20, 60, 80, vV,u, [0,100], [0,100], "Value", "Uncertainty");
-    break;
-
-    case "2D":
-    default:
-    if(stim.ramp=="Size"){
-      //TODO plug this into 2d size scales
-      makeHeatmap(mapSvg,100,0,200,makeTaskTwoMap(stim.size),taskMap.squareScale);
-      makeHeatmap(mapSvg, 420, 50, 160,taskMap.square,taskMap.squareScale);
-    }
-    else{
-      makeHeatmap(mapSvg,100,0,200,makeTaskTwoMap(stim.size),taskMap.squareScale);
-      makeHeatmap(mapSvg, 420, 50, 160,taskMap.square,taskMap.squareScale);
-    }
-    makeHeatmapLegend(mapSvg, 420, 50, 160, taskMap.square, [0,100], [0,100], vLabel, uLabel);
-    break;
-  }
+  drawMap(stim,data,"two");
 
   mapSvg.selectAll("rect")
   .on("click",toggleToken);
@@ -753,15 +730,16 @@ function placeToken(d){
   token.datum().u = d.v.u;
 
   var stim = taskTwoStimuli[questionNum-1];
-  var offset = 0;
+  var xoffset = 225;
+  var yoffset = 0;
 
-  if(stim.ramp=="Size" && stim.type!="juxta"){
-    offset = -1*maxSize;
+  if(stim.shape=="juxtaposed"){
+    xoffset = 100;
   }
 
   d3.select("#map").append("svg:image")
-  .attr("x", (d.c*token.attr("width")) + offset)
-  .attr("y",(d.r*token.attr("height")) + offset)
+  .attr("x", (d.c*token.attr("width")) + xoffset)
+  .attr("y",(d.r*token.attr("height")) + yoffset)
   .attr("width",token.attr("width"))
   .attr("height",token.attr("height"))
   .attr("transform",d3.select("#map").select("g").attr("transform"))
@@ -795,11 +773,11 @@ function answerTaskTwo(){
   var stim = taskTwoStimuli[questionNum-1];
   var answerData = { "workerId": workerId, "task": "Two", "index": questionNum, "rt": rt};
   for(stimProp in stim){
-    answerData[stimProp] = stim[stimProp].toString;
+    answerData[stimProp] = stim[stimProp];
   }
 
-  answerData.Vs = data.map(function(obj){ return obj.v;});
-  answerData.Us = data.map(function(obj){ return obj.u;});
+  answerData.Vs = data.map(function(obj){ return obj.v;}).toString();
+  answerData.Us = data.map(function(obj){ return obj.u;}).toString();
   answerData.meanV = dl.mean(data,"v");
   answerData.meanU = dl.mean(data,"u");
   answerData.stdV = dl.stdev(data,"v");
@@ -1067,5 +1045,4 @@ function ineligible(){
 
 }
 
-taskOne();
-//consent();
+consent();
