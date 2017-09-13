@@ -85,6 +85,12 @@ iframe {
   border: 1px solid black;
 }
 
+.figure span{
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
 .likert{
   min-width: 400px;
   display: flex;

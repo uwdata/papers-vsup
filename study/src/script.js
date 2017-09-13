@@ -145,6 +145,8 @@ function consent() {
     readyBtn.text("PREVIEW");
   }
 
+  window.scrollTo(0,0);
+
 }
 
 function finishConsent() {
@@ -223,6 +225,7 @@ function tutorial() {
   main.selectAll("*").remove();
 
   main.append("iframe")
+  .attr("height","100%")
   .attr("src", "tutorial.html");
 
   main.append("button")
@@ -232,6 +235,8 @@ function tutorial() {
   .attr("name", "answer")
   .text("Ready")
   .on("click", finishTutorial);
+
+  window.scrollTo(0,0);
 }
 
 function finishTutorial() {
@@ -304,7 +309,7 @@ function makeTaskTwoStimuli() {
     {binned: "discrete", shape:"arc", vsum:true}
   ];
 
-  var replicates = 8;
+  var replicates = 4;
 
   for (var type of types) {
     for (var i = 0;i < replicates;i++) {
@@ -357,7 +362,7 @@ function taskOne() {
 
   main.append("svg")
   .attr("id", "map")
-  .attr("style", "width: 700px; height: 250px;");
+  .attr("style", "width: 700px; height: 250px; padding-bottom: 10px");
 
   main.append("div")
   .attr("id", "legend")
@@ -446,7 +451,7 @@ function drawMap(stim, data, task) {
 
   if (stim.binned == "continuous") {
     var canvasDiv = d3.select("#legend").append("div")
-      .attr("style", "position: relative; margin-top: -175px; margin-left: 275px;")
+      .attr("style", "position: relative; margin-top: -175px; margin-left: 275px; padding-bottom: 25px;")
     if (stim.shape == "square") {
       var square = bvu.csquare(150, d3.interpolateViridis);
       canvasDiv.call(square);
@@ -636,7 +641,7 @@ function taskTwo() {
 
   main.append("svg")
   .attr("id", "map")
-  .attr("style", "width: 700px; height: 250px;");
+  .attr("style", "width: 700px; height: 250px; padding-bottom: 10px");
 
   main.append("div")
   .attr("id", "legend")
