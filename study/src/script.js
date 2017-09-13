@@ -37,9 +37,6 @@ var taskTwoStimuli = [];
 var taskTwoGrid = [];
 var taskTwoTokens = 0;
 
-var maxSize = 200 / 16;
-
-
 //Variables for our 8 conditions
 
 //8 conditions
@@ -105,7 +102,7 @@ for (var i = 0;i < temp.length;i++) {
 
 var squareLegend = [];
 temp = Q2d.matrix();
-for (var i = 0;i < temp.length;i++) {
+for (i = 0;i < temp.length;i++) {
   squareLegend[i] = temp[temp.length - i - 1];
 }
 
@@ -174,7 +171,7 @@ function ishihara(){
   var platesDiv = main.append("div")
   .attr("id", "plates");
 
-  for (var i = 0;i < 3;i++){
+  for (var i = 0;i < numPlates;i++){
     platesDiv.append("div")
     .append("img")
     .attr("width", "300px")
@@ -202,6 +199,7 @@ function ishihara(){
 
 function finishIshihara(){
   var plates = [];
+  var plate;
   main.select("#plates").selectAll("input").each( function(){
     plates.push({"right": d3.select(this).attr("name").replace("plate", ""), "guess": d3.select(this).property("value")});
   });
@@ -333,7 +331,7 @@ function makeTaskOneMap(size){
 
   var matrix = [];
 
-  for (var i = 0;i < size;i++){
+  for (i = 0;i < size;i++){
     matrix[i] = [];
     for (var j = 0;j < size;j++){
       matrix[i][j] = values[i * size + j];
@@ -525,7 +523,7 @@ function answerTaskOne(){
   var rt = (new Date()).getTime() - startTime;
   var d = d3.select(this).datum();
   var stim = taskOneStimuli[questionNum - 1];
-
+  var stimProp;
   var answerData = { "workerId": workerId, "task": "One", "index": questionNum, "rt": rt, "v": d.v.v, "u": d.v.u};
   for (stimProp in stim){
     answerData[stimProp] = stim[stimProp];
@@ -602,7 +600,7 @@ function makeTaskTwoMap(size){
   var badValue = dl.random.uniform(0.5, 1);
   var lowUncertainty = dl.random.uniform(0, 0.5);
 
-  for (var i = values.length;i < (size * size);i++){
+  for (i = values.length;i < (size * size);i++){
     values.push({u: lowUncertainty(), v: badValue()});
   }
 
@@ -610,9 +608,9 @@ function makeTaskTwoMap(size){
 
   var matrix = [];
 
-  for (var i = 0;i < size;i++){
+  for (i = 0;i < size;i++){
     matrix[i] = [];
-    for (var j = 0;j < size;j++){
+    for (j = 0;j < size;j++){
       matrix[i][j] = values[i * size + j];
     }
   }
@@ -688,7 +686,7 @@ function initializeTaskTwo(){
 
   var tokenImg = "ship.png";
 
-  for (var i = 0;i < tokens;i++){
+  for (i = 0;i < tokens;i++){
     d3.select("#tokenBar").append("svg:image")
     .attr("x", i * tokenSize)
     .attr("height", tokenSize)
@@ -768,7 +766,7 @@ function removeToken(d){
 
 function answerTaskTwo(){
   var data = [];
-  var d = d3.select("#tokenBar").selectAll("image").each(function(d){ data.push({"v":d.v, "u":d.u});});
+  var stimProp;
   var rt = (new Date()).getTime() - startTime;
   var stim = taskTwoStimuli[questionNum - 1];
   var answerData = { "workerId": workerId, "task": "Two", "index": questionNum, "rt": rt};
@@ -776,6 +774,7 @@ function answerTaskTwo(){
     answerData[stimProp] = stim[stimProp];
   }
 
+  d3.select("#tokenBar").selectAll("image").each(function(d){ data.push({"v":d.v, "u":d.u});});
   answerData.Vs = data.map(function(obj){ return obj.v;}).toString();
   answerData.Us = data.map(function(obj){ return obj.u;}).toString();
   answerData.meanV = dl.mean(data, "v");
@@ -901,7 +900,6 @@ function postTest(){
 
   // Any metadata we want to be able to read over on MTurk should be set here.
   // All items in the mturk_form are visible in the HIT summary csv.
-  var format = d3.format(".3f");
 
   main.append("div")
   .html("This concludes the main task of the study. Thank you for your participation!");
@@ -944,7 +942,7 @@ function postTest(){
   var experiences = ["1. No experience", "2.", "3. Some experience", "4.", "5. A great deal of experience"];
 
   var visionQ = dlist.append("li").html("Do you have normal vision (or vision which has been corrected to normal)? <br />");
-  var q = visionQ.append("label");
+  q = visionQ.append("label");
 
   q.append("input")
   .attr("type", "radio")
