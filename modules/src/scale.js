@@ -20,7 +20,7 @@ export function simpleScale(m_mode, m_range, m_scale) {
   function map(value, uncertainty) {
     var data = scale(value, uncertainty);
     var vcolor = range(data.v);
-    var uScale = d3.scaleLinear().domain([0, 1]).range([0.0, 1.0]);
+    var uScale = d3.scaleLinear().domain([0, 1]).range([0, 1]);
     switch (mode) {
       case "usl":
       default:
