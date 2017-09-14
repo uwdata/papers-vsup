@@ -769,6 +769,7 @@ function removeToken(d) {
 }
 
 function answerTaskTwo() {
+  d3.select("#answer").attr("disabled", "disabled");
   var data = [];
   var stimProp;
   var rt = (new Date()).getTime() - startTime;
