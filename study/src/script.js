@@ -157,7 +157,7 @@ function consent() {
     readyBtn.text("PREVIEW");
   }
 
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 
 }
 
@@ -237,7 +237,7 @@ function tutorial() {
   main.selectAll("*").remove();
 
   main.append("iframe")
-  .attr("height","100%")
+  .attr("height", "100%")
   .attr("src", "tutorial.html");
 
   main.append("button")
@@ -248,7 +248,7 @@ function tutorial() {
   .text("Ready")
   .on("click", finishTutorial);
 
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
 function finishTutorial() {
@@ -769,8 +769,8 @@ function answerTaskTwo() {
   }
 
   d3.select("#tokenBar").selectAll("image").each(function(d) { data.push({"v":d.v, "u":d.u});});
-  answerData.Vs = data.map(function(obj) { return obj.v;}).toString();
-  answerData.Us = data.map(function(obj) { return obj.u;}).toString();
+  answerData.Vs = "\"" + data.map(function(obj) { return obj.v;}).toString() + "\"";
+  answerData.Us = "\"" + data.map(function(obj) { return obj.u;}).toString() + "\"";
   answerData.meanV = dl.mean(data, "v");
   answerData.meanU = dl.mean(data, "u");
   answerData.stdV = dl.stdev(data, "v");
