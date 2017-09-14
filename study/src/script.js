@@ -273,12 +273,12 @@ function makeTaskOneStimuli() {
   var types =
   [
     {binned: "discrete", shape:"square", vsum:false},
-    {binned: "continuous", shape:"square", vsum:false},
+//    {binned: "continuous", shape:"square", vsum:false},
     {binned: "discrete", shape:"juxtaposed", vsum:false},
-    {binned: "continuous", shape:"juxtaposed", vsum:false},
-    {binned: "discrete", shape:"arc", vsum:false},
-    {binned: "continuous", shape:"arc", vsum:false},
-    {binned: "discrete", shape:"square", vsum:true},
+//    {binned: "continuous", shape:"juxtaposed", vsum:false},
+//    {binned: "discrete", shape:"arc", vsum:false},
+//    {binned: "continuous", shape:"arc", vsum:false},
+//    {binned: "discrete", shape:"square", vsum:true},
     {binned: "discrete", shape:"arc", vsum:true}
   ];
 

@@ -8,7 +8,7 @@
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=0.9\columnwidth]{example.pdf}
-	\caption{A standard bivariate map (left) and a VSUP (right), used to encode an identical 10x10 grid of random data. Both use the same visual channels to encode value (position along the Viridis~\protect\cite{viridis} color map) and uncertainty (lightness and saturation). However, the VSUP uses a tree-like structure to allocate colors, defining more bins when uncertainty is low. This non-uniform budgeting affords better discrimination between values when uncertainty is low, even though the VSUP has fewer color bins (15 to the bivariate map's 16). This tree-like structure also discourages analysis in regions where uncertainty may be unacceptably high.}
+	\caption{A standard bivariate map (left) and a VSUP (right), used to encode an identical 10x10 grid of random data. Both use the same visual channels to encode value (position along the Viridis~\protect\cite{viridis} color map) and uncertainty (lightness and saturation). However, the VSUP uses a tree-like structure to allocate colors, defining more bins when uncertainty is low. This non-uniform budgeting affords better discrimination between values when uncertainty is low, even though the VSUP has fewer color bins (in this case, 15 to the bivariate map's 16). This tree-like structure also discourages analysis in regions where uncertainty may be unacceptably high.}
 	\label{fig:example}
 \end{figure}
 }
@@ -48,49 +48,39 @@
 }
 
 \newcommand{\taskTwoFig}{
-	\begin{figure*}
+	\begin{figure}
 		\centering
-		\begin{subfigure}{0.45\textwidth}
-			\includegraphics[width=\textwidth]{attack.png}
-			\caption{Attacking}
-			\label{fig:taskTwoAttack}
-		\end{subfigure}
-		~
-		\begin{subfigure}{0.45\textwidth}
-			\includegraphics[width=\textwidth]{defend.png}
-			\caption{Defending}
-			\label{fig:taskTwoDefend}
-		\end{subfigure}
-		\caption{The two framings of the Prediction task. In the ``attack'' framing, the participant is given a map of predictions of the location of enemy ships, along with the uncertainty in those predictions. The participant should place their missile strikes on locations with a high probability of containing a ship, and with high certainty in this probability. The ``defend'' framing is the opposite task: the participant has a list of likely missile locations, and ought to place their ships on locations with low probability of attack, and high certainty in this probability.}
+		\includegraphics[width=0.45\columnwidth]{defend.png}
+		\caption{The prediction task. The participant has a list of locations, and ought to place their ships on locations with low probability of attack, and high certainty in this probability.}
 		\label{fig:taskTwoConditions}
-	\end{figure*}
-}
-
-\newcommand{\performanceFig}{
-	\begin{figure}[t]
-		\centering
-		\includegraphics[width=0.9\columnwidth]{performance.pdf}
-		\caption{
-			The number of discrete color categories in traditional bivariate color maps versus VSUPs, assuming value is encoded by the Viridis color map~\protect\cite{viridis}, and uncertainty is encoded by saturation/value (whiter values are more uncertain). Since these whiter uncertain colors are closer together in CIELAB space, and VSUPs intentionally require fewer color bins in those regions, VSUPs always have more color categories than the corresponding 2D bivariate map. The red lines denote:
-		  \textbf{1)} Theoretical 50\% JND from CIELAB specification.
-			\textbf{2)} 50\% JND from controlled lab study of Mahy et al.~\protect\cite{mahy1994evaluation}.
-			\textbf{3)} 50\% JND from Szafir et al.\protect\cite{szafir2014adapting}.
-			\textbf{4)} 50\% JND for small visual targets from Stone et al.~\protect\cite{stone2014engineering}.
-			\textbf{5)} The threshold resulting in the simplest possible (2x2) bivariate map.
-	    }
-		\label{fig:performance}
 	\end{figure}
 }
 
-\newcommand{\flowFig}{
-	\begin{figure}[t]
-		\centering
-		\includegraphics[width=0.95\columnwidth]{flow.pdf}
-		\caption{The process for creating a VSUP. VSUPs guarantee that no two marks in the resulting bivariate mapping are perceptually closer than some pre-specified threshold. This guarantee removes some of the issues of non-separability and ambiguity that are otherwise a concern when designing bivariate maps. \\
-		In this example two colors from the map for $n=9$ are too close in CIELAB space. Thus, we create a VSUP with $n=8$ color bins at the lowest level of uncertainty.}
-		\label{fig:flow}
-	\end{figure}
-}
+%\newcommand{\performanceFig}{
+%	\begin{figure}[t]
+%		\centering
+%		\includegraphics[width=0.9\columnwidth]{performance.pdf}
+%		\caption{
+%			The number of discrete color categories in traditional bivariate color maps versus VSUPs, assuming value is encoded by the Viridis color map~\protect\cite{viridis}, and uncertainty is encoded by saturation/value (whiter values are more uncertain). Since these whiter uncertain colors are closer together in CIELAB space, and VSUPs intentionally require fewer color bins in those regions, VSUPs always have more color categories than the corresponding 2D bivariate map. The red lines denote:
+%		  \textbf{1)} Theoretical 50\% JND from CIELAB specification.
+%			\textbf{2)} 50\% JND from controlled lab study of Mahy et al.~\protect\cite{mahy1994evaluation}.
+%			\textbf{3)} 50\% JND from Szafir et al.\protect\cite{szafir2014adapting}.
+%			\textbf{4)} 50\% JND for small visual targets from Stone et al.~\protect\cite{stone2014engineering}.
+%			\textbf{5)} The threshold resulting in the simplest possible (2x2) bivariate map.
+%	    }
+%		\label{fig:performance}
+%	\end{figure}
+%}
+
+%\newcommand{\flowFig}{
+%	\begin{figure}[t]
+%		\centering
+%		\includegraphics[width=0.95\columnwidth]{flow.pdf}
+%		\caption{The process for creating a VSUP. VSUPs guarantee that no two marks in the resulting bivariate mapping are perceptually closer than some pre-specified threshold. This guarantee removes some of the issues of non-separability and ambiguity that are otherwise a concern when designing bivariate maps. \\
+%		In this example two colors from the map for $n=9$ are too close in CIELAB space. Thus, we create a VSUP with $n=8$ color bins at the lowest level of uncertainty.}
+%		\label{fig:flow}
+%	\end{figure}
+%}
 
 \newcommand{\airlineFig}{
 \begin{figure}[t]
@@ -123,7 +113,7 @@
 	\centering
 	\includegraphics[width=\columnwidth]{viral-vsum.pdf}
 	\vspace{-15px}
-	\caption{Variability for 25 different viral populations of SIV, encoded with a VSUP. The magnitude of mutation rate, as well as the generally poorer quality of data towards the end of the sequence, is more readily visible than with the traditional bivariate color map. }
+	\caption{Variability for 12 different viral populations of SIV, encoded with a VSUP. The magnitude of mutation rate, as well as the generally poorer quality of data towards the end of the sequence, is more readily visible than with the traditional bivariate color map. }
 	\label{fig:viralVsum}
 \end{figure}
 }
