@@ -31,18 +31,6 @@ var main = d3.select("#fcontainer");
 var done = false;
 var questionNum = 1;
 
-var types =
-[
-  {binned: "discrete", shape:"square", vsum:false},
-//    {binned: "continuous", shape:"square", vsum:false},
-  {binned: "discrete", shape:"juxtaposed", vsum:false},
-//    {binned: "continuous", shape:"juxtaposed", vsum:false},
-//    {binned: "discrete", shape:"arc", vsum:false},
-//    {binned: "continuous", shape:"arc", vsum:false},
-//    {binned: "discrete", shape:"square", vsum:true},
-  {binned: "discrete", shape:"arc", vsum:true}
-];
-
 var taskOneStimuli = [];
 var taskTwoStimuli = [];
 
@@ -61,6 +49,19 @@ var taskTwoTokens = 0;
 // 7. VSUM square
 // 8. VSUM arc
 
+var types =
+[
+  {binned: "discrete", shape:"square", vsum:false},
+  {binned: "continuous", shape:"square", vsum:false},
+  {binned: "discrete", shape:"juxtaposed", vsum:false},
+  {binned: "continuous", shape:"juxtaposed", vsum:false},
+  {binned: "discrete", shape:"arc", vsum:false},
+  {binned: "continuous", shape:"arc", vsum:false},
+  {binned: "discrete", shape:"square", vsum:true},
+  {binned: "discrete", shape:"arc", vsum:true}
+];
+
+//quantization schema
 var Qvsum = bvu.quantization().branching(2).layers(4);
 var Q2d = bvu.squareQuantization().n(4);
 
@@ -282,7 +283,7 @@ function finishTutorialTwo() {
 function makeTaskOneStimuli() {
   var stimuli = [];
 
-  var replicates = 8;
+  var replicates = experiment=="Exp1" ? 8 : 4;
 
   for (var type of types) {
     for (var i = 0;i < replicates;i++) {
@@ -559,7 +560,12 @@ function doneAnswerTaskOne() {
   d3.select("#questionNum").html(questionNum);
 
   if (done) {
-    tutorialTwo();
+    if (experiment=="Exp1") {
+      finishTask();
+    }
+    else {
+      tutorialTwo();
+    }
   }
   else {
     initializeTaskOne();

@@ -1,8 +1,9 @@
 import * as d3 from "d3";
 
-export function continuousSquare(m_size, m_scale){
+export function continuousSquare(m_size, m_scale, m_id){
   var el = null,
     size = m_size,
+    id = m_id,
     scale = m_scale,
     context,
     canvas;
@@ -42,6 +43,10 @@ export function continuousSquare(m_size, m_scale){
     canvas
       .attr("width", size)
       .attr("height", size);
+
+    if (id) {
+      canvas.attr("id", id);
+    }
 
     var cnode = canvas.node();
     context = cnode.getContext("2d");
@@ -83,6 +88,19 @@ export function continuousSquare(m_size, m_scale){
       }
       else {
         square.make();
+      }
+      return square;
+    }
+  }
+
+  square.id = function(newId) {
+    if (!arguments.length) {
+      return id;
+    }
+    else {
+      id = newId;
+      if (canvas) {
+        canvas.attr("id", id);
       }
       return square;
     }

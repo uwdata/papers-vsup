@@ -45,7 +45,7 @@
         var iheatmap = bvu.heatmap().size(150).scale(sScale).data(iLegendData).x(475);
         svg.append("g").call(iheatmap);
 
-        var n = 10;
+        var n = 4;
         var randomData = [];
         for(var i = 0;i<n;i++){
           randomData[i] = [];
@@ -64,9 +64,9 @@
         var el = d3.select("body").append("div")
           .attr("style", "float:left");
 
-        var square = bvu.csquare(150,d3.interpolateViridis);
+        var square = bvu.csquare(150,d3.interpolateViridis).id("csquare");
         el.append("div").call(square);
-        var arc = bvu.carc(150,d3.interpolateViridis);
+        var arc = bvu.carc(150,d3.interpolateViridis).id("carc");
         el.append("div").call(arc);
 
       </script>
