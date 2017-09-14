@@ -4,23 +4,11 @@
 % Process figure
 % Real examples with different color maps
 
-
-
-
-\newcommand{\teaserFig}{
-  \teaser{
-		\centering
-		\includegraphics[width=0.9\textwidth]{example.pdf}
-		\caption{Lookit! Lookit!}
-		\label{fig:teaser}
-	}
-}
-
 \newcommand{\exampleFig}{
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=0.9\columnwidth]{example.pdf}
-	\caption{A standard bivariate map (left) and a VSUP (right), used to encode an identical 5x5 grid of random data. Both use the same visual channels to encode value (position along the Viridis~\protect\cite{viridis} color map) and uncertainty (lightness and saturation), and have an equal standard of perceptual discriminability (at least 18 units of distance in CIELAB color space between colors). However, highly uncertain values result in colors that are very close together in the bivariate case, meaning the full bivariate map is only 9 bins under these constraints\,---\,a 4x4 map would result in colors that are perceptually too close together. By contrast, the VSUP intentionally reduces bins when uncertainty is high, eventually aliasing all highly uncertain values to the same color. This decision affords more distinct colors in other regions of the map, and so an increase in overall bins to 15. The resulting map suppresses the value of highly uncertain data, but increases the discriminability of data with low uncertainty.}
+	\caption{A standard bivariate map (left) and a VSUP (right), used to encode an identical 10x10 grid of random data. Both use the same visual channels to encode value (position along the Viridis~\protect\cite{viridis} color map) and uncertainty (lightness and saturation). However, the VSUP uses a tree-like structure to allocate colors, defining more bins when uncertainty is low. This non-uniform budgeting affords better discrimination between values when uncertainty is low, even though the VSUP has fewer color bins (15 to the bivariate map's 16). This tree-like structure also discourages analysis in regions where uncertainty may be unacceptably high.}
 	\label{fig:example}
 \end{figure}
 }
@@ -107,7 +95,7 @@
 \newcommand{\airlineFig}{
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\columnwidth]{airline-2d.png}
+	\includegraphics[width=\columnwidth]{airline-2d}
 	\vspace{-15px}
 	\caption{Average departure delay for different times of the day and days of the week visualized with a 2D uncertainty map. Horizontal position is the hour of scheduled departure, and vertical position is the day of the week.}
 	\label{fig:airline2d}
@@ -115,7 +103,7 @@
 	\vspace{10px}
 
 	\centering
-	\includegraphics[width=\columnwidth]{airline-vsum.png}
+	\includegraphics[width=\columnwidth]{airline-vsum}
 	\vspace{-15px}
 	\caption{Flight delay data encoded with a VSUP.}
 	\label{fig:airlineVsum}
