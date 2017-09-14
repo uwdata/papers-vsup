@@ -514,6 +514,10 @@ function revealTaskOne() {
 
 
 function answerTaskOne() {
+  //prevent answers from piling up.
+  d3.select("#map").selectAll("rect")
+    .on("click", null);
+
   var rt = (new Date()).getTime() - startTime;
   var d = d3.select(this).datum();
   var stim = taskOneStimuli[questionNum - 1];
