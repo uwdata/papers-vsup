@@ -31,6 +31,18 @@ var main = d3.select("#fcontainer");
 var done = false;
 var questionNum = 1;
 
+var types =
+[
+  {binned: "discrete", shape:"square", vsum:false},
+//    {binned: "continuous", shape:"square", vsum:false},
+  {binned: "discrete", shape:"juxtaposed", vsum:false},
+//    {binned: "continuous", shape:"juxtaposed", vsum:false},
+//    {binned: "discrete", shape:"arc", vsum:false},
+//    {binned: "continuous", shape:"arc", vsum:false},
+//    {binned: "discrete", shape:"square", vsum:true},
+  {binned: "discrete", shape:"arc", vsum:true}
+];
+
 var taskOneStimuli = [];
 var taskTwoStimuli = [];
 
@@ -270,18 +282,6 @@ function finishTutorialTwo() {
 function makeTaskOneStimuli() {
   var stimuli = [];
 
-  var types =
-  [
-    {binned: "discrete", shape:"square", vsum:false},
-//    {binned: "continuous", shape:"square", vsum:false},
-    {binned: "discrete", shape:"juxtaposed", vsum:false},
-//    {binned: "continuous", shape:"juxtaposed", vsum:false},
-//    {binned: "discrete", shape:"arc", vsum:false},
-//    {binned: "continuous", shape:"arc", vsum:false},
-//    {binned: "discrete", shape:"square", vsum:true},
-    {binned: "discrete", shape:"arc", vsum:true}
-  ];
-
   var replicates = 8;
 
   for (var type of types) {
@@ -297,19 +297,7 @@ function makeTaskOneStimuli() {
 function makeTaskTwoStimuli() {
   var stimuli = [];
 
-  var types =
-  [
-    {binned: "discrete", shape:"square", vsum:false},
-    {binned: "continuous", shape:"square", vsum:false},
-    {binned: "discrete", shape:"juxtaposed", vsum:false},
-    {binned: "continuous", shape:"juxtaposed", vsum:false},
-    {binned: "discrete", shape:"arc", vsum:false},
-    {binned: "continuous", shape:"arc", vsum:false},
-    {binned: "discrete", shape:"square", vsum:true},
-    {binned: "discrete", shape:"arc", vsum:true}
-  ];
-
-  var replicates = 4;
+  var replicates = 6;
 
   for (var type of types) {
     for (var i = 0;i < replicates;i++) {
