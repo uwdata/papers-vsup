@@ -530,6 +530,7 @@ function answerTaskOne() {
   answerData.vError = vError;
   answerData.uError = uError;
   answerData.error = vError + uError;
+  answerData.vsum = stim.vsum ? "yes" : "no";
 
   delete answerData.question;
   writeAnswerTaskOne(answerData);
@@ -774,6 +775,7 @@ function answerTaskTwo() {
   answerData.meanU = dl.mean(data, "u");
   answerData.stdV = dl.stdev(data, "v");
   answerData.stdU = dl.stdev(data, "u");
+  answerData.vsum = stim.vsum ? "yes" : "no";
 
   writeAnswerTaskTwo(answerData);
 }
