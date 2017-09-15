@@ -25,7 +25,7 @@ Include both gain and loss framings.
 5. Collect demographic information, including risk assay.
 */
 
-var experiment = "Exp1";
+var experiment = "Exp2";
 var startTime;
 var main = d3.select("#fcontainer");
 var done = false;
@@ -49,14 +49,16 @@ var taskTwoTokens = 0;
 // 7. VSUM square
 // 8. VSUM arc
 
+
+//The top types for exp2
 var types =
 [
   {binned: "discrete", shape:"square", vsum:false},
-  {binned: "continuous", shape:"square", vsum:false},
-  {binned: "discrete", shape:"juxtaposed", vsum:false},
-  {binned: "continuous", shape:"juxtaposed", vsum:false},
+//  {binned: "continuous", shape:"square", vsum:false},
+//  {binned: "discrete", shape:"juxtaposed", vsum:false},
+//  {binned: "continuous", shape:"juxtaposed", vsum:false},
   {binned: "discrete", shape:"arc", vsum:false},
-  {binned: "continuous", shape:"arc", vsum:false},
+//  {binned: "continuous", shape:"arc", vsum:false},
   {binned: "discrete", shape:"square", vsum:true},
   {binned: "discrete", shape:"arc", vsum:true}
 ];

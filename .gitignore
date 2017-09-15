@@ -17,3 +17,13 @@ paper/uncertainty.aux
 paper/uncertainty.log
 
 paper/uncertainty.out
+
+paper/uncertainty.aux
+
+paper/uncertainty.log
+
+*.out
+
+*.log
+
+*.aux

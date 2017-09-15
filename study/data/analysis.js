@@ -1,7 +1,7 @@
 var dataOne;
 var dataTwo;
 
-analysis();
+process();
 
 function process() {
   //Steps:
@@ -13,10 +13,8 @@ function process() {
 
   var demoTable = dl.csv("demo.csv");
   var dataOneTable = dl.csv("dataOne.csv");
-  var dataTwoTable = dl.csv("dataTwo.csv");
 
   var cleanedOne = [];
-  var cleanedTwo = [];
   var valids = [];
   var turkId;
   var row;
@@ -26,22 +24,18 @@ function process() {
     turkId = row.WorkerId;
     valids = dataOneTable.filter(function(x){ return x.workerId == turkId;});
     cleanedOne = cleanedOne.concat(valids);
-
-    valids = dataTwoTable.filter(function(x){ return x.workerId == turkId;});
-    valids = cleanRows(valids,i);
-    cleanedOne = cleanedTwo.concat(valids);
   }
 
   for(var i = 0;i<cleanedOne.length;i++) {
+    cleanedOne[i].correct = cleanedOne[i].error==0 ? 1 : 0;
+    cleanedOne[i].condition = cleanedOne[i].binned + cleanedOne[i].shape;
+    if(cleanedOne[i].vsum == "yes") {
+      cleanedOne[i].condition = "vsum" + cleanedOne[i].condition;
+    }
     writeRow(cleanedOne[i]);
   }
 
-  for(var i = 0;i<cleanedTwo.length;i++) {
-    writeRow(cleanedTwo[i]);
-  }
-
   dataOne = cleanedOne;
-  dataTwo = cleanedTwo;
 }
 
 function writeRow(row) {
