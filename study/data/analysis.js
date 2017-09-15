@@ -23,6 +23,7 @@ function process() {
     row = demoTable[i];
     turkId = row.WorkerId;
     valids = dataOneTable.filter(function(x){ return x.workerId == turkId;});
+    valids.forEach(function(d){ d.workerId = i+1;});
     cleanedOne = cleanedOne.concat(valids);
   }
 
