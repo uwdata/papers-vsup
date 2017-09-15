@@ -31,7 +31,7 @@ export function simpleScale(m_mode, m_range, m_scale) {
   }
 
   map.colorList = function() {
-    return scale.range().map(map);
+    return (this.quantize().range()).map(function(d){ return map(d);});
   }
 
   map.colorDists = function() {
