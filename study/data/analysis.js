@@ -13,8 +13,10 @@ function process() {
 
   var demoTable = dl.csv("demo.csv");
   var dataOneTable = dl.csv("dataOne.csv");
+  var dataTwoTable = dl.csv("dataTwo.csv");
 
   var cleanedOne = [];
+  var cleanedTwo = [];
   var valids = [];
   var turkId;
   var row;
@@ -25,6 +27,9 @@ function process() {
     valids = dataOneTable.filter(function(x){ return x.workerId == turkId;});
     valids.forEach(function(d){ d.workerId = i+1;});
     cleanedOne = cleanedOne.concat(valids);
+    valids = dataTwoTable.filter(function(x){ return x.workerId == turkId;});
+    valids.forEach(function(d){ d.workerId = i+1;});
+    cleanedTwo = cleanedTwo.concat(valids);
   }
 
   for(var i = 0;i<cleanedOne.length;i++) {
@@ -36,7 +41,16 @@ function process() {
     writeRow(cleanedOne[i]);
   }
 
+  for(var i = 0;i<cleanedTwo.length;i++) {
+    cleanedTwo[i].condition = cleanedTwo[i].binned + cleanedTwo[i].shape;
+    if(cleanedTwo[i].vsum == "yes") {
+      cleanedTwo[i].condition = "vsum" + cleanedTwo[i].condition;
+    }
+    writeRow(cleanedTwo[i]);
+  }
+
   dataOne = cleanedOne;
+  dataTwo = cleanedTwo;
 }
 
 function writeRow(row) {
