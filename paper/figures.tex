@@ -25,24 +25,8 @@
 \newcommand{\conditionFig}{
 	\begin{figure*}[t]
 		\centering
-		\begin{subfigure}{0.3\textwidth}
-			\centering
-			\includegraphics[width=.45\textwidth]{conditions1.pdf}
-			\caption{Traditional Bivariate Map}
-		\end{subfigure}
-		~
-		\begin{subfigure}{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{conditions2.pdf}
-			\caption{Juxtaposed Univariate Maps}
-		\end{subfigure}
-		~
-		\begin{subfigure}{0.3\textwidth}
-			\centering
-			\includegraphics[width=0.45\textwidth]{conditions3.pdf}
-			\caption{Value-Suppressing Uncertainty Palette}
-		\end{subfigure}
-		\caption{The three graph types in our evaluation. Bivariate color ramps ensure that there are orthogonal mappings for each combination of value and uncertainty, but, since color channels are not separable, can afford only a few discrete colors before color categories become unacceptably close, perceptually. Juxtaposed maps, by keeping these channels separate, afford a larger range of colors, but require a visual search task to recover both value and uncertainty in a region. VSUPs have many of the advantages of bivariate maps, but assign more color categories to certain data, at the expense of ambiguity when uncertainty is high.}
+		\includegraphics[width=0.95\textwidth]{allConditions.pdf}
+		\caption{The 8 conditions from our first experiment. Juxtaposed maps require a participants to make an error-prone connection between areas in two separate maps in order to make a decision that integrates value and uncertainty. Traditional bivariate maps integrate both value and uncertainty. VSUPs improve on traditional bivariate maps by reducing color resolution as uncertainty increases, discouraging conclusions based on noisy or imprecise data.}
 		\label{fig:conditions}
 	\end{figure*}
 }
@@ -50,7 +34,7 @@
 \newcommand{\taskTwoFig}{
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.45\columnwidth]{defend.png}
+		\includegraphics[width=0.4\columnwidth]{defend.png}
 		\caption{The prediction task. The participant has a list of locations, and ought to place their ships on locations with low probability of attack, and high certainty in this probability.}
 		\label{fig:taskTwoConditions}
 	\end{figure}
