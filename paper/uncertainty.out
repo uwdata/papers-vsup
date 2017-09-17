@@ -1,22 +1,20 @@
 \BOOKMARK [1][-]{section.6}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.9}{Related Work}{}% 2
-\BOOKMARK [2][-]{subsection.11}{Visual Variables for Representing Uncertainty}{section.9}% 3
+\BOOKMARK [2][-]{subsection.11}{Visual Variables for Uncertainty}{section.9}% 3
 \BOOKMARK [2][-]{subsection.13}{Bivariate Maps}{section.9}% 4
-\BOOKMARK [2][-]{subsection.15}{Quantizing Color Scales}{section.9}% 5
-\BOOKMARK [1][-]{section.17}{Value-Suppressing Uncertainty Maps}{}% 6
-\BOOKMARK [2][-]{subsection.19}{Method}{section.17}% 7
-\BOOKMARK [2][-]{subsection.23}{Design Considerations}{section.17}% 8
-\BOOKMARK [2][-]{subsection.26}{Examples}{section.17}% 9
-\BOOKMARK [3][-]{subsubsection.28}{Air Travel Delay}{subsection.26}% 10
-\BOOKMARK [1][-]{section.32}{Evaluation}{}% 11
-\BOOKMARK [2][-]{subsection.37}{Identification Task}{section.32}% 12
-\BOOKMARK [2][-]{subsection.39}{Prediction Task}{section.32}% 13
-\BOOKMARK [2][-]{subsection.42}{Hypotheses}{section.32}% 14
-\BOOKMARK [2][-]{subsection.46}{Results}{section.32}% 15
-\BOOKMARK [3][-]{subsubsection.48}{Participants}{subsection.46}% 16
-\BOOKMARK [3][-]{subsubsection.50}{Identification Task}{subsection.46}% 17
-\BOOKMARK [3][-]{subsubsection.54}{Prediction Task}{subsection.46}% 18
-\BOOKMARK [1][-]{section.57}{Discussion}{}% 19
-\BOOKMARK [2][-]{subsection.60}{Limitations and Future Work}{section.57}% 20
-\BOOKMARK [2][-]{subsection.62}{Conclusion}{section.57}% 21
-\BOOKMARK [1][-]{section.64}{References }{}% 22
+\BOOKMARK [1][-]{section.15}{Value-Suppressing Uncertainty Palettes}{}% 5
+\BOOKMARK [2][-]{subsection.19}{Design Considerations}{section.15}% 6
+\BOOKMARK [2][-]{subsection.21}{Examples}{section.15}% 7
+\BOOKMARK [3][-]{subsubsection.23}{Air Travel Delay}{subsection.21}% 8
+\BOOKMARK [3][-]{subsubsection.26}{Viral Mutation}{subsection.21}% 9
+\BOOKMARK [1][-]{section.29}{Evaluation}{}% 10
+\BOOKMARK [2][-]{subsection.34}{Identification Experiment}{section.29}% 11
+\BOOKMARK [3][-]{subsubsection.40}{Hypotheses}{subsection.34}% 12
+\BOOKMARK [3][-]{subsubsection.44}{Results}{subsection.34}% 13
+\BOOKMARK [2][-]{subsection.47}{Prediction Experiment}{section.29}% 14
+\BOOKMARK [3][-]{subsubsection.50}{Hypotheses}{subsection.47}% 15
+\BOOKMARK [3][-]{subsubsection.54}{Results}{subsection.47}% 16
+\BOOKMARK [1][-]{section.57}{Discussion}{}% 17
+\BOOKMARK [2][-]{subsection.60}{Limitations and Future Work}{section.57}% 18
+\BOOKMARK [2][-]{subsection.62}{Conclusion}{section.57}% 19
+\BOOKMARK [1][-]{section.64}{References }{}% 20
