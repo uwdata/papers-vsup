@@ -27,7 +27,6 @@
             var legend = bvu.legend.simpleLegend()
                 .title("Simple Legend")
                 .size(250)
-                .format(".1f")
                 .height(20)
                 .scale(color)
                 .x(10)
@@ -37,11 +36,14 @@
                 .append("g")
                 .call(legend)
 
-            var data = [[0,0.1,0.2], [0.3,0.4,0.5],[0.6,0.7,0.8] ];
+            var squareQuantization = bvu.squareQuantization().n(5).valueDomain([0, 39]).uncertaintyDomain([1.1, 4.8]);
+            var squareScale = bvu.scale().quantize(squareQuantization).range(d3.interpolateViridis);
+
+            var quantization = bvu.quantization().branching(2).layers(4).valueDomain([-10, 55]).uncertaintyDomain([1.1, 4.8]);
+            var scale = bvu.scale().quantize(quantization).range(d3.interpolateViridis);
 
             var heatLegend = bvu.legend.heatmapLegend()
-                .data(data)
-                .scale(d3.interpolateViridis)
+                .scale(squareScale)
                 .size(150)
                 .x(60)
                 .y(160);
@@ -50,10 +52,8 @@
                 .append("g")
                 .call(heatLegend);
 
-
             var arcLegend = bvu.legend.arcmapLegend()
-                .data(data)
-                .scale(d3.interpolateViridis)
+                .scale(scale)
                 .size(150)
                 .x(60)
                 .y(380);
