@@ -1,6 +1,7 @@
-chema": "https://vega.github.io/schema/vega-lite/v2.json",
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
   "width": 400,
-  "data": { 
+  "data": {
     "values": [
       {"Chart Type" : "Traditional Bivariate", "Quartile" : 1, "count" : 499},
       {"Chart Type" : "VSUP", "Quartile" : 1, "count" : 470},
@@ -15,7 +16,7 @@ chema": "https://vega.github.io/schema/vega-lite/v2.json",
   "mark": "bar",
   "encoding": {
     "x": {
-      "field": "Quartile", 
+      "field": "Quartile",
       "type": "ordinal",
       "axis" : {"title" : "Uncertainty Quartile"}
     },
@@ -35,4 +36,3 @@ chema": "https://vega.github.io/schema/vega-lite/v2.json",
     "opacity": {"value": 0.7}
   }
 }
-
