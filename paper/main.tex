@@ -80,12 +80,12 @@ When selecting a visual channel to represent value, the designer should consider
 
 When determining the quantization tree, the design should be careful to avoid having too many output colors. For reasons of memorability and complexity, Wainer\& Francolini~\cite{wainer1980empirical} suggest no more than 16. For a binary quantization tree, this results in a maximum tree depth of 4, as seen in \figref{fig:example}. In general, for tasks that require finer-grade distinctions between uncertainty, the depth of the tree should be increased. For tasks involving finer-grade distinctions between value, the branching factor of the tree should be increased. Beyond these two parameters, non-uniform binning would allow the designer to target particular distributions or important subregions of the data that would otherwise be difficult to visualize in a limited palette, as in Dunn's~\cite{dunn1989dynamic} dynamic bivariate maps. As an additional form of control, prior tools using VSUP-like techniques, such as LayerCake~\cite{correll2015layercake}, allow the analyst to interactively control the size of bins in the tree through dragging on the color legend.
 
-\subsection{Examples}
+\section{Examples}
 
 We present a set of examples showing how VSUPs can be applied to realworld datasets. The decision of VSUPs to allocate color bins asymmetrically amongst value and uncertainty regions affords greater discriminability in regions of the chart that warrant closer scrutiny, while discouraging exploration of regions with noisy or unreliable signals.
 
 
-\subsubsection{Air Travel Delay}
+\subsection{Air Travel Delay}
 
 \airlineFig
 
@@ -93,7 +93,7 @@ Using a public data set from the U.S. Bureau of Transportation Statistics~\cite{
 
 Both maps illustrate a similar temporal trend: flight delays are shorter towards the beginning of the day, increasing on average over time. The traditional bivariate map affords only a coarse examination of this trend: two visible ``blocks'' of color, early in the day, and later in the afternoon. The VSUP, in contrast, has sufficient color resolution to show a quasi-linear trend. Uncertainty is high only for a few bins for which there are small number of flights, either on the weekends or late at night. The VSUP does not obscure any significant trends in the high uncertainty data, despite having fewer color categories overall.
 
-\subsubsection{Viral Mutation}
+\subsection{Viral Mutation}
 %TODO update this figure
 \viralFig
 
