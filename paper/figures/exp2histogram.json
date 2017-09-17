@@ -1,0 +1,38 @@
+chema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "width": 400,
+  "data": { 
+    "values": [
+      {"Chart Type" : "Traditional Bivariate", "Quartile" : 1, "count" : 499},
+      {"Chart Type" : "VSUP", "Quartile" : 1, "count" : 470},
+      {"Chart Type" : "Traditional Bivariate", "Quartile" : 2, "count" : 372},
+      {"Chart Type" : "VSUP", "Quartile" : 2, "count" : 381},
+      {"Chart Type" : "Traditional Bivariate", "Quartile" : 3, "count" : 230},
+      {"Chart Type" : "VSUP", "Quartile" : 3, "count" : 303},
+      {"Chart Type" : "Traditional Bivariate", "Quartile" : 4, "count" : 159},
+      {"Chart Type" : "VSUP", "Quartile" : 4, "count" : 106}
+    ]
+    },
+  "mark": "bar",
+  "encoding": {
+    "x": {
+      "field": "Quartile", 
+      "type": "ordinal",
+      "axis" : {"title" : "Uncertainty Quartile"}
+    },
+    "y": {
+      "field": "count", "type": "quantitative",
+      "axis": {"title": "Guess Frequency"},
+      "stack": "none"
+    },
+    "color": {
+      "field": "Chart Type",
+      "type" : "nominal",
+      "scale" : {"range" : ["steelblue","goldenrod"]},
+      "legend" : {
+        "orient" : "bottom"
+      }
+    },
+    "opacity": {"value": 0.7}
+  }
+}
+
