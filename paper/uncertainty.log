@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.8.2)  17 SEP 2017 09:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.8.2)  17 SEP 2017 09:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1223,14 +1223,14 @@ Package pdftex.def Info: figures/viral-vsum.pdf used on input line 98.
 (pdftex.def)             Requested size: 243.98238pt x 78.01662pt.
  [4 <./figures/airline-2d.pdf> <./figures/airline-vsum.pdf> <./figures/viral-2d
 .pdf> <./figures/viral-vsum.pdf>]
-<figures/allConditions.pdf, id=617, 2023.05812pt x 531.2949pt>
+<figures/allConditions.pdf, id=616, 2023.05812pt x 531.2949pt>
 File: figures/allConditions.pdf Graphic file (type pdf)
 
 <use figures/allConditions.pdf>
 Package pdftex.def Info: figures/allConditions.pdf used on input line 108.
 (pdftex.def)             Requested size: 486.54054pt x 127.7728pt.
 
-<figures/task1.png, id=624, 1025.8325pt x 991.705pt>
+<figures/task1.png, id=623, 1025.8325pt x 991.705pt>
 File: figures/task1.png Graphic file (type png)
  <use figures/task1.png>
 Package pdftex.def Info: figures/task1.png used on input line 153.
@@ -1272,12 +1272,12 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 198.
 Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 198.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 198.
 Package rerunfilecheck Info: File `uncertainty.out' has not changed.
-(rerunfilecheck)             Checksum: D5642582BF027688248EF85F06EAC0D5;1260.
+(rerunfilecheck)             Checksum: 470D6309D2E588E5592799D85BC50BE9;1235.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 198.
  ) 
 Here is how much of TeX's memory you used:
  21048 strings out of 494437
- 386194 string characters out of 6166646
+ 386176 string characters out of 6166646
  489298 words of memory out of 5000000
  23621 multiletter control sequences out of 15000+600000
  84965 words of font info for 239 fonts, out of 8000000 for 9000
@@ -1294,7 +1294,7 @@ fb></usr/local/texlive/2017basic/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb
 local/texlive/2017basic/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local
 /texlive/2017basic/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texl
 ive/2017basic/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on uncertainty.pdf (10 pages, 1445939 bytes).
+Output written on uncertainty.pdf (10 pages, 1445080 bytes).
 PDF statistics:
  898 PDF objects out of 1000 (max. 8388607)
  604 compressed objects within 7 object streams
