@@ -19,14 +19,14 @@ export function linearQuantization(m_n, m_range) {
   }
 
   quantization.n = function(newN) {
-      if (!arguments.length) {
-        return n;
-      }
-      else {
-        n = newN;
-        scale = makeScale();
-        return quantization;
-      }
+    if (!arguments.length) {
+      return n;
+    }
+    else {
+      n = newN;
+      scale = makeScale();
+      return quantization;
+    }
   }
 
   return quantization;
@@ -34,19 +34,21 @@ export function linearQuantization(m_n, m_range) {
 
 export function squareQuantization(m_n) {
   var n = m_n,
-      matrix = makeMatrix();
+    uscale = d3.scaleLinear(),
+    vscale = d3.scaleLinear(),
+    matrix = makeMatrix();
 
   function quantization(value, uncertainty) {
     var u = uncertainty != undefined ? uncertainty : value.u,
-        v = uncertainty != undefined ? value : value.v,
-        i = 0;
+      v = uncertainty != undefined ? value : value.v,
+      i = 0;
 
-    //find the right layer of the tree, based on uncertainty
-    while (i < matrix.length - 1 && u < 1 - ((i + 1) / n)){
+    // find the right layer of the tree, based on uncertainty
+    while (i < matrix.length - 1 && uscale(u) < 1 - ((i + 1) / n)){
       i++;
     }
 
-    //find right leaf of tree, based on value
+    // find right leaf of tree, based on value
     var vgap = (matrix[i].length > 1) ? (matrix[i][1].v - matrix[i][0].v) / 2 : 0,
         j = 0;
 
@@ -60,10 +62,13 @@ export function squareQuantization(m_n) {
   function makeMatrix() {
     var matrix = [];
 
-    for (var i = 0;i < n;i++){
+    uscale.nice(n);
+    vscale.nice(n);
+
+    for (var i = 0; i < n; i++){
       matrix[i] = [];
-      for (var j = 1;j < (2 * n);j += 2){
-        matrix[i].push({ u: 1 - ((i + 1) / n), v: (j / (2 * n))});
+      for (var j = 1; j < (2 * n); j += 2){
+        matrix[i].push({ u: uscale.invert(1 - ((i + 1) / n)), v: vscale.invert(j / (2 * n))});
       }
     }
 
@@ -75,27 +80,53 @@ export function squareQuantization(m_n) {
   }
 
   quantization.n = function(newN) {
-      if (!arguments.length) {
-        return n;
-      }
-      else {
-        n = newN;
-        matrix = makeMatrix();
-        return quantization;
-      }
+    if (!arguments.length) {
+      return n;
+    }
+    else {
+      n = newN;
+      matrix = makeMatrix();
+      return quantization;
+    }
   }
 
   quantization.matrix = function() {
     return matrix;
   }
 
+  quantization.data = quantization.matrix;
+
+  quantization.uncertaintyDomain = function(newDomain) {
+    if (!arguments.length) {
+      return uscale.domain();
+    }
+    else {
+      uscale.domain(newDomain);
+      matrix = makeMatrix();
+      return quantization;
+    }
+  }
+
+  quantization.valueDomain = function(newDomain) {
+    if (!arguments.length) {
+      return vscale.domain();
+    }
+    else {
+      vscale.domain(newDomain);
+      matrix = makeMatrix();
+      return quantization;
+    }
+  }
+
   return quantization;
 }
 
 export function treeQuantization(branchingFactor, treeLayers) {
-  var branch = branchingFactor ? branchingFactor : 2,
-      layers = treeLayers ? treeLayers : 2,
-      tree = makeTree();
+  var branch = branchingFactor || 2,
+    layers = treeLayers || 2,
+    uscale = d3.scaleLinear(),
+    vscale = d3.scaleLinear(),
+    tree = makeTree();
 
   function quantization(value, uncertainty) {
     var u = uncertainty != undefined ? uncertainty : value.u,
@@ -103,7 +134,7 @@ export function treeQuantization(branchingFactor, treeLayers) {
         i = 0;
 
     // find the right layer of the tree, based on uncertainty
-    while (i < tree.length - 1 && u < 1 - ((i + 1) / layers)){
+    while (i < tree.length - 1 && uscale(u) < 1 - ((i + 1) / layers)){
       i++;
     }
 
@@ -122,16 +153,19 @@ export function treeQuantization(branchingFactor, treeLayers) {
     // Our tree should be "squarish" - it should have about
     // as many layers as leaves.
     var tree = [],
-        n;
+      n;
+
+    vscale.nice(Math.pow(branch, layers - 1));
+    uscale.nice(layers);
 
     tree[0] = [];
-    tree[0].push({u: ( (layers - 1) / layers), v: 0.5});
+    tree[0].push({u: uscale.invert((layers - 1) / layers), v: vscale.invert(0.5)});
 
-    for (var i = 1;i < layers;i++){
+    for (var i = 1; i < layers; i++){
       tree[i] = [];
       n = 2 * Math.pow(branch, i);
-      for (var j = 1;j < n;j += 2){
-        tree[i].push({ u: 1 - ((i + 1) / layers), v: (j / n)});
+      for (var j = 1; j < n; j += 2){
+        tree[i].push({ u: uscale.invert(1 - ((i + 1) / layers)), v: vscale.invert(j / n)});
       }
     }
     return tree;
@@ -140,6 +174,8 @@ export function treeQuantization(branchingFactor, treeLayers) {
   quantization.tree = function() {
     return tree;
   }
+
+  quantization.data = quantization.tree;
 
   quantization.branching = function(newbranch) {
     if (!arguments.length) {
@@ -165,6 +201,28 @@ export function treeQuantization(branchingFactor, treeLayers) {
 
   quantization.range = function() {
     return [].concat.apply([], tree);
+  }
+
+  quantization.uncertaintyDomain = function(uDom) {
+    if (!arguments.length) {
+      return uscale.domain();
+    }
+    else {
+      uscale.domain(uDom);
+      tree = makeTree();
+      return quantization;
+    }
+  }
+
+  quantization.valueDomain = function(vDom) {
+    if (!arguments.length) {
+      return vscale.domain();
+    }
+    else {
+      vscale.domain(vDom);
+      tree = makeTree();
+      return quantization;
+    }
   }
 
   return quantization;
