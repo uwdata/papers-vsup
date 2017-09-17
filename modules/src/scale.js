@@ -3,9 +3,9 @@ import * as d3 from "d3";
 // Returns a color, based on a bivariate data point,
 // a quantization function, and a color interpolator
 // can be extended to different modes (just saturation, say)
-export function simpleScale(m_mode, m_range, m_scale) {
+export function simpleScale(m_mode, m_range, m_quantization) {
   var range = m_range,
-      scale = m_scale ? m_scale : function(v, u) {
+      quantization = m_quantization ? m_quantization : function(v, u) {
         var data = u != undefined ? {v:v, u:u} : {v:v.v, u:v.u};
         return data;
       },
@@ -18,9 +18,23 @@ export function simpleScale(m_mode, m_range, m_scale) {
   }
 
   function map(value, uncertainty) {
-    var data = scale(value, uncertainty);
-    var vcolor = range(data.v);
-    var uScale = d3.scaleLinear().domain([0, 1]).range([0, 1]);
+    var data = quantization(value, uncertainty);
+
+    var uDom = [0, 1];
+    var vDom = [0, 1];
+
+    if (quantization.uncertaintyDomain) {
+      uDom = quantization.uncertaintyDomain();
+    }
+    if (quantization.valueDomain) {
+      vDom = quantization.valueDomain();
+    }
+
+    var uScale = d3.scaleLinear().domain(uDom).range([0, 1]);
+    var vScale = d3.scaleLinear().domain(vDom).range([0, 1]);
+
+    var vcolor = range(vScale(data.v));
+
     switch (mode) {
       case "usl":
       default:
@@ -78,12 +92,12 @@ export function simpleScale(m_mode, m_range, m_scale) {
     }
   }
 
-  map.quantize = function(newScale) {
+  map.quantize = function(newQuantization) {
     if (!arguments.length) {
-      return scale;
+      return quantization;
     }
     else {
-      scale = newScale;
+      quantization = newQuantization;
       return map;
     }
   }

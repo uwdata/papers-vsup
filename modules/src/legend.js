@@ -13,7 +13,7 @@ export function simpleLegend(m_scale, m_size, m_height, m_format, m_title, m_x, 
       scale = m_scale ? m_scale : null,
       size = m_size ? m_size : 200,
       height = m_height ? m_height : 30,
-      fmat = m_format ? m_format : ".2f",
+      fmat = m_format || null,
       x = m_x ? m_x : 0,
       y = m_y ? m_y : 0;
 
@@ -54,7 +54,7 @@ export function simpleLegend(m_scale, m_size, m_height, m_format, m_title, m_x, 
     }
     axis
       .attr("transform", "translate(0, " + height + ")")
-      .call(d3.axisBottom(axisScale).tickFormat(d3.format(fmat)));
+      .call(d3.axisBottom(axisScale).tickFormat(d3.format(fmat || "")));
 
     var label = el.select("g.legend > text");
     if (label.empty()) {
@@ -147,17 +147,18 @@ export function simpleLegend(m_scale, m_size, m_height, m_format, m_title, m_x, 
   return legend;
 }
 
-export function heatmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitle, m_x, m_y) {
+export function heatmapLegend(m_scale, m_size, m_format, m_utitle, m_vtitle, m_x, m_y) {
   var el = null,
     utitle = m_utitle ? m_utitle : "Uncertainty",
     vtitle = m_vtitle ? m_vtitle : "Value",
     scale = m_scale ? m_scale : null,
     size = m_size ? m_size : 200,
-    fmat = m_format ? m_format : ".2f",
+    fmat = m_format || null,
     x = m_x ? m_x : 0,
-    y = m_y ? m_y : 0;
+    y = m_y ? m_y : 0,
+    data = null;
 
-  var heatmap = simpleHeatmap(data, m_scale, m_size, null, 0, 0);
+  var heatmap = simpleHeatmap();
 
   var legend = function(nel) {
     el = nel;
@@ -171,7 +172,17 @@ export function heatmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitl
       return;
     }
 
-    heatmap.data(data);
+    var tmp = data;
+    if (!tmp) {
+      tmp = scale.quantize().data();
+    }
+
+    var inverted = [];
+    for (var i = 0; i < tmp.length; i++) {
+      inverted[i] = tmp[tmp.length - i - 1];
+    }
+
+    heatmap.data(inverted);
     heatmap.scale(scale);
     heatmap.size(size);
 
@@ -179,16 +190,18 @@ export function heatmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitl
       .attr("class", "legend")
       .attr("transform", "translate(" + x + "," + y + ")");
 
-    var uStep = 1 / data.length;
-    var uDom = d3.range(0, 1 + uStep - epsylon, uStep);
+    var uncertaintyDomain = scale.quantize().uncertaintyDomain();
+    var uStep = (uncertaintyDomain[1] - uncertaintyDomain[0]) / inverted.length;
+    var uDom = d3.range(uncertaintyDomain[0], uncertaintyDomain[1] + uStep - epsylon, uStep);
 
-    var vStep = 1 / data.length;
-    var vDom = d3.range(0, 1 + vStep - epsylon, vStep);
+    var valueDomain = scale.quantize().valueDomain();
+    var vStep = (valueDomain[1] - valueDomain[0]) / inverted.length;
+    var vDom = d3.range(valueDomain[0], valueDomain[1] + vStep - epsylon, vStep);
 
-    var xAxis = d3.scalePoint().range([0, size]).domain(vDom);
+    var xAxisScale = d3.scalePoint().range([0, size]).domain(vDom);
 
     el.append("g")
-      .call(d3.axisTop(xAxis).tickFormat(d3.format(fmat)));
+      .call(d3.axisTop(xAxisScale).tickFormat(d3.format(fmat || "")));
 
     el.append("text")
       .style("text-anchor", "middle")
@@ -200,7 +213,7 @@ export function heatmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitl
 
     el.append("g")
       .attr("transform", "translate(" + size + ", 0)")
-      .call(d3.axisRight(yAxis).tickFormat(d3.format(fmat)));
+      .call(d3.axisRight(yAxis).tickFormat(d3.format(fmat || "")));
 
     el.append("text")
       .style("text-anchor", "middle")
@@ -301,17 +314,18 @@ export function heatmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitl
 }
 
 
-export function arcmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitle, m_x, m_y) {
+export function arcmapLegend(m_scale, m_size, m_format, m_utitle, m_vtitle, m_x, m_y) {
   var el = null,
     utitle = m_utitle ? m_utitle : "Uncertainty",
     vtitle = m_vtitle ? m_vtitle : "Value",
     scale = m_scale ? m_scale : null,
     size = m_size ? m_size : 200,
-    fmat = m_format ? m_format : ".2f",
+    fmat = m_format || null,
     x = m_x ? m_x : 0,
-    y = m_y ? m_y : 0;
+    y = m_y ? m_y : 0,
+    data = null;
 
-  var arcmap = simpleArcmap(data, m_scale, m_size, null, 0, 0);
+  var arcmap = simpleArcmap();
 
   var legend = function(nel) {
     el = nel;
@@ -325,7 +339,17 @@ export function arcmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitle
       return;
     }
 
-    arcmap.data(data);
+    var tmp = data;
+    if (!tmp) {
+      tmp = scale.quantize().data();
+    }
+
+    var inverted = [];
+    for (var i = 0; i < tmp.length; i++) {
+      inverted[i] = tmp[tmp.length - i - 1];
+    }
+
+    arcmap.data(inverted);
     arcmap.scale(scale);
     arcmap.size(size);
 
@@ -333,15 +357,16 @@ export function arcmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitle
       .attr("class", "legend")
       .attr("transform", "translate(" + x + "," + y + ")");
 
-    var uStep = 1 / data.length;
-    var uDom = d3.range(0, 1 + uStep - epsylon, uStep);
+    var uncertaintyDomain = scale.quantize().uncertaintyDomain();
+    var uStep = (uncertaintyDomain[1] - uncertaintyDomain[0]) / inverted.length;
+    var uDom = d3.range(uncertaintyDomain[0], uncertaintyDomain[1] + uStep - epsylon, uStep);
 
-    var uAxis = d3.scalePoint().range([0, size]).domain(uDom);
+    var uAxisScale = d3.scalePoint().range([0, size]).domain(uDom);
 
     var px = size / 180;
     el.append("g")
       .attr("transform", "translate(" + (size + 6 * px) + "," + (28 * px) + ")rotate(30)")
-      .call(d3.axisRight(uAxis).tickFormat(d3.format(fmat)));
+      .call(d3.axisRight(uAxisScale).tickFormat(d3.format(fmat || "")));
 
     el.append("text")
       .style("text-anchor", "middle")
@@ -349,12 +374,15 @@ export function arcmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitle
       .attr("transform", "translate(" + (size + 10 * px) + "," + (40 * px + size / 2) + ")rotate(-60)")
       .text(utitle);
 
+    var valueDomain = scale.quantize().valueDomain();
+    var vStep = (valueDomain[1] - valueDomain[0]) / inverted[0].length;
+    var vTicks = d3.range(valueDomain[0], valueDomain[1] + vStep - epsylon, vStep);
 
-    var vStep = 1 / data.length;
-    var vTicks = d3.range(0, 1 + vStep - epsylon, vStep);
+    var vAxisScale = d3.scaleLinear().range([0, size]).domain(valueDomain);
+    var valueFormat = fmat ? d3.format(fmat) : vAxisScale.tickFormat(vTicks.length);
 
     var angle = d3.scaleLinear()
-      .domain([vTicks[0], vTicks[vTicks.length - 1]])
+      .domain(valueDomain)
       .range([-30, 30]);
 
     var offset = 3 * px;
@@ -384,7 +412,7 @@ export function arcmapLegend(data, m_scale, m_size, m_format, m_utitle, m_vtitle
       .style("font-size", "11")
       .style("text-anchor", "middle")
       .attr("y", -10)
-      .text(d3.format(fmat));
+      .text(valueFormat);
 
     labelEnter.append("line")
       .attr("x1", 0.5)
