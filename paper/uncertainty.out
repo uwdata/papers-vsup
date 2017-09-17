@@ -4,9 +4,9 @@
 \BOOKMARK [2][-]{subsection.13}{Bivariate Maps}{section.9}% 4
 \BOOKMARK [1][-]{section.15}{Value-Suppressing Uncertainty Palettes}{}% 5
 \BOOKMARK [2][-]{subsection.19}{Design Considerations}{section.15}% 6
-\BOOKMARK [2][-]{subsection.21}{Examples}{section.15}% 7
-\BOOKMARK [3][-]{subsubsection.23}{Air Travel Delay}{subsection.21}% 8
-\BOOKMARK [3][-]{subsubsection.26}{Viral Mutation}{subsection.21}% 9
+\BOOKMARK [1][-]{section.21}{Examples}{}% 7
+\BOOKMARK [2][-]{subsection.23}{Air Travel Delay}{section.21}% 8
+\BOOKMARK [2][-]{subsection.26}{Viral Mutation}{section.21}% 9
 \BOOKMARK [1][-]{section.29}{Evaluation}{}% 10
 \BOOKMARK [2][-]{subsection.34}{Identification Experiment}{section.29}% 11
 \BOOKMARK [3][-]{subsubsection.40}{Hypotheses}{subsection.34}% 12
