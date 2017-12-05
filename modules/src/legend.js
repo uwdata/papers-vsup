@@ -5,8 +5,6 @@ import * as d3 from "d3";
 
 import {simpleHeatmap, simpleArcmap} from "./heatmap";
 
-var epsylon = 0.0001;
-
 export function simpleLegend(m_scale, m_size, m_height, m_format, m_title, m_x, m_y) {
   var el = null,
       title = m_title,
@@ -192,11 +190,11 @@ export function heatmapLegend(m_scale, m_size, m_format, m_utitle, m_vtitle, m_x
 
     var uncertaintyDomain = scale.quantize().uncertaintyDomain();
     var uStep = (uncertaintyDomain[1] - uncertaintyDomain[0]) / inverted.length;
-    var uDom = d3.range(uncertaintyDomain[0], uncertaintyDomain[1] + uStep - epsylon, uStep);
+    var uDom = d3.range(uncertaintyDomain[0], uncertaintyDomain[1] + uStep, uStep);
 
     var valueDomain = scale.quantize().valueDomain();
     var vStep = (valueDomain[1] - valueDomain[0]) / inverted.length;
-    var vDom = d3.range(valueDomain[0], valueDomain[1] + vStep - epsylon, vStep);
+    var vDom = d3.range(valueDomain[0], valueDomain[1] + vStep, vStep);
 
     var xAxisScale = d3.scalePoint().range([0, size]).domain(vDom);
 
@@ -359,7 +357,7 @@ export function arcmapLegend(m_scale, m_size, m_format, m_utitle, m_vtitle, m_x,
 
     var uncertaintyDomain = scale.quantize().uncertaintyDomain();
     var uStep = (uncertaintyDomain[1] - uncertaintyDomain[0]) / inverted.length;
-    var uDom = d3.range(uncertaintyDomain[0], uncertaintyDomain[1] + uStep - epsylon, uStep);
+    var uDom = d3.range(uncertaintyDomain[0], uncertaintyDomain[1] + uStep, uStep);
 
     var uAxisScale = d3.scalePoint().range([0, size]).domain(uDom);
 
@@ -376,7 +374,7 @@ export function arcmapLegend(m_scale, m_size, m_format, m_utitle, m_vtitle, m_x,
 
     var valueDomain = scale.quantize().valueDomain();
     var vStep = (valueDomain[1] - valueDomain[0]) / inverted[0].length;
-    var vTicks = d3.range(valueDomain[0], valueDomain[1] + vStep - epsylon, vStep);
+    var vTicks = d3.range(valueDomain[0], valueDomain[1] + vStep, vStep);
 
     var vAxisScale = d3.scaleLinear().range([0, size]).domain(valueDomain);
     var valueFormat = fmat ? d3.format(fmat) : vAxisScale.tickFormat(vTicks.length);
