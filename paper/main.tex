@@ -49,10 +49,6 @@ Given that bivariate maps, for reasons of either practicality or perceptual fide
 Correll \ea~\cite{correll2015layercake,correll2011visualizing} use a precursor of VSUPs in their LayerCake genomics visualization tool, where marks representing genomic data with increasing uncertainty are mapped to a smaller and smaller set of increasingly grey colors, creating the effect of uncertain values retreating into a ``confidence fog'' while highly certain values remain prominent. Other bivariate visualizations implicitly alias together uncertain values through perceptual integrality. For instance, if uncertainty is encoded by transparency, a maximally uncertain glyph may be entirely transparent, and so impossible to distinguish from any other maximally uncertain glyph. Other channels with a semiotic connection to uncertainty, such as saturation, value, blur, or size, have similar deleterious effects on the disambiguation of colors and shapes. In both cases, the property of aliasing is \emph{ad hoc}, and places no guarantees on the discriminability of colors. The binning and degradation approach of VSUPs makes the choice to alias values explicit to both the designer and the viewer, and results in a bivariate mapping with known perceptual properties.
 
 \section{Value-Suppressing Uncertainty Palettes}
-
-%TODO need some example figure here, showing tree structure perhaps?
-%\flowFig
-
 Value-Suppressing Uncertainty Palettes (VSUPs) are a technique for creating bivariate maps of data \emph{value} and \emph{uncertainty}. VSUPs make two central assumptions about bivariate maps:
 
 \begin{enumerate}
@@ -68,13 +64,13 @@ VSUPs rely on an underlying \textbf{quantization tree} that governs how values a
 
 Since the visual channel used to encode uncertainty (e.g., saturation, lightness, transparency) often reduces the ability of people to distinguish colors, VSUPs have the added benefit of creating bivariate palettes that are perceptually easier to distinguish, by reducing color resolution in precisely the areas where color disambiguation would be most difficult anyway. For instance, the two closest colors in the VSUP in \figref{fig:example} are 1.4 units farther apart in CIELAB color space than the two closest colors in the traditional bivariate map.
 
-JavaScript code for generating VSUPs for use in D3~\cite{bostock2011d3} charts is available at \url{URL-REMOVED-FOR-REVIEW}.
+JavaScript code for generating VSUPs for use in D3~\cite{bostock2011d3} charts is available at \url{https://github.com/uwdata/spatial-sampling}.
 
 \subsection{Design Considerations}
 
 There are multiple choices that designers must make before creating a VSUP. Specifically, they must choose which visual channels map to value (1), uncertainty (2), and the structure of the underlying VSUP tree (3).
 
-When selecting a visual channel to represent uncertainty, we recommend channels with both a strong semiotic connection to uncertainty (such as those recommended by MacEachren et al.~\cite{maceachren2012visual}) as well as a relatively large number of perceptually distinguishable levels (such as those evaluated by Boukhelifa et al. \cite{boukhelifa2012evaluating}). Here, we focus on a combination of increasing luminance and decreasing saturation. Correll \& Gleicher~\cite{correll2013error} provide evidence that even audiences without statistical training can successfully interpret uncertainty information encoded in these channels.
+When selecting a visual channel to represent uncertainty, we recommend channels with both a strong semiotic connection to uncertainty (such as those recommended by MacEachren et al.~\cite{maceachren2012visual}) as well as a relatively large number of perceptually distinguishable levels (such as those evaluated by Boukhelifa et al. \cite{boukhelifa2012evaluating}). Here, we focus on a combination of increasing luminance and decreasing saturation. Correll \& Gleicher~\cite{correll2014error} provide evidence that even audiences without statistical training can successfully interpret uncertainty information encoded in these channels.
 
 When selecting a visual channel to represent value, the designer should consider the perceptual integrality of the value and uncertainty visual channels. For instance, we use the Viridis~\cite{viridis} color map frequently in this paper, as many standard color ramps (such as sequential ColorBrewer~\cite{harrower2003colorbrewer} ramps), following usual best practices, interpolate in both hue and luminance~\cite{ware1988color}. This interpolation in luminance interferes with our uncertainty encoding, introducing ambiguity. Ramps such as Viridis, which avoid very light and very dark colors, reduce this ambiguity.
 
@@ -93,16 +89,20 @@ Using a public data set from the U.S. Bureau of Transportation Statistics~\cite{
 
 Both maps illustrate a similar trend: flight delays are shorter towards the beginning of the day, increasing on average over time. The traditional bivariate map affords only a coarse examination of this trend: two visible ``blocks'' of color, early in the day, and later in the afternoon. The VSUP, in contrast, has sufficient color resolution to show a quasi-linear trend. Uncertainty is high only for a few bins for which there are small number of flights, either on the weekends or late at night. The VSUP does not obscure any significant trends in the high uncertainty data, despite having fewer color categories overall.
 
-\subsection{Viral Mutation}
-%TODO update this figure
-\viralFig
+%\subsection{Viral Mutation}
+%\viralFig
 
-Next generation sequencing allows biologists to collect and analyze large amounts of genomics data. However, these techniques often create data quality issues, as they must align large numbers of potentially ambiguous ``reads'' of relatively small numbers of base pairs. Using a dataset from a group of virologists interested in the population dynamics of viral mutation~\cite{o2012conditional}, we visualized the variability in viral genomes across 12 populations of the simian immunodeficiency virus (SIV). In the dataset here, it is important not only to identify hotspots in the viral genome (locations with high rates of mutation or variability), but also to not be distracted by false positives. The traditional bivariate map (\figref{fig:viral2d}) has many locations with apparent inter-population variance.
+%Next generation sequencing allows biologists to collect and analyze large amounts of genomics data. However, these techniques often create data quality issues, as they must align large numbers of potentially ambiguous ``reads'' of relatively small numbers of base pairs. Using a dataset from a group of virologists interested in the population dynamics of viral mutation~\cite{o2012conditional}, we visualized the variability in viral genomes across 12 populations of the simian immunodeficiency virus (SIV). In the dataset here, it is important not only to identify hotspots in the viral genome (locations with high rates of mutation or variability), but also to not be distracted by false positives. The traditional bivariate map (\figref{fig:viral2d}) has many locations with apparent inter-population variance.
 
-VSUPs (\figref{fig:viralVsum}) enable biologists to explore interesting patterns while deemphasizing noise. Orange hot spots towards the beginning (the second column) and end of the genome (around reference nucleotide $9,500$) could be considered potential regions of interest in the 2D map; in the VSUP these are encoded as highly uncertain and of ambiguous value. In fact, these regions have systematically low coverage; the lack of reliable data for these regions should discourage analysts from giving their apparent pattern equal consideration from the stronger signals elsewhere in the genome.
+%VSUPs (\figref{fig:viralVsum}) enable biologists to explore interesting patterns while deemphasizing noise. Orange hot spots towards the beginning (the second column) and end of the genome (around reference nucleotide $9,500$) could be considered potential regions of interest in the 2D map; in the VSUP these are encoded as highly uncertain and of ambiguous value. In fact, these regions have systematically low coverage; the lack of reliable data for these regions should discourage analysts from giving their apparent pattern equal consideration from the stronger signals elsewhere in the genome.
+
+\subsection{2016 Pre-Election Polling}
+
+Using a public data set from Wikipedia~\cite{wiki}, we collected the statewide polls that were conducted closest to the 2016 U.S. presidential election, we created a choropleth map showing which candidate was leading in the polls. We calculated uncertainty as the size of the lead in terms of margin of error (lead/margin). The AP style guide for reporters suggests that a candidate leading by more than two margins of error is said to be ``significantly ahead'' in the polls~\cite{french1988associated}. As the lead becomes closer to the margin of error, there is more doubt about the electoral outcome.
+
+By providing more color categories when the margin of error was relatively small, the VSUP map shows that, in many of the states leaning towards Hillary Clinton, her lead was quite small. The VSUP map, by limiting inferences about which candidate was leading when the uncertainty is high, also prevents the viewer from making strong claims about the outcome of the election, even if a state is leaning one way or the other. Given the relative volatility in polling data, this caution was warranted. An additional benefit to the VSUP map is that, as the diverging blue-red color map passes through a central whitepoint, it can be difficult to distinguish between uncertainty levels (which also interpolates to white) in the 2D map. The VSUP's tree-like structure separates these problematic colors.
 
 \section{Evaluation}
-%TODO update conditions fig
 \conditionFig
 
 We performed two crowdsourced experiments on Amazon's Mechanical Turk to evaluate the effectiveness of VSUPs for integrating uncertainty and value information in visualizations. This focus on integration meant that we limited our experimental tasks to scenarios where the participants needed to consider both value and uncertainty before making a decision. Each experiment focused on one of two separate tasks:
@@ -114,7 +114,7 @@ We performed two crowdsourced experiments on Amazon's Mechanical Turk to evaluat
 
 We limited our population to Turkers from the United States, with a prior task approval rate of at least 90\%. As the experimental tasks required multi-hue color perception, we presented participants with a set of Ishihara plates~\cite{hardy1945tests} as a pre-test, and excluded participants who either misidentified the values in the plates, or who self-reported as having a color vision deficiency (CVD) in the post-test. Based on piloting, we paid participants \$2 for participation, for a target rate of \$8/hour. After completion of the main tasks, we solicited demographic information, including a risk aversion assay from Mandrik \& Bao~\cite{mandrik2005exploring}. Participants from the first experiment were excluded from participating in the second.
 
-Experimental materials, including data tables and stimuli generation code, are available at \url{URL-REMOVED-FOR-REVIEW}.
+Experimental materials, including data tables and stimuli generation code, are available at \url{https://github.com/uwdata/spatial-sampling}.
 
 \subsection{Identification Experiment}
 
