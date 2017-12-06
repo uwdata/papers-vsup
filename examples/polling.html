@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Polling example</title>
+  <meta charset="UTF-8">
+
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+  </style>
+  <script src="//d3js.org/topojson.v1.min.js"></script>
+  <script src="../modules/node_modules/d3/build/d3.js"></script>
+  <script src="//d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <script src="../modules/dist/bvu.js"></script>
+</head>
+  <body>
+    <script>
+      d3.csv("polling.csv", function(data) {
+        var lead;
+        data = data.map(function(d) {
+          lead = d["Lead"]=="Tied" ? 0 : +d["Lead"];
+          return {
+            State: d["State"],
+            Hillary: parseFloat(d["Hillary Clinton"]),
+            Margin: parseFloat(d["Margin of error"]),
+            HillaryAhead: Math.sign(parseFloat(d["Hillary Clinton"]) - parseFloat(d["Donald Trump"])),
+            Lead: lead,
+            LeadRatio: lead / (d["Margin of error"]=="Tied" ? 0 : parseFloat(d["Margin of error"]))
+          }
+        });
+
+        var interpolate
+        var maxLead = d3.max(data, function(d){ return d.Lead;});
+        var vDom = [-maxLead, maxLead];
+        var uDom = [2,0];//[d3.max(data, function(d){ return d.LeadRatio;}), 0];
+
+        var quantization = bvu.quantization().branching(2).layers(4).valueDomain(vDom).uncertaintyDomain(uDom);
+        var scale = bvu.scale().quantize(quantization).range(d3.interpolateRdBu);
+
+        var squareQuantization = bvu.squareQuantization().n(4).valueDomain(vDom).uncertaintyDomain(uDom);
+        var squareScale = bvu.scale().quantize(squareQuantization).range(d3.interpolateRdBu);
+
+        var body = d3.select("body");
+
+        test = data;
+        makePollingExample(body.append("svg"),scale,data,"arc");
+        makePollingExample(body.append("svg"),squareScale,data,"square");
+      //  makeFlightExample(body.append("svg"), scale, data, "arc");
+      //  makeFlightExample(body.append("svg"), squareScale, data, "square");
+      });
+
+      function makePollingExample(svg,scale,data,type) {
+        var w = 900;
+        var h = 500;
+
+        svg
+          .attr("width",w+160)
+          .attr("height",h);
+
+        var projection = d3.geoAlbersUsa()
+          .translate([w/2,h/2])
+          .scale(Math.max(w,h));
+
+        var path = d3.geoPath()
+        .projection(projection);
+
+
+        //using the albersUSA json/code from from Mike B., https://bl.ocks.org/mbostock/2869946
+        d3.json("us.json", function(error, us) {
+          if (error) throw error;
+
+
+          svg.append("g").selectAll("path").data(us.features)
+          .enter().append("path")
+          .datum(function(d){
+            var name = d.properties.name;
+            d.properties = data.find(function(state){ return state.State == name;});
+            if(!d.properties){
+              console.log(name);
+              d.properties = {"State": name};
+            }
+            return d;})
+          .attr("d", path)
+          .attr("stroke", "white")
+          .attr("fill", function(d){ return d.properties.Lead===undefined ? "#aaa" : scale(d.properties.HillaryAhead * d.properties.Lead,d.properties.LeadRatio);})
+          .append("svg:title")
+          .text(function(d){ return d.properties.Lead + "," + d.properties.LeadRatio;});
+          });
+
+          // legend
+          var legend = type === "arc" ? bvu.legend.arcmapLegend() : bvu.legend.heatmapLegend();
+
+          legend
+            .scale(scale)
+            .size(160)
+            .x(w - 160)
+            .y(h-200)
+            .vtitle("Hillary Lead")
+            .utitle("Lead / Margin of Error");
+
+          svg.append("g").call(legend)
+      }
+    </script>
+  </body>
+</html>
