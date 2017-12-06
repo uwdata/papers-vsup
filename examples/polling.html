@@ -33,7 +33,7 @@
         var interpolate
         var maxLead = d3.max(data, function(d){ return d.Lead;});
         var vDom = [-maxLead, maxLead];
-        var uDom = [2,0];//[d3.max(data, function(d){ return d.LeadRatio;}), 0];
+        var uDom = [3,0];//[d3.max(data, function(d){ return d.LeadRatio;}), 0];
 
         var quantization = bvu.quantization().branching(2).layers(4).valueDomain(vDom).uncertaintyDomain(uDom);
         var scale = bvu.scale().quantize(quantization).range(d3.interpolateRdBu);
@@ -96,7 +96,7 @@
             .size(160)
             .x(w - 160)
             .y(h-200)
-            .vtitle("Hillary Lead")
+            .vtitle("Clinton Lead")
             .utitle("Lead / Margin of Error");
 
           svg.append("g").call(legend)

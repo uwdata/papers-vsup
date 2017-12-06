@@ -128,6 +128,24 @@
 \end{figure}
 }
 
+\newcommand{\pollFig}{
+	\begin{figure}[t]
+		\centering
+		\includegraphics[width=\columnwidth]{polling-2d.pdf}
+		\vspace{-15px}
+		\caption{Polling data prior to the 2016 U.S. Presidential Election, encoded in a traditional 2D bivariate map. Many states appear to be ``leaning'' towards Clinton, even when the margin of error of the polls is quite large. The blue-red color scale that is semantically appropriate for the topic is also not isoluminant, making it difficult to see just how much uncertainty there is in states with small leads for either candidate.}
+		\label{fig:polling2d}
+		
+		\vspace{10px}
+		
+		\centering
+		\includegraphics[width=\columnwidth]{polling-vsum.pdf}
+		\vspace{-15px}
+		\caption{Polling data prior to the 2016 U.S. Presidential Election, encoded with a VSUP. The larger amount of color bins for high-certainty regions shows that the leads for Hillary Clinton were, in many states, quite small. The collapsing of bins as uncertainty increases dissuades viewers from making confident predictions about states where the outcome was very much in doubt. }
+		\label{fig:pollingVsum}
+	\end{figure}
+}
+
 \newcommand{\responseTimeFig}{
 	\begin{figure}[t]
 		\centering
