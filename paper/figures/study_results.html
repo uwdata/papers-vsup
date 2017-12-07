@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Study results</title>
+        <meta charset="UTF-8">
+
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+        </style>
+
+        <script src="../../modules/node_modules/d3/build/d3.js"></script>
+        <script src="../../modules/dist/bvu.js"></script>
+    </head>
+    <body>
+        <script>
+            d3.csv("../Supplemental Material/Exp2/exclusionsDataTwo.csv", function(data) {
+                console.log(data);
+
+                var vsumdata = [];
+                var twoddata = [];
+
+                data.forEach(function(d) {
+                    var set = d.vsum === "yes" ? vsumdata : twoddata;
+
+                    set.push({u: +d.U1, v: +d.V1});
+                    set.push({u: +d.U2, v: +d.V2});
+                    set.push({u: +d.U3, v: +d.V3});
+                    set.push({u: +d.U4, v: +d.V4});
+                    set.push({u: +d.U5, v: +d.V5});
+                });
+
+                var binRange = [0, 1, 2, 3];
+                var bin = d3.scaleQuantile().domain([0, 1]).range(binRange);
+
+                var maxCount = 0;
+
+                function group(data) {
+                    var discrete = data.map(function(d) { return {u: bin(d.u), v: bin(d.v)}; });
+
+                    var entries = d3.nest()
+                        .key(function(d) { return d.u; })
+                        .key(function(d) { return d.v; })
+                        .entries(discrete);
+
+                    var out = [];
+                    entries.forEach(function(row) {
+                        row.values.forEach(function(column) {
+                            var count = Math.sqrt(column.values.length);
+
+                            if (count > maxCount) {
+                                maxCount = count;
+                            }
+
+                            out.push({u: +row.key, v: +column.key, count: count});
+                        });
+                    });
+
+                    return out;
+                }
+
+                vsumdata = group(vsumdata);
+                twoddata = group(twoddata);
+
+                var svg1 = d3.select("body").append("svg");
+                svg1.attr("width",320).attr("height",320);
+
+                var svg2 = d3.select("body").append("svg");
+                svg2.attr("width",320).attr("height",320);
+
+                var squareQuantization = bvu.squareQuantization().n(4).valueDomain([0, 1]).uncertaintyDomain([0, 1]);
+                var squareScale = bvu.scale().quantize(squareQuantization).range(d3.interpolateViridis);
+
+                var quantization = bvu.quantization().branching(2).layers(4).valueDomain([0, 1]).uncertaintyDomain([0, 1]);
+                var scale = bvu.scale().quantize(quantization).range(d3.interpolateViridis);
+
+                var heatLegendSquare = bvu.legend.heatmapLegend()
+                    .scale(squareScale)
+                    .size(200)
+                    .x(40)
+                    .y(40)
+                    .vtitle("Danger");
+
+                svg1
+                    .append("g")
+                    .call(heatLegendSquare);
+
+                overlay(svg1, twoddata);
+
+                var heatLegendTree = bvu.legend.heatmapLegend()
+                    .scale(scale)
+                    .size(200)
+                    .x(40)
+                    .y(40)
+                    .vtitle("Danger");
+
+                svg2
+                    .append("g")
+                    .call(heatLegendTree);
+
+                overlay(svg2, vsumdata);
+
+                function overlay(svg, data) {
+                    console.log(data);
+
+                    var el = svg.append("g").attr("transform", "translate(40, 40)");
+
+                    var xScale = d3.scalePoint().domain(binRange).range([0,200]).padding(0.5);
+                    var yScale = d3.scalePoint().domain(binRange).range([1,200]).padding(0.5);
+
+                    var size = d3.scaleLinear().domain([0, maxCount]).range([0, 21]);
+
+                    el.selectAll("circle").data(data)
+                        .enter().append("circle")
+                        .attr("r", function(d) { return size(d.count); })
+                        .attr("cx", function(d) { return xScale(d.v); })
+                        .attr("cy", function(d) { return yScale(d.u); })
+                        .attr("opacity", 1)
+                        .style("fill", "transparent")
+                        .style("stroke", "black")
+                        .style("stroke-width", 1.5);
+                }
+            });
+        </script>
+    </body>
+</html>

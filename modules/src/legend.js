@@ -180,6 +180,7 @@ export function heatmapLegend(m_scale, m_size, m_format, m_utitle, m_vtitle, m_x
       inverted[i] = tmp[tmp.length - i - 1];
     }
 
+    heatmap.y(1);  // don't hide x-axis
     heatmap.data(inverted);
     heatmap.scale(scale);
     heatmap.size(size);
