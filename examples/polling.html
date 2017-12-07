@@ -43,7 +43,6 @@
 
         var body = d3.select("body");
 
-        test = data;
         makePollingExample(body.append("svg"),scale,data,"arc");
         makePollingExample(body.append("svg"),squareScale,data,"square");
       //  makeFlightExample(body.append("svg"), scale, data, "arc");
@@ -77,7 +76,6 @@
             var name = d.properties.name;
             d.properties = data.find(function(state){ return state.State == name;});
             if(!d.properties){
-              console.log(name);
               d.properties = {"State": name};
             }
             return d;})
