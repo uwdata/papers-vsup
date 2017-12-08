@@ -8,12 +8,37 @@
             body {
                 font-family: sans-serif;
             }
+
+            .vsum {
+                position: fixed;
+                top: 266px;
+                left: 443px;
+                font-weight: 600;
+                font-size: 16px;
+            }
+
+            .map {
+                position: fixed;
+                top: 266px;
+                left: 53px;
+                font-weight: 600;
+                font-size: 16px;
+            }
+
+            .legendSize circle {
+                fill: transparent;
+                stroke: black;
+                stroke-width: 1.5;
+            }
         </style>
 
         <script src="../../modules/node_modules/d3/build/d3.js"></script>
         <script src="../../modules/dist/bvu.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.0/d3-legend.js"></script>
     </head>
     <body>
+        <div class="map">Traditional Bivariate Map</div>
+        <div class="vsum">VSUP</div>
         <script>
             d3.csv("../Supplemental Material/Exp2/exclusionsDataTwo.csv", function(data) {
                 console.log(data);
@@ -64,10 +89,10 @@
                 twoddata = group(twoddata);
 
                 var svg1 = d3.select("body").append("svg");
-                svg1.attr("width",320).attr("height",320);
+                svg1.attr("width",315).attr("height",315);
 
                 var svg2 = d3.select("body").append("svg");
-                svg2.attr("width",320).attr("height",320);
+                svg2.attr("width",315).attr("height",315);
 
                 var squareQuantization = bvu.squareQuantization().n(4).valueDomain([0, 1]).uncertaintyDomain([0, 1]);
                 var squareScale = bvu.scale().quantize(squareQuantization).range(d3.interpolateViridis);
@@ -86,8 +111,6 @@
                     .append("g")
                     .call(heatLegendSquare);
 
-                overlay(svg1, twoddata);
-
                 var heatLegendTree = bvu.legend.heatmapLegend()
                     .scale(scale)
                     .size(200)
@@ -99,7 +122,28 @@
                     .append("g")
                     .call(heatLegendTree);
 
-                overlay(svg2, vsumdata);
+                var size = d3.scaleLinear().domain([0, maxCount]).range([0, 21]).nice();
+
+                var svg = d3.select("body").append("svg").attr("height", 300);
+
+                svg.append("g")
+                    .attr("class", "legendSize")
+                    .attr("transform", "translate(25, 40)");
+
+                var legendSize = d3.legendSize()
+                    .scale(size)
+                    .shape("circle")
+                    .shapePadding(10)
+                    .labelOffset(10)
+                    .orient("vertical")
+                    .labelFormat("1.0f");
+
+                svg.select(".legendSize")
+                    .call(legendSize);
+
+
+                overlay(svg1, twoddata);
+                overlay(svg2, vsumdata);                        
 
                 function overlay(svg, data) {
                     console.log(data);
@@ -108,8 +152,6 @@
 
                     var xScale = d3.scalePoint().domain(binRange).range([0,200]).padding(0.5);
                     var yScale = d3.scalePoint().domain(binRange).range([1,200]).padding(0.5);
-
-                    var size = d3.scaleLinear().domain([0, maxCount]).range([0, 21]);
 
                     el.selectAll("circle").data(data)
                         .enter().append("circle")
