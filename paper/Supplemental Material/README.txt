@@ -18,14 +18,14 @@ v: the value of the guessed location, in [0,1]
 u: the uncertainty of the guessed location, in [0,1]
 binned: whether the legend was {continuous} or {discrete}
 shape: whether the legend was {arc} shaped (called “wedge” in the paper), {square} shaped, or there were two {juxtaposed} univariate legends.
-vsum: whether the discrete legend was uniformly binned ({no}), or non-uniformly binned using the Value-Suppressing procedure described in the paper ({yes}).
+vsup: whether the discrete legend was uniformly binned ({no}), or non-uniformly binned using the Value-Suppressing procedure described in the paper ({yes}).
 qV: the target data value.
 qU: the target uncertainty value.
 vError: difference between the guessed value and the target value
 uError: difference between the guessed uncertainty and the target uncertainty
 error: vError+uError
 correct: if the participant clicked the correct location
-condition: a string uniquely picking out one of our eight conditions (vsum x binned x shape).
+condition: a string uniquely picking out one of our eight conditions (vsup x binned x shape).
 
 Column Key for taskTwo.csv
 
@@ -33,13 +33,13 @@ index: the question number
 rt: response time, in milliseconds
 binned: whether the legend was {continuous} or {discrete}.
 shape: whether the legend was {arc} shaped (called “wedge” in the paper), {square} shaped, or there were two {juxtaposed} univariate legends.
-vsum: whether the discrete legend was uniformly binned ({no}), or non-uniformly binned using the Value-Suppressing procedure described in the paper ({yes}).
+vsup: whether the discrete legend was uniformly binned ({no}), or non-uniformly binned using the Value-Suppressing procedure described in the paper ({yes}).
 V1-V5: the danger of the 5 tokens placed by the participant
 U1-U5: the uncertainty of the 5 tokens placed by the participant.
 meanV: the average danger value of the participant’s guesses. the lower this is, the “safer” the tokens placed.
 meanU: the average uncertainty of the participant’s guesses.
 stdV, stdU: standard deviation in value and uncertainty, respectively, in the participant guesses.
-condition: a string uniquely picking out one of our eight conditions (vsum x binned x shape).
+condition: a string uniquely picking out one of our eight conditions (vsup x binned x shape).
 
 Column Key for participants.csv
 

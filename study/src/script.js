@@ -46,30 +46,30 @@ var taskTwoTokens = 0;
 // 4. Continuous juxtaposed
 // 5. Discrete arc
 // 6. Continuous arc
-// 7. VSUM square
-// 8. VSUM arc
+// 7. VSUP square
+// 8. VSUP arc
 
 
 //The top types for exp2
 var types =
 [
-  {binned: "discrete", shape:"square", vsum:false},
-//  {binned: "continuous", shape:"square", vsum:false},
-//  {binned: "discrete", shape:"juxtaposed", vsum:false},
-//  {binned: "continuous", shape:"juxtaposed", vsum:false},
-  {binned: "discrete", shape:"arc", vsum:false},
-//  {binned: "continuous", shape:"arc", vsum:false},
-  {binned: "discrete", shape:"square", vsum:true},
-  {binned: "discrete", shape:"arc", vsum:true}
+  {binned: "discrete", shape:"square", vsup:false},
+//  {binned: "continuous", shape:"square", vsup:false},
+//  {binned: "discrete", shape:"juxtaposed", vsup:false},
+//  {binned: "continuous", shape:"juxtaposed", vsup:false},
+  {binned: "discrete", shape:"arc", vsup:false},
+//  {binned: "continuous", shape:"arc", vsup:false},
+  {binned: "discrete", shape:"square", vsup:true},
+  {binned: "discrete", shape:"arc", vsup:true}
 ];
 
 //quantization schema
-var Qvsum = bvu.quantization().branching(2).layers(4);
+var Qvsup = bvu.quantization().branching(2).layers(4);
 var Q2d = bvu.squareQuantization().n(4);
 
 
 //bivariate scales
-var scaleVsum = bvu.scale().quantize(Qvsum).range(d3.interpolateViridis);
+var scalevsup = bvu.scale().quantize(Qvsup).range(d3.interpolateViridis);
 var scale2d = bvu.scale().quantize(Q2d).range(d3.interpolateViridis);
 var scaleContinuous = function(d) {
   var c = d3.interpolateViridis(d.v);
@@ -109,10 +109,10 @@ var validQs = [
   {v:0.4, u:0.8},
 ];
 
-var vsumLegend = [];
-var temp = Qvsum.tree();
+var vsupLegend = [];
+var temp = Qvsup.tree();
 for (var i = 0;i < temp.length;i++) {
-  vsumLegend[i] = temp[temp.length - i - 1];
+  vsupLegend[i] = temp[temp.length - i - 1];
 }
 
 var squareLegend = [];
@@ -289,7 +289,7 @@ function makeTaskOneStimuli() {
 
   for (var type of types) {
     for (var i = 0;i < replicates;i++) {
-      stimuli.push({binned: type.binned, shape:type.shape, vsum: type.vsum, question: validQs[Math.floor(Math.random() * validQs.length)]});
+      stimuli.push({binned: type.binned, shape:type.shape, vsup: type.vsup, question: validQs[Math.floor(Math.random() * validQs.length)]});
     }
   }
 
@@ -304,7 +304,7 @@ function makeTaskTwoStimuli() {
 
   for (var type of types) {
     for (var i = 0;i < replicates;i++) {
-      stimuli.push({binned: type.binned, shape:type.shape, vsum: type.vsum});
+      stimuli.push({binned: type.binned, shape:type.shape, vsup: type.vsup});
     }
   }
 
@@ -430,8 +430,8 @@ function drawMap(stim, data, task) {
           .scale(scaleContinuous);
     }
 
-    if (stim.vsum) {
-      legend.data(vsumLegend);
+    if (stim.vsup) {
+      legend.data(vsupLegend);
     }
     else {
       legend.data(squareLegend);
@@ -472,8 +472,8 @@ function drawMap(stim, data, task) {
   var mapSvg = d3.select("#map");
   var map = bvu.heatmap().x(225).size(250).scale(scale2d).data(data);
 
-  if (stim.vsum) {
-    map.scale(scaleVsum);
+  if (stim.vsup) {
+    map.scale(scalevsup);
   }
   else if (stim.shape == "juxtaposed") {
     var umap = bvu.heatmap().size(250).scale(scale1dU).data(data).x(400);
@@ -537,7 +537,7 @@ function answerTaskOne() {
   answerData.vError = vError;
   answerData.uError = uError;
   answerData.error = vError + uError;
-  answerData.vsum = stim.vsum ? "yes" : "no";
+  answerData.vsup = stim.vsup ? "yes" : "no";
 
   delete answerData.question;
   writeAnswerTaskOne(answerData);
@@ -788,7 +788,7 @@ function answerTaskTwo() {
   answerData.meanU = dl.mean(data, "u");
   answerData.stdV = dl.stdev(data, "v");
   answerData.stdU = dl.stdev(data, "u");
-  answerData.vsum = stim.vsum ? "yes" : "no";
+  answerData.vsup = stim.vsup ? "yes" : "no";
 
   writeAnswerTaskTwo(answerData);
 }

@@ -9,7 +9,7 @@
                 font-family: sans-serif;
             }
 
-            .vsum {
+            .vsup {
                 position: fixed;
                 top: 266px;
                 left: 443px;
@@ -38,16 +38,16 @@
     </head>
     <body>
         <div class="map">Traditional Bivariate Map</div>
-        <div class="vsum">VSUP</div>
+        <div class="vsup">VSUP</div>
         <script>
             d3.csv("../Supplemental Material/Exp2/exclusionsDataTwo.csv", function(data) {
                 console.log(data);
 
-                var vsumdata = [];
+                var vsupdata = [];
                 var twoddata = [];
 
                 data.forEach(function(d) {
-                    var set = d.vsum === "yes" ? vsumdata : twoddata;
+                    var set = d.vsup === "yes" ? vsupdata : twoddata;
 
                     set.push({u: +d.U1, v: +d.V1});
                     set.push({u: +d.U2, v: +d.V2});
@@ -85,7 +85,7 @@
                     return out;
                 }
 
-                vsumdata = group(vsumdata);
+                vsupdata = group(vsupdata);
                 twoddata = group(twoddata);
 
                 var svg1 = d3.select("body").append("svg");
@@ -143,7 +143,7 @@
 
 
                 overlay(svg1, twoddata);
-                overlay(svg2, vsumdata);                        
+                overlay(svg2, vsupdata);                        
 
                 function overlay(svg, data) {
                     console.log(data);
