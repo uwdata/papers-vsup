@@ -3,7 +3,7 @@
   "data": {
     "values": [
       {
-        "type": "VSUM",
+        "type": "VSUP",
         "mean": 0.815068493150685,
         "ci1": 0.7054794520547946,
         "ci2": 0.9315068493150684
@@ -33,12 +33,14 @@
             "title": "Chart Type",
             "titlePadding": 10
           },
-          "scale": {"domain": ["VSUM","2D","Juxtaposed"]}
+          "scale": {"domain": ["VSUP","2D","Juxtaposed"]}
         },
         "x": {
           "field": "ci1",
           "type": "quantitative",
-          "title": "Accuracy"
+          "axis": {
+            "title": "Accuracy"
+          }
         },
         "x2": {"field": "ci2","type": "quantitative"}
       }
@@ -49,7 +51,7 @@
         "y": {
           "field": "type",
           "type": "ordinal",
-          "scale": {"domain": ["Juxtaposed","2D","VSUM"]}
+          "scale": {"domain": ["Juxtaposed","2D","VSUP"]}
         },
         "x": {"field": "mean","type": "quantitative"},
         "opacity": {"value": 1},
