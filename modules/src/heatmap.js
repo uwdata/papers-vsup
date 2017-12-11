@@ -25,7 +25,7 @@ export function simpleHeatmap(data, m_scale, m_size, m_id, m_x, m_y) {
       heatmap.svgGroup = heatmap.el.append("g");
     }
 
-    heatmap.svgGroup.attr("transform", "translate(" + x + "," + y + ")").style("opacity", 0.6);
+    heatmap.svgGroup.attr("transform", "translate(" + x + "," + y + ")");
 
     heatmap.svgGroup.selectAll("g")
       .data(data)
