@@ -35,16 +35,16 @@ function process() {
   for(var i = 0;i<cleanedOne.length;i++) {
     cleanedOne[i].correct = cleanedOne[i].error==0 ? 1 : 0;
     cleanedOne[i].condition = cleanedOne[i].binned + cleanedOne[i].shape;
-    if(cleanedOne[i].vsum == "yes") {
-      cleanedOne[i].condition = "vsum" + cleanedOne[i].condition;
+    if(cleanedOne[i].vsup == "yes") {
+      cleanedOne[i].condition = "vsup" + cleanedOne[i].condition;
     }
     writeRow(cleanedOne[i]);
   }
 
   for(var i = 0;i<cleanedTwo.length;i++) {
     cleanedTwo[i].condition = cleanedTwo[i].binned + cleanedTwo[i].shape;
-    if(cleanedTwo[i].vsum == "yes") {
-      cleanedTwo[i].condition = "vsum" + cleanedTwo[i].condition;
+    if(cleanedTwo[i].vsup == "yes") {
+      cleanedTwo[i].condition = "vsup" + cleanedTwo[i].condition;
     }
     writeRow(cleanedTwo[i]);
   }
