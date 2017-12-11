@@ -41,7 +41,7 @@
         .interpolate(d3.interpolateLab);
 
         var maxLead = d3.max(data, function(d){ return d.Lead;});
-        var vDom = [-maxLead/4, maxLead/4];
+        var vDom = [-20,20];
         var uDom = [8,0];//[d3.max(data, function(d){ return d.LeadRatio;}), 0];
 
         var quantization = bvu.quantization().branching(2).layers(4).valueDomain(vDom).uncertaintyDomain(uDom);
