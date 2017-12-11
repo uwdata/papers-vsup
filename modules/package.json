@@ -1,4 +1,8 @@
 {
+    "name": "vsup",
+    "version": "1.0.0",
+    "description": "Value-Suppressing Uncertainty Palettes. A technique for creating bivariate scales for depicting uncertainty, using D3.",
+    "main": "bin/bvu.js",
     "scripts": {
         "build": "rollup -c",
         "watch": "rollup -c -w",
@@ -13,5 +17,17 @@
         "eslint": "^4.12.1",
         "rollup": "^0.52.1",
         "rollup-plugin-node-resolve": "^3.0.0"
-    }
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/uwdata/spatial-sampling.git"
+    },
+    "keywords": [
+      "d3",
+      "bivariate",
+      "visualization",
+      "uncertainty"
+    ],
+    "author": "Michael Correll, Dominik Moritz, and Jeffrey Heer",
+    "license": "MIT"
 }

@@ -38,7 +38,7 @@ export function simpleScale(m_mode, m_range, m_quantization) {
     switch (mode) {
       case "usl":
       default:
-        vcolor = d3.interpolateLab(vcolor, "#ddd")(uScale(data.u));
+        vcolor = d3.interpolateLab(vcolor, "#fff")(uScale(data.u));
       break;
     }
     return vcolor;

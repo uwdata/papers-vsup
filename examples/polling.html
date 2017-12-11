@@ -30,16 +30,25 @@
           }
         });
 
-        var interpolate
+        var red = "rgb(172,32,47)";
+        var purple = "rgb(116,2,128)";
+      //  "rgb(209, 172, 210)";
+        var blue = "rgb(34,101,163)";
+
+        var interpolateIsoRdBu = d3.scaleLinear()
+        .domain([0,0.5,1])
+        .range([red,purple,blue])
+        .interpolate(d3.interpolateLab);
+
         var maxLead = d3.max(data, function(d){ return d.Lead;});
         var vDom = [-maxLead, maxLead];
         var uDom = [3,0];//[d3.max(data, function(d){ return d.LeadRatio;}), 0];
 
         var quantization = bvu.quantization().branching(2).layers(4).valueDomain(vDom).uncertaintyDomain(uDom);
-        var scale = bvu.scale().quantize(quantization).range(d3.interpolateRdBu);
+        var scale = bvu.scale().quantize(quantization).range(interpolateIsoRdBu);
 
         var squareQuantization = bvu.squareQuantization().n(4).valueDomain(vDom).uncertaintyDomain(uDom);
-        var squareScale = bvu.scale().quantize(squareQuantization).range(d3.interpolateRdBu);
+        var squareScale = bvu.scale().quantize(squareQuantization).range(interpolateIsoRdBu);
 
         var body = d3.select("body");
 
