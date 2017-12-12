@@ -201,7 +201,7 @@ Our experimental results have a number of implications for designers wishing to 
 
 Gleicher et al.~\cite{gleicher2011visual} propose three major categories for visualizations that support comparison: juxtaposition (where two variables are visualized in adjacent charts), superposition (where the two variables are encoded simultaneously in a single chart) and explicit encoding (where the two variables are reduced to a single calculated variable, which is directly visualized). Juxtaposition has a number of advantages for bivariate data of this sort: firstly, there are no issues of the integrality of different components of color perception, as there are separate maps for both uncertainty and value. Secondly, juxtaposed displays allow viewers to separately consider patterns in value and uncertainty.
 
-\subsection{Discrete vs Continuous Encodings}
+\subsection{Discrete vs. Continuous Encodings}
 
 When using color to encode data, designers must make the decision whether or not to separate the data into discrete classes of color outputs, or to employ a continuous and class-less scale. This, in turn, introduces a trade-off between \emph{quantization error} (the sampling error introduced by binning the data) and \emph{perceptual error} (the error introduced by the viewer as they decode the color). For bivariate color maps, where often the color properties used to encode value and uncertainty are not perceptually separable, this perceptual error can be quite high. We observed this high error in our identification task, where continuous maps, despite, in theory, having greater expressivity in encoding color and uncertainty, had significantly worse accuracy than the discretized bivariate maps. This is despite the fact that we had comparatively few categories (16 in total).
 
@@ -242,3 +242,7 @@ VSUPs, like other mappings involving quantization, are also highly sensitive to 
 \subsection{Conclusion}
 
 Uncertainty, data quality, or confidence values are often considered separately from the data itself, relegated to tooltips or visually distant supplemental charts. We contend, in contrast, that uncertainty information ought to be directly integrated within a shared chart. This integration introduces additional complexity in the design and presentation of data. Value-Suppressing Uncertainty Palettes represent one strategy for dealing with this complexity, by assigning mark properties in a way that supports the disambiguation of values in data where uncertainty is low, but suppresses these judgments when uncertainty is high. This decision of how to allocate visual variables promotes patterns of decision-making that make responsible use of uncertainty information, discouraging comparison of values in unreliable regions of the data, and promoting comparison in regions of high certainty.
+
+\section{Acknowledgments}
+
+This work was supported by a Moore Foundation Data-Driven Discovery Investigator Award.
