@@ -195,13 +195,21 @@ These two results, taken together, suggest that VSUPs led participants to modera
 
 \section{Discussion}
 
-Our experimental results have a number of implications for designers wishing to employ bivariate maps for encoding uncertainty. Both of our experiments show that the way that uncertainty information is presented can have a measurable impact of decision-making. VSUPs make a number of design choices in presenting uncertainty. Firstly, they present uncertainty information simultaneously (superimposed) with value, rather than either of the other two strategies for comparing data in visualizations~\cite{gleicher2011visual}, juxtaposition or superposition. Secondly, they encode value and uncertainty in discrete, quantized bins, rather than continuously. Lastly, they alias and suppress uncertain, rather than certain, values. Our experiments provide specific performance information about the effects of each of these choices on information fusion tasks.
-
-\subsection{Discrete vs Continuous Encodings}
+Our experimental results have a number of implications for designers wishing to employ bivariate maps for encoding uncertainty. Both of our experiments show that the way that uncertainty information is presented can have a measurable impact of decision-making. VSUPs make a number of design choices in presenting uncertainty. Firstly, they present uncertainty information simultaneously (superimposed) with value, rather than in juxtaposed charts. Secondly, they encode value and uncertainty in discrete, quantized bins, rather than continuously. Lastly, they alias and suppress uncertain, rather than certain, values. Our experiments provide specific performance information about the effects of each of these choices on information fusion tasks.
 
 \subsection{Juxtaposition vs. Superposition}
 
+Gleicher et al.~\cite{gleicher2011visual} propose three major categories for visualizations that support comparison: juxtaposition (where two variables are visualized in adjacent charts), superposition (where the two variables are encoded simultaneously in a single chart) and explicit encoding (where the two variables are reduced to a single calculated variable, which is directly visualized). Juxtaposition has a number of advantages for bivariate data of this sort: firstly, there are no issues of the integrality of different components of color perception, as there are separate maps for both uncertainty and value. Secondly, juxtaposed displays allow viewers to separately consider patterns in value and uncertainty.
+
+\subsection{Discrete vs Continuous Encodings}
+
+When using color to encode data, designers must make the decision whether or not to separate the data into discrete classes of color outputs, or to employ a continuous and class-less scale. This, in turn, introduces a trade-off between \emph{quantization error} (the sampling error introduced by binning the data) and \emph{perceptual error} (the error introduced by the viewer as they decode the color). For bivariate color maps, where often the color properties used to encode value and uncertainty are not perceptually separable, this perceptual error can be quite high. We observed this high error in our identification task, where continuous maps, despite, in theory, having greater expressivity in encoding color and uncertainty, had significantly worse accuracy than the discretized bivariate maps. This is despite the fact that we had comparatively few categories (16 in total).
+
 \subsection{Risk Aversion vs. Risk Seeking}
+
+It is often difficult for the general audience to successfully make use of uncertainty information.  In order to minimize the complexity of uncertainty, uncertainty information is often visualized in a binary way, where values either meet some explicit uncertainty standard, or do not. These binary encodings for uncertain information, such as error bars for estimates, or ``cones of uncertainty'' for hurricane paths, result in binary patterns of decision-making that do not accurately reflect the underlying uncertainty in the data~\cite{cox2013visualizing,correll2014error}.
+
+We designed VSUPs to promote risk-averse decision-making. In the limit of uncertainty VSUPs have only one output color, and so explicitly prevent any decoding of value. This narrowing of options is reflected not only in the quantization scheme, but also in the shape of the legend, narrowing as the uncertainty increases. 
 %\sizeFig
 
 
