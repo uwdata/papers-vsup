@@ -12,3 +12,4 @@ uncertainty.synctex.gz
 modules/dist
 *.psd
 *.out
+paper/uncertainty.pdf
