@@ -1,0 +1,18 @@
+Following the suggestions from the reviewers, and our revision plan laid out in our rebuttal, we made the following revisions to the paper:
+
+1. We added an additional example of the VSUPs technique using polling data, that we believe better highlights the utility of VSUPs. For space reasons, we removed the existing virus example, as there was significant overlap between it and the flight delay example in terms of important differences between VSUP and traditional techniques.
+
+2. We de-anonymized the submission, including links to our public repositories for generating VSUPs and replication and reanalysis of our experiments.
+
+3. We provided additional details concerning our experimental methods and analyses, including updating our figure of our prediction experiment results, and reinforcing the relationship between prospect theory and the design of our prediction task.
+
+4. We significantly expanded our discussion section, including subsections for each of our main experimental findings, highlighting areas where our results clarify or contradict prior work on decision-making and bivariate map design.
+
+We also made several minor revisions:
+
+5. Per the advice of a reviewer, we removed the size/color VSUP figure.
+
+6. We corrected minor typos, usage errors, and layout issues.
+
+7. We added, where available, DOI links for our references. We corrected errors in the references identified by the reviewers, and included some additional references in support of our new example and expanded discussion section.
+

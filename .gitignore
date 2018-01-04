@@ -13,3 +13,5 @@ modules/dist
 *.psd
 *.out
 paper/uncertainty.pdf
+paper/SRC
+paper/SRC.zip
