@@ -73,7 +73,17 @@ var scalevsup = bvu.scale().quantize(Qvsup).range(d3.interpolateViridis);
 var scale2d = bvu.scale().quantize(Q2d).range(d3.interpolateViridis);
 var scaleContinuous = function(d) {
   var c = d3.interpolateViridis(d.v);
-  return d3.interpolateLab(c, d3.color("#ddd"))(d.u);
+  return d3.interpolateLab(d3.color("#ddd"), c)(d.u);
+}
+scaleContinuous.quantize = function() {
+  return {
+    uncertaintyDomain: function() {
+      return [0,1]
+    },
+    valueDomain: function() {
+      return [0,1]
+    }
+  }
 }
 
 //juxtaposed univated scales
