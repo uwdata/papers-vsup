@@ -64,27 +64,32 @@ var types =
 ];
 
 //quantization schema
-var Qvsup = bvu.quantization().branching(2).layers(4);
-var Q2d = bvu.squareQuantization().n(4);
+vDom = [0,1];
+uDom = [0,1];
+var Qvsup = bvu.quantization().branching(2).layers(4).valueDomain(vDom).uncertaintyDomain(uDom);
+var Q2d = bvu.squareQuantization().n(4).valueDomain(vDom).uncertaintyDomain(uDom);
 
 
 //bivariate scales
 var scalevsup = bvu.scale().quantize(Qvsup).range(d3.interpolateViridis);
 var scale2d = bvu.scale().quantize(Q2d).range(d3.interpolateViridis);
+
 var scaleContinuous = function(d) {
   var c = d3.interpolateViridis(d.v);
   return d3.interpolateLab(d3.color("#ddd"), c)(d.u);
 }
+
 scaleContinuous.quantize = function() {
   return {
     uncertaintyDomain: function() {
-      return [0,1]
+      return [0,1];
     },
     valueDomain: function() {
-      return [0,1]
+      return [0,1];
     }
   }
 }
+
 
 //juxtaposed univated scales
 
@@ -118,18 +123,6 @@ var validQs = [
   {v:0.8, u:0.6},
   {v:0.4, u:0.8},
 ];
-
-var vsupLegend = [];
-var temp = Qvsup.tree();
-for (var i = 0;i < temp.length;i++) {
-  vsupLegend[i] = temp[temp.length - i - 1];
-}
-
-var squareLegend = [];
-temp = Q2d.matrix();
-for (i = 0;i < temp.length;i++) {
-  squareLegend[i] = temp[temp.length - i - 1];
-}
 
 function gup(name) {
   var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -441,10 +434,10 @@ function drawMap(stim, data, task) {
     }
 
     if (stim.vsup) {
-      legend.data(vsupLegend);
+      legend.scale(scalevsup)
     }
     else {
-      legend.data(squareLegend);
+      legend.scale(scale2d);
     }
     legend.vtitle(vtitle);
     legendSvg.append("g").call(legend);
