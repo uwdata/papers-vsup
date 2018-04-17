@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>SNAP example</title>
+  <title>Polyglots example</title>
   <meta charset="UTF-8">
 
   <style>
@@ -18,74 +18,45 @@
     <script>
       var avg = 12.4;
 
-      d3.csv("snap.csv", function(data) {
+      d3.csv("polyglots.csv", function(data) {
         data = data.map(function(d) {
           return {
             State: d["State"],
-            Snap: parseFloat(d["SNAP"]),
+            Polyglots: parseFloat(d["Polyglots"]),
             Margin: parseFloat(d["Margin"]),
-            SnapDiff: Math.abs((parseFloat(d["SNAP"])-avg) / parseFloat(d["Margin"]))
           }
         });
 
-        var maureenColorsSeq = [
-          "#ffd800",
-          "#febe01",
-          "#f9a701",
-          "#f08f00",
-          "#e57807",
-          "#db5f16",
-          "#ca4b1f",
-          "#b63924"
-        ];
+        var colors = d3.interpolateCool;
 
-        var maureenColorsDiv = [
-          "#137c9f",
-          "#3093a9",
-          "#59aca2",
-          "#fad656",
-          "#f68a2c",
-          "#de6723",
-          "#c5402b"
-        ]
+        var c1 = d3.hsl(10,0.25,0.5);
+        var c2 = d3.hsl(30,0.75,0.5);
+        var c3 = d3.hsl(50,1,0.5);
 
-        var maureenColors = maureenColorsSeq;
 
-        var breaks = [];
-        for(var i = 0;i<maureenColors.length;i++){
-          breaks.push(i / (maureenColors.length-1));
-        };
-
-        var snapColors = d3.scaleLinear()
-        .domain(breaks)
-        .range(maureenColors)
+        var isoColors = d3.scaleLinear()
+        .domain([0,0.5,1])
+        .range([c1,c2,c3])
         .interpolate(d3.interpolateLab);
 
-        //var snapColors = d3.interpolatePlasma;
-
-        var snapColorsR = function(d){
-          return snapColors(1-d);
-        }
-
-
-        var vDom = [4,16];
-        var uDom = [0,1];
+        var vDom = [50,80];
+        var uDom = [0,2];
 
         var quantization = bvu.quantization().branching(2).layers(4).valueDomain(vDom).uncertaintyDomain(uDom);
-        var scale = bvu.scale().quantize(quantization).range(snapColors);
+        var scale = bvu.scale().quantize(quantization).range(isoColors);
 
         var squareQuantization = bvu.squareQuantization().n(4).valueDomain(vDom).uncertaintyDomain([0,0]);
-        var squareScale = bvu.scale().quantize(squareQuantization).range(snapColors);
+        var squareScale = bvu.scale().quantize(squareQuantization).range(isoColors);
 
         var body = d3.select("body");
 
-        makeSnapExample(body.append("svg"),scale,data,"arc");
-        makeSnapExample(body.append("svg"),squareScale,data,"square");
+        makePolyExample(body.append("svg"),scale,data,"arc");
+        makePolyExample(body.append("svg"),squareScale,data,"square");
       //  makeFlightExample(body.append("svg"), scale, data, "arc");
       //  makeFlightExample(body.append("svg"), squareScale, data, "square");
       });
 
-      function makeSnapExample(svg,scale,data,type) {
+      function makePolyExample(svg,scale,data,type) {
         var w = 900;
         var h = 500;
 
@@ -117,9 +88,9 @@
             return d;})
           .attr("d", path)
           .attr("stroke", "white")
-          .attr("fill", function(d){ return d.properties.Snap===undefined ? "#aaa" : scale(d.properties.Snap,d.properties.Margin);})
+          .attr("fill", function(d){ return d.properties.Polyglots===undefined ? "#aaa" : scale(d.properties.Polyglots,d.properties.Margin);})
           .append("svg:title")
-          .text(function(d){ return d.properties.Snap + "," + d.properties.Margin;});
+          .text(function(d){ return d.properties.State + ":" + d.properties.Polyglots + "," + d.properties.Margin;});
           });
 
           // legend
@@ -130,7 +101,7 @@
             .size(160)
             .x(w - 140)
             .y(h-200)
-            .vtitle("Households Using SNAP (%)")
+            .vtitle("Polyglots Fluent In English (%)")
             .utitle("Margin of Error");
 
           svg.append("g").call(legend)
