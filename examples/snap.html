@@ -28,15 +28,48 @@
           }
         });
 
-        var maxLead = d3.max(data, function(d){ return d.Lead;});
-        //avg is 12.4
+        var maureenColorsSeq = [
+          "#ffd800",
+          "#febe01",
+          "#f9a701",
+          "#f08f00",
+          "#e57807",
+          "#db5f16",
+          "#ca4b1f",
+          "#b63924"
+        ];
 
-        var snapColors = function(d){
-          return d3.interpolateRdYlBu(1-d);
+        var maureenColorsDiv = [
+          "#137c9f",
+          "#3093a9",
+          "#59aca2",
+          "#fad656",
+          "#f68a2c",
+          "#de6723",
+          "#c5402b"
+        ]
+
+        var maureenColors = maureenColorsSeq;
+
+        var breaks = [];
+        for(var i = 0;i<maureenColors.length;i++){
+          breaks.push(i / (maureenColors.length-1));
+        };
+
+        var snapColors = d3.scaleLinear()
+        .domain(breaks)
+        .range(maureenColors)
+        .interpolate(d3.interpolateLab);
+
+        //var snapColors = d3.interpolatePlasma;
+
+        var snapColorsR = function(d){
+          return snapColors(1-d);
         }
 
-        var vDom = [-6,6];
-        var uDom = [3,0];
+
+        var vDom = [5,15];
+        var uDom = [0,1];
 
         var quantization = bvu.quantization().branching(2).layers(4).valueDomain(vDom).uncertaintyDomain(uDom);
         var scale = bvu.scale().quantize(quantization).range(snapColors);
@@ -84,7 +117,7 @@
             return d;})
           .attr("d", path)
           .attr("stroke", "white")
-          .attr("fill", function(d){ return d.properties.Snap===undefined ? "#aaa" : scale(d.properties.Snap-avg,d.properties.SnapDiff);})
+          .attr("fill", function(d){ return d.properties.Snap===undefined ? "#aaa" : scale(d.properties.Snap,d.properties.Margin);})
           .append("svg:title")
           .text(function(d){ return d.properties.Snap + "," + d.properties.Margin;});
           });
@@ -97,8 +130,8 @@
             .size(160)
             .x(w - 140)
             .y(h-200)
-            .vtitle("Usage of SNAP vs. National Avg (%)")
-            .utitle("Effect / Margin of Error");
+            .vtitle("Households Using SNAP (%)")
+            .utitle("Margin of Error");
 
           svg.append("g").call(legend)
       }
