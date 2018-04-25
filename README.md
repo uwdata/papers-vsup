@@ -4,7 +4,7 @@ This repository contains data and other supplemental material for [our paper](ht
 
 This work presents a technique, Value-Suppressing Uncertainty Palettes (VSUPs) for generating palettes for bivariate color maps for visualizing value and uncertainty.
 
-The [Paper](paper/) folder contains the paper itself, as well as all figures.
+The [Paper](paper/) folder contains the paper itself, as well as all figures, and the [Talk Slide](paper/slides.pdf).
 The [Study](study/) folder contains our study materials, including data tables.
 The [Examples](examples/) folder contains running examples of VSUPs on real data sets.
 
