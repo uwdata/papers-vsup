@@ -11,22 +11,22 @@
         "lint:fix": "eslint src --fix"
     },
     "dependencies": {
-        "d3": "^5.0.0"
+        "d3": "^5.9.2"
     },
     "devDependencies": {
-        "eslint": "^4.19.1",
+        "eslint": "^5.16.0",
         "rollup": "^0.57.1",
-        "rollup-plugin-node-resolve": "^3.3.0"
+        "rollup-plugin-node-resolve": "^3.4.0"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/uwdata/spatial-sampling.git"
+        "type": "git",
+        "url": "git+https://github.com/uwdata/spatial-sampling.git"
     },
     "keywords": [
-      "d3",
-      "bivariate",
-      "visualization",
-      "uncertainty"
+        "d3",
+        "bivariate",
+        "visualization",
+        "uncertainty"
     ],
     "author": "Michael Correll, Dominik Moritz, and Jeffrey Heer",
     "license": "MIT"
