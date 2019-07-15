@@ -11,7 +11,7 @@
         "lint:fix": "eslint src --fix"
     },
     "dependencies": {
-        "d3": "^5.9.2"
+        "d3": "^5.9.7"
     },
     "devDependencies": {
         "eslint": "^5.16.0",
